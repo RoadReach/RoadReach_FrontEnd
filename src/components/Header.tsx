@@ -1,7 +1,6 @@
 import React from "react";
 //import roadReachLogo from "../assets/roadreach-logo.png";
 import RoadReachLogo from "../assets/RoadReach_Logo_cropped.png";
-import { FaFlagUsa } from 'react-icons/fa';
 import { HelpCircle } from 'lucide-react';
 const Header: React.FC = () => {
   return (
