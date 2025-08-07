@@ -1,9 +1,23 @@
 import React from "react";
 //import roadReachLogo from "../assets/roadreach-logo.png";
-
+import RoadReachLogo from "../assets/RoadReach_Logo_cropped.png";
+import { FaFlagUsa } from 'react-icons/fa';
+import { HelpCircle } from 'lucide-react';
 const Header: React.FC = () => {
   return (
-    <header style={{ fontFamily: "Arial, sans-serif", borderBottom: "1px solid #ccc" }}>
+// ...existing code...
+<header
+  style={{
+    fontFamily: "Arial, sans-serif",
+    borderBottom: "1px solid #ccc",
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    background: "#fff",
+    zIndex: 1000,
+  }}
+>
       {/* Top bar */}
       <div style={styles.topBar}>
         <div style={styles.topLeft}></div>
@@ -12,13 +26,13 @@ const Header: React.FC = () => {
           <span style={styles.separator}>|</span>
           <a href="#" style={styles.topLink}>Membership</a>
           <span style={styles.separator}>|</span>
-          <a href="#" style={styles.topLink}>Help Center</a>
+          <a href="#" style={styles.topLink}><HelpCircle style={{ color: "#ff0000ff" }} size={13} /> Help Center</a>
           <span style={styles.separator}>|</span>
           <span style={{ color: "#004B8D", fontWeight: 600 }}>
             📞 1-520-482-8859
           </span>
           <span style={styles.separator}>|</span>
-          <span style={styles.flag}>🇺🇸</span>
+          <span style={styles.flag}><img src="https://flagcdn.com/us.svg" alt="United States Flag" width={20} height={18}/>US</span>
           <span style={styles.separator}>|</span>
           <span style={styles.login}>
             <span style={{ fontSize: 18 }}>👤</span> Login
@@ -30,7 +44,7 @@ const Header: React.FC = () => {
       <div style={styles.mainBar}>
         {/* Logo */}
         <div>
-          {/* <img src={roadReachLogo} alt="RoadReach Logo" style={styles.logo} /> */}
+          <img src={RoadReachLogo} width={100} height={50} alt="RoadReach Logo" />
         </div>
 
         {/* Navigation menu */}
@@ -52,7 +66,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "6px 20px",
+    padding: "6px 220px",
     fontSize: "13px",
     backgroundColor: "#fff",
     color: "#333",
@@ -87,9 +101,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "10px 20px",
+    padding: "10px 220px",
     backgroundColor: "#fff",
-    borderTop: "1px solid #eee",
   },
   logo: {
     height: 50,
