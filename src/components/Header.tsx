@@ -1,8 +1,10 @@
-import React from "react";
-//import roadReachLogo from "../assets/roadreach-logo.png";
+import React, {useState} from "react";
+import { Link } from "react-router-dom";
 import RoadReachLogo from "../assets/RoadReach_Logo_cropped.png";
 import { HelpCircle } from 'lucide-react';
+
 const Header: React.FC = () => {
+  const [selectedCountry, setSelectedCountry] = useState("us");
   return (
 // ...existing code...
 <header
@@ -19,7 +21,11 @@ const Header: React.FC = () => {
 >
       {/* Top bar */}
       <div style={styles.topBar}>
-        <div style={styles.topLeft}></div>
+        <div style={styles.topLeft}> {/* Logo */}
+          
+            <img src={RoadReachLogo} width={100} height={50} alt="RoadReach Logo" />
+          
+        </div>
         <div style={styles.topRight}>
           <a href="#" style={styles.topLink}>RoadReach.com</a>
           <span style={styles.separator}>|</span>
@@ -31,20 +37,27 @@ const Header: React.FC = () => {
             📞 1-520-482-8859
           </span>
           <span style={styles.separator}>|</span>
-          <span style={styles.flag}><img src="https://flagcdn.com/us.svg" alt="United States Flag" width={20} height={18}/>US</span>
-          <span style={styles.separator}>|</span>
-          <span style={styles.login}>
+          <span style={styles.flag}>{countryFlags[selectedCountry]}</span>
+          <select
+            style={styles.countrySelect}
+            value={selectedCountry}
+            onChange={(e) => setSelectedCountry(e.target.value)}
+          >
+            <option value="us">USA</option>
+            <option value="ca">Canada</option>
+            <option value="uk">UK</option>
+            <option value="in">India</option>
+            <option value="au">Australia</option>
+          </select>
+          <span style={styles.separator}>|</span>          <span style={styles.separator}>|</span>
+          <Link to="/login" style={styles.login}>
             <span style={{ fontSize: 18 }}>👤</span> Login
-          </span>
+          </Link>
         </div>
       </div>
 
       {/* Main nav bar */}
       <div style={styles.mainBar}>
-        {/* Logo */}
-        <div>
-          <img src={RoadReachLogo} width={100} height={50} alt="RoadReach Logo" />
-        </div>
 
         {/* Navigation menu */}
         <nav style={styles.nav}>
@@ -58,6 +71,13 @@ const Header: React.FC = () => {
       </div>
     </header>
   );
+};
+const countryFlags: { [key: string]: string } = {
+  us: "🇺🇸",
+  ca: "🇨🇦",
+  uk: "🇬🇧",
+  in: "🇮🇳",
+  au: "🇦🇺",
 };
 
 const styles: { [key: string]: React.CSSProperties } = {
@@ -100,7 +120,10 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "10px 220px",
+    paddingTop: "10px",
+    paddingBottom: "10px",
+    paddingLeft: "520px",
+    //paddingRight: "220px",
     backgroundColor: "#fff",
   },
   logo: {
