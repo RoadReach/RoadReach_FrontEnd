@@ -2,7 +2,7 @@ import './App.css'
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
-import Login from "./components/login"; // Import the Login component
+import Login from "./components/Login"; // Import the Login component
 
 const App: React.FC = () => {
   return (
