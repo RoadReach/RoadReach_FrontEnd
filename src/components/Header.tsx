@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import RoadReachLogo from "../assets/RoadReach_Logo_cropped.png";
 import { HelpCircle } from 'lucide-react';
 
+import CountryDropdown from './countryDropdown';
+
 const Header: React.FC = () => {
   const [selectedCountry, setSelectedCountry] = useState("us");
   return (
@@ -37,19 +39,8 @@ const Header: React.FC = () => {
             📞 1-520-482-8859
           </span>
           <span style={styles.separator}>|</span>
-          <span style={styles.flag}>{countryFlags[selectedCountry]}</span>
-          <select
-            style={styles.countrySelect}
-            value={selectedCountry}
-            onChange={(e) => setSelectedCountry(e.target.value)}
-          >
-            <option value="us">USA</option>
-            <option value="ca">Canada</option>
-            <option value="uk">UK</option>
-            <option value="in">India</option>
-            <option value="au">Australia</option>
-          </select>
-          <span style={styles.separator}>|</span>          <span style={styles.separator}>|</span>
+           <CountryDropdown />
+          <span style={styles.separator}>|</span>         
           <Link to="/login" style={styles.login}>
             <span style={{ fontSize: 18 }}>👤</span> Login
           </Link>
