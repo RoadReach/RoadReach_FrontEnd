@@ -3,6 +3,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Login from "./components/Login"; // Import the Login component
+import CreateAccount from "./components/CreateAccount";
 
 const App: React.FC = () => {
   return (
@@ -10,7 +11,8 @@ const App: React.FC = () => {
       <Header />
       <Routes>
         <Route path="/login" element={<Login />} />
-        {/* Add other routes here */}
+        <Route path="/create-account" element={<CreateAccount />} />
+        {/* Other routes */}
       </Routes>
     </BrowserRouter>
   );

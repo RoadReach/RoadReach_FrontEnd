@@ -24,9 +24,9 @@ const Header: React.FC = () => {
       {/* Top bar */}
       <div style={styles.topBar}>
         <div style={styles.topLeft}> {/* Logo */}
-          
+
             <img src={RoadReachLogo} width={100} height={50} alt="RoadReach Logo" />
-          
+
         </div>
         <div style={styles.topRight}>
           <a href="#" style={styles.topLink}>RoadReach.com</a>
@@ -40,7 +40,7 @@ const Header: React.FC = () => {
           </span>
           <span style={styles.separator}>|</span>
            <CountryDropdown />
-          <span style={styles.separator}>|</span>         
+          <span style={styles.separator}>|</span>
           <Link to="/login" style={styles.login}>
             <span style={{ fontSize: 18 }}>👤</span> Login
           </Link>
