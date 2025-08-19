@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 interface LoginFormData {
   email: string;
@@ -14,6 +15,7 @@ const Login: React.FC = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -21,10 +23,18 @@ const Login: React.FC = () => {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+    if (name === "password" && value) {
+      setPasswordError("");
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.password) {
+      setPasswordError("Password is required.");
+      return;
+    }
+    // Proceed with login logic
     console.log("Login data:", formData);
   };
 
@@ -32,53 +42,83 @@ const Login: React.FC = () => {
     <div style={styles.pageWrapper}>
       <div style={styles.card}>
         <h2 style={styles.heading}>Sign In</h2>
-        <p style={styles.infoText}>
-          NEW! RoadReach.com and RoadReachTravel.com sign in are merging.
-        </p>
-        <ul style={styles.list}>
-          <li>
-            You can now sign in to both websites using your RoadReach email and password.
-          </li>
-          <li>You must be a RoadReach Member residing in the United States.</li>
-        </ul>
-
         <form onSubmit={handleSubmit}>
           {/* Email */}
-          <label style={styles.label}>Email Address</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            style={styles.input}
-          />
+          <div style={styles.floatingGroup}>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              style={styles.floatingInput}
+              autoComplete="email"
+              id="login-email"
+            />
+            <label
+              htmlFor="login-email"
+              style={
+                formData.email
+                  ? { ...styles.floatingLabel, ...styles.floatingLabelActive }
+                  : styles.floatingLabel
+              }
+            >
+              Email Address
+            </label>
+          </div>
 
           {/* Password */}
-          <label style={styles.label}>Password</label>
-          <div style={styles.passwordWrapper}>
+          <div style={styles.floatingGroup}>
             <input
               type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleChange}
               required
-              style={styles.input}
+              style={{
+                ...styles.floatingInput,
+                border: passwordError ? "2px solid #D84343" : "1px solid #222",
+                color: passwordError ? "#D84343" : "#222",
+              }}
+              id="login-password"
+              autoComplete="current-password"
             />
+            <label
+              htmlFor="login-password"
+              style={
+                formData.password
+                  ? {
+                      ...styles.floatingLabel,
+                      ...styles.floatingLabelActive,
+                      color: passwordError ? "#D84343" : "#222",
+                    }
+                  : {
+                      ...styles.floatingLabel,
+                      color: passwordError ? "#D84343" : "#444",
+                    }
+              }
+            >
+              Password
+            </label>
             <button
               type="button"
-              style={styles.showButton}
+              style={{
+                ...styles.showButton,
+                top: "50%",
+                transform: "translateY(-50%)",
+                color: "#666",
+              }}
               onClick={() => setShowPassword((prev) => !prev)}
+              tabIndex={-1}
             >
-              {showPassword ? "🙈" : "👁️"}
+              <span role="img" aria-label="Show password">👁️</span>
             </button>
           </div>
-
-          {/* Links */}
-          <div style={styles.links}>
-            <a href="#">Forgot Password?</a>
-            <a href="#">Need help logging in?</a>
-          </div>
+          {passwordError && (
+            <div style={{ color: "#D84343", fontWeight: 600, margin: "6px 0 0 2px", fontSize: "22px" }}>
+              Password is required.
+            </div>
+          )}
 
           {/* Checkbox */}
           <div style={styles.checkbox}>
@@ -97,9 +137,9 @@ const Login: React.FC = () => {
           </button>
 
           <hr style={{ margin: "20px 0" }} />
-          <button type="button" style={styles.createBtn}>
+          <Link to="/create-account" style={styles.createBtn}>
             Create Account
-          </button>
+          </Link>
         </form>
       </div>
     </div>
@@ -113,6 +153,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: "center",
     minHeight: "90vh",
     backgroundColor: "#f5f5f5",
+    overflow: "visible",
   },
   card: {
     background: "#fff",
@@ -125,14 +166,6 @@ const styles: { [key: string]: React.CSSProperties } = {
   heading: {
     marginBottom: "10px",
   },
-  infoText: {
-    fontSize: "14px",
-    color: "#555",
-  },
-  list: {
-    fontSize: "14px",
-    marginBottom: "20px",
-  },
   label: {
     fontSize: "14px",
     margin: "10px 0 5px",
@@ -141,9 +174,11 @@ const styles: { [key: string]: React.CSSProperties } = {
   input: {
     width: "100%",
     padding: "8px",
-    fontSize: "14px",
+    fontSize: "18px",
     border: "1px solid #ccc",
-    borderRadius: "4px",
+    borderRadius: "6px",
+    marginBottom: "10px",
+    boxSizing: "border-box",
   },
   passwordWrapper: {
     position: "relative",
@@ -155,12 +190,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     background: "none",
     border: "none",
     cursor: "pointer",
-  },
-  links: {
-    display: "flex",
-    justifyContent: "space-between",
-    fontSize: "12px",
-    marginTop: "5px",
+    fontSize: "20px",
   },
   checkbox: {
     display: "flex",
@@ -176,6 +206,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: "4px",
     width: "100%",
     cursor: "pointer",
+    fontSize: "18px",
   },
   createBtn: {
     background: "#ccc",
@@ -185,6 +216,39 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: "4px",
     width: "100%",
     cursor: "pointer",
+    fontSize: "18px",
+  },
+  floatingGroup: {
+    position: "relative",
+    marginBottom: "18px",
+  },
+  floatingInput: {
+    width: "100%",
+    padding: "12px 8px 8px 8px",
+    fontSize: "18px",
+    border: "1px solid #222",
+    borderRadius: "6px",
+    outline: "none",
+    boxSizing: "border-box",
+  },
+  floatingLabel: {
+    position: "absolute",
+    left: "12px",
+    top: "8px",
+    fontSize: "14px",
+    color: "#444",
+    background: "#fff",
+    padding: "0 2px",
+    pointerEvents: "none",
+    transition: "0.2s",
+  },
+  floatingLabelActive: {
+    top: "-10px",
+    left: "8px",
+    fontSize: "12px",
+    color: "#222",
+    background: "#fff",
+    padding: "0 2px",
   },
 };
 
