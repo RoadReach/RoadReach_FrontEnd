@@ -1,5 +1,73 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
+
+const FloatingInput = ({
+  label,
+  type = "text",
+  name,
+  value,
+  onChange,
+  required = false,
+  hasError = false, // Add this prop
+}: {
+  label: string;
+  type?: string;
+  name: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
+  hasError?: boolean;
+}) => {
+  const [isFocused, setIsFocused] = useState(false);
+  const isActive = isFocused || value.length > 0;
+  return (
+    <div
+      style={{
+        position: "relative",
+        marginBottom: "18px",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        required={required}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        style={{
+          width: "100%",
+          padding: "12px 8px 8px 8px",
+          fontSize: "18px",
+          border: hasError ? "1.5px solid red" : "1px solid #222", // Highlight in red if error
+          borderRadius: "6px",
+          outline: "none",
+          boxSizing: "border-box",
+          backgroundColor: "#fff",
+        }}
+      />
+      <label
+        style={{
+          position: "absolute",
+          left: "12px",
+          top: isActive ? "-10px" : "16px",
+          fontSize: isActive ? "12px" : "14px",
+          color: isActive ? "#222" : "#444",
+          background: "#fff",
+          padding: "0 2px",
+          pointerEvents: "none",
+          transition: "0.2s",
+          zIndex: 1,
+        }}
+      >
+        {label}
+      </label>
+    </div>
+  );
+};
 
 const CreateAccount: React.FC = () => {
   const [form, setForm] = useState({
@@ -11,84 +79,68 @@ const CreateAccount: React.FC = () => {
     receiveEmails: false,
   });
 
+  const [emailError, setEmailError] = useState(false);
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+
+    // Email validation
+    if (name === "email") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      setEmailError(!emailRegex.test(value) && value.length > 0);
+    }
+
+    // Confirm password validation
+    if (
+      name === "confirmPassword" ||
+      (name === "password" && form.confirmPassword.length > 0)
+    ) {
+      setConfirmPasswordError(
+        name === "confirmPassword"
+          ? value !== form.password
+          : form.confirmPassword !== value
+      );
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle account creation logic here
-    console.log("Create Account Data:", form);
-  };
+  const navigate = useNavigate();
 
-  const FloatingInput = ({
-    label,
-    type = "text",
-    name,
-    value,
-    onChange,
-    required = false,
-  }: {
-    label: string;
-    type?: string;
-    name: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    required?: boolean;
-  }) => {
-    const [isFocused, setIsFocused] = useState(false);
-    const isActive = isFocused || value.length > 0;
-    return (
-      <div
-        style={{
-          position: "relative",
-          marginBottom: "18px",
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <input
-          type={type}
-          name={name}
-          value={value}
-          onChange={onChange}
-          required={required}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          style={{
-            width: "100%",
-            padding: "12px 8px 8px 8px",
-            fontSize: "18px",
-            border: "1px solid #222",
-            borderRadius: "6px",
-            outline: "none",
-            boxSizing: "border-box",
-            backgroundColor: "#fff",
-          }}
-        />
-        <label
-          style={{
-            position: "absolute",
-            left: "12px",
-            top: isActive ? "-10px" : "8px",
-            fontSize: isActive ? "12px" : "14px",
-            color: isActive ? "#222" : "#444",
-            background: "#fff",
-            padding: "0 2px",
-            pointerEvents: "none",
-            transition: "0.2s",
-          }}
-        >
-          {label}
-        </label>
-      </div>
-    );
-  };
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (form.password !== form.confirmPassword) {
+    alert("Passwords do not match!");
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:8080/api/users/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: form.email,
+        password: form.password,
+        firstName: form.firstName,   // map correctly
+        lastName: form.lastName,     // map correctly
+      }),
+    });
+
+    const result = await response.text();
+    alert(result);
+
+    if (result.includes("successfully")) {
+        navigate("/login");
+    }
+    } catch (error) {
+        alert("Error connecting to server");
+        }
+    };
+
 
   return (
     <div style={styles.pageWrapper}>
@@ -121,6 +173,7 @@ const CreateAccount: React.FC = () => {
             onChange={handleChange}
             type="email"
             required
+            hasError={emailError}
           />
 
           {/* Password */}
@@ -141,6 +194,7 @@ const CreateAccount: React.FC = () => {
             onChange={handleChange}
             type="password"
             required
+            hasError={confirmPasswordError}
           />
 
           {/* Receive Emails */}
