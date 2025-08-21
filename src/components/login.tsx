@@ -16,6 +16,7 @@ const Login: React.FC = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<{ email: boolean; password: boolean }>({ email: false, password: false });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -23,14 +24,29 @@ const Login: React.FC = () => {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+    // Remove red border when user types
+    if (name === "email" && value) {
+      setFieldErrors((prev) => ({ ...prev, email: false }));
+    }
     if (name === "password" && value) {
       setPasswordError("");
+      setFieldErrors((prev) => ({ ...prev, password: false }));
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.password) {
+    const errors = {
+      email: !formData.email,
+      password: !formData.password,
+    };
+    setFieldErrors(errors);
+    // Show only one error message at a time, prioritizing email
+    if (errors.email) {
+      setPasswordError("");
+      return;
+    }
+    if (errors.password) {
       setPasswordError("Password is required.");
       return;
     }
@@ -50,8 +66,11 @@ const Login: React.FC = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              required
-              style={styles.floatingInput}
+              style={{
+                ...styles.floatingInput,
+                border: fieldErrors.email ? "2px solid #D84343" : "1px solid #222",
+                color: fieldErrors.email ? "#D84343" : "#222",
+              }}
               autoComplete="email"
               id="login-email"
             />
@@ -59,8 +78,8 @@ const Login: React.FC = () => {
               htmlFor="login-email"
               style={
                 formData.email
-                  ? { ...styles.floatingLabel, ...styles.floatingLabelActive }
-                  : styles.floatingLabel
+                  ? { ...styles.floatingLabel, ...styles.floatingLabelActive, color: fieldErrors.email ? "#D84343" : "#222" }
+                  : { ...styles.floatingLabel, color: fieldErrors.email ? "#D84343" : "#444" }
               }
             >
               Email Address
@@ -74,11 +93,10 @@ const Login: React.FC = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              required
               style={{
                 ...styles.floatingInput,
-                border: passwordError ? "2px solid #D84343" : "1px solid #222",
-                color: passwordError ? "#D84343" : "#222",
+                border: fieldErrors.password ? "2px solid #D84343" : "1px solid #222",
+                color: fieldErrors.password ? "#D84343" : "#222",
               }}
               id="login-password"
               autoComplete="current-password"
@@ -90,11 +108,11 @@ const Login: React.FC = () => {
                   ? {
                       ...styles.floatingLabel,
                       ...styles.floatingLabelActive,
-                      color: passwordError ? "#D84343" : "#222",
+                      color: fieldErrors.password ? "#D84343" : "#222",
                     }
                   : {
                       ...styles.floatingLabel,
-                      color: passwordError ? "#D84343" : "#444",
+                      color: fieldErrors.password ? "#D84343" : "#444",
                     }
               }
             >
@@ -116,7 +134,7 @@ const Login: React.FC = () => {
           </div>
           {passwordError && (
             <div style={{ color: "#D84343", fontWeight: 600, margin: "6px 0 0 2px", fontSize: "22px" }}>
-              Password is required.
+              {fieldErrors.email ? "Email is required." : passwordError}
             </div>
           )}
 
