@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link,useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const FloatingInput = ({
   label,
@@ -7,7 +7,6 @@ const FloatingInput = ({
   name,
   value,
   onChange,
-  required = false,
   hasError = false, // Add this prop
 }: {
   label: string;
@@ -15,7 +14,6 @@ const FloatingInput = ({
   name: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  required?: boolean;
   hasError?: boolean;
 }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -208,7 +206,6 @@ const CreateAccount: React.FC = () => {
               name="firstName"
               value={form.firstName}
               onChange={handleChange}
-              required
               hasError={fieldErrors.firstName}
             />
             {/* Last Name */}
@@ -217,7 +214,6 @@ const CreateAccount: React.FC = () => {
               name="lastName"
               value={form.lastName}
               onChange={handleChange}
-              required
               hasError={fieldErrors.lastName}
             />
             {/* Email Address */}
@@ -227,7 +223,6 @@ const CreateAccount: React.FC = () => {
               value={form.email}
               onChange={handleChange}
               type="email"
-              required
               hasError={emailError || fieldErrors.email}
             />
             {/* Password */}
@@ -237,7 +232,6 @@ const CreateAccount: React.FC = () => {
               value={form.password}
               onChange={handleChange}
               type="password"
-              required
               hasError={fieldErrors.password}
             />
             {/* Confirm Password */}
@@ -247,7 +241,6 @@ const CreateAccount: React.FC = () => {
               value={form.confirmPassword}
               onChange={handleChange}
               type="password"
-              required
               hasError={confirmPasswordError}
             />
             {/* Error Message */}

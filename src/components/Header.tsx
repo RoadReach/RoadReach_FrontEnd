@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import RoadReachLogo from "../assets/RoadReach_Logo_cropped.png";
 import { HelpCircle } from 'lucide-react';
@@ -6,7 +6,6 @@ import { HelpCircle } from 'lucide-react';
 import CountryDropdown from './countryDropdown';
 
 const Header: React.FC = () => {
-  const [selectedCountry, setSelectedCountry] = useState("us");
   return (
 // ...existing code...
 <header
@@ -67,13 +66,7 @@ const Header: React.FC = () => {
     
   );
 };
-const countryFlags: { [key: string]: string } = {
-  us: "🇺🇸",
-  ca: "🇨🇦",
-  uk: "🇬🇧",
-  in: "🇮🇳",
-  au: "🇦🇺",
-};
+
 
 const styles: { [key: string]: React.CSSProperties } = {
   topBar: {
