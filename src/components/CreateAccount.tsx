@@ -14,10 +14,6 @@ const FloatingInput = ({
   name: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-<<<<<<< HEAD
-  required?: boolean;
-=======
->>>>>>> origin/25.3-dev
   hasError?: boolean;
 }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -179,11 +175,7 @@ const CreateAccount: React.FC = () => {
       // Expecting backend to return JSON: { userId: "...", message: "..." }
       const result = await response.json();
       if (result.userId && result.message) {
-<<<<<<< HEAD
-        setSuccessMsg(`Successfully registered to RoadReach app! Your User ID is: ${result.userId}. Please check your email.`);
-=======
         setSuccessMsg("Successfully registered to RoadReach app! Your User ID is: ${result.userId}. Please check your email.");
->>>>>>> origin/25.3-dev
       } else if (result.message) {
         setSuccessMsg(result.message);
       } else {
@@ -214,10 +206,6 @@ const CreateAccount: React.FC = () => {
               name="firstName"
               value={form.firstName}
               onChange={handleChange}
-<<<<<<< HEAD
-              required
-=======
->>>>>>> origin/25.3-dev
               hasError={fieldErrors.firstName}
             />
             {/* Last Name */}
@@ -226,10 +214,6 @@ const CreateAccount: React.FC = () => {
               name="lastName"
               value={form.lastName}
               onChange={handleChange}
-<<<<<<< HEAD
-              required
-=======
->>>>>>> origin/25.3-dev
               hasError={fieldErrors.lastName}
             />
             {/* Email Address */}
@@ -239,10 +223,6 @@ const CreateAccount: React.FC = () => {
               value={form.email}
               onChange={handleChange}
               type="email"
-<<<<<<< HEAD
-              required
-=======
->>>>>>> origin/25.3-dev
               hasError={emailError || fieldErrors.email}
             />
             {/* Password */}
@@ -252,10 +232,6 @@ const CreateAccount: React.FC = () => {
               value={form.password}
               onChange={handleChange}
               type="password"
-<<<<<<< HEAD
-              required
-=======
->>>>>>> origin/25.3-dev
               hasError={fieldErrors.password}
             />
             {/* Confirm Password */}
@@ -265,10 +241,6 @@ const CreateAccount: React.FC = () => {
               value={form.confirmPassword}
               onChange={handleChange}
               type="password"
-<<<<<<< HEAD
-              required
-=======
->>>>>>> origin/25.3-dev
               hasError={confirmPasswordError}
             />
             {/* Error Message */}

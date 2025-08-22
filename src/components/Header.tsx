@@ -7,6 +7,7 @@ import CountryDropdown from './countryDropdown';
 
 const Header: React.FC = () => {
   return (
+// ...existing code...
 <header
   style={{
     fontFamily: "Arial, sans-serif",
@@ -30,7 +31,7 @@ const Header: React.FC = () => {
           <Link to="/" style={styles.topLink}>
             RoadReach.com
           </Link>
-          
+
           <span style={styles.separator}>|</span>
           <a href="#" style={styles.topLink}>Membership</a>
           <span style={styles.separator}>|</span>
@@ -62,14 +63,11 @@ const Header: React.FC = () => {
         </nav>
       </div>
     </header>
-    
+
   );
 };
-<<<<<<< HEAD
-=======
 
 
->>>>>>> origin/25.3-dev
 const styles: { [key: string]: React.CSSProperties } = {
   topBar: {
     display: "flex",
@@ -112,7 +110,8 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: "center",
     paddingTop: "10px",
     paddingBottom: "10px",
-    paddingLeft: "520px",
+    paddingLeft: "720px",
+    //paddingRight: "220px",
     backgroundColor: "#fff",
   },
   logo: {
