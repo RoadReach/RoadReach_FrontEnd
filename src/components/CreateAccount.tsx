@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link,useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const FloatingInput = ({
   label,
@@ -7,7 +7,6 @@ const FloatingInput = ({
   name,
   value,
   onChange,
-  required = false,
   hasError = false, // Add this prop
 }: {
   label: string;
@@ -35,7 +34,6 @@ const FloatingInput = ({
         name={name}
         value={value}
         onChange={onChange}
-        required={required}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         style={{
@@ -70,6 +68,7 @@ const FloatingInput = ({
 };
 
 const CreateAccount: React.FC = () => {
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -81,6 +80,8 @@ const CreateAccount: React.FC = () => {
 
   const [emailError, setEmailError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<{ firstName: boolean; lastName: boolean; email: boolean; password: boolean }>({ firstName: false, lastName: false, email: false, password: false });
+  const [mainError, setMainError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -88,6 +89,24 @@ const CreateAccount: React.FC = () => {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+
+    // Remove red border when user types
+    if (name === "firstName" && value) {
+      setFieldErrors((prev) => ({ ...prev, firstName: false }));
+      setMainError("");
+    }
+    if (name === "lastName" && value) {
+      setFieldErrors((prev) => ({ ...prev, lastName: false }));
+      setMainError("");
+    }
+    if (name === "email" && value) {
+      setFieldErrors((prev) => ({ ...prev, email: false }));
+      setMainError("");
+    }
+    if (name === "password" && value) {
+      setFieldErrors((prev) => ({ ...prev, password: false }));
+      setMainError("");
+    }
 
     // Email validation
     if (name === "email") {
@@ -108,121 +127,159 @@ const CreateAccount: React.FC = () => {
     }
   };
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-
-  if (form.password !== form.confirmPassword) {
-    alert("Passwords do not match!");
-    return;
-  }
-
-  try {
-    const response = await fetch("http://localhost:8080/api/users/create", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: form.email,
-        password: form.password,
-        firstName: form.firstName,   // map correctly
-        lastName: form.lastName,     // map correctly
-      }),
-    });
-
-    const result = await response.text();
-    alert(result);
-
-    if (result.includes("successfully")) {
-        navigate("/login");
-    }
-    } catch (error) {
-        alert("Error connecting to server");
-        }
+    e.preventDefault();
+    const errors = {
+      firstName: !form.firstName,
+      lastName: !form.lastName,
+      email: !form.email,
+      password: !form.password,
     };
+    setFieldErrors(errors);
+    // Show only one error message at a time, prioritizing firstName, lastName, email, password
+    if (errors.firstName) {
+      setMainError("First Name is required.");
+      return;
+    }
+    if (errors.lastName) {
+      setMainError("Last Name is required.");
+      return;
+    }
+    if (errors.email) {
+      setMainError("Email is required.");
+      return;
+    }
+    if (errors.password) {
+      setMainError("Password is required.");
+      return;
+    }
+
+    if (form.password !== form.confirmPassword) {
+      setMainError("Passwords do not match!");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8080/api/users/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+          firstName: form.firstName,
+          lastName: form.lastName,
+        }),
+      });
+
+      // Expecting backend to return JSON: { userId: "...", message: "..." }
+      const result = await response.json();
+      if (result.userId && result.message) {
+        setSuccessMsg(`Successfully registered to RoadReach app! Your User ID is: ${result.userId}. Please check your email.`);
+      } else if (result.message) {
+        setSuccessMsg(result.message);
+      } else {
+        setSuccessMsg("Registration completed. Please check your email.");
+      }
+      setMainError("");
+      // Optionally navigate to login after a delay
+      // setTimeout(() => navigate("/login"), 5000);
+    } catch {
+      setSuccessMsg("Error connecting to server");
+    }
+  };
 
 
   return (
     <div style={styles.pageWrapper}>
       <div style={styles.card}>
         <h2 style={styles.heading}>Create Account</h2>
-        <form onSubmit={handleSubmit}>
-          {/* First Name */}
-          <FloatingInput
-            label="First Name"
-            name="firstName"
-            value={form.firstName}
-            onChange={handleChange}
-            required
-          />
-
-          {/* Last Name */}
-          <FloatingInput
-            label="Last Name"
-            name="lastName"
-            value={form.lastName}
-            onChange={handleChange}
-            required
-          />
-
-          {/* Email Address */}
-          <FloatingInput
-            label="Email Address"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            type="email"
-            required
-            hasError={emailError}
-          />
-
-          {/* Password */}
-          <FloatingInput
-            label="Password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            type="password"
-            required
-          />
-
-          {/* Confirm Password */}
-          <FloatingInput
-            label="Confirm Password"
-            name="confirmPassword"
-            value={form.confirmPassword}
-            onChange={handleChange}
-            type="password"
-            required
-            hasError={confirmPasswordError}
-          />
-
-          {/* Receive Emails */}
-          <div style={{ margin: "15px 0" }}>
-            <input
-              type="checkbox"
-              name="receiveEmails"
-              checked={form.receiveEmails}
+        {successMsg ? (
+          <div style={{ color: "#005DA6", fontWeight: 600, margin: "20px 0", fontSize: "16px", textAlign: "center" }}>
+            {successMsg}
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            {/* First Name */}
+            <FloatingInput
+              label="First Name"
+              name="firstName"
+              value={form.firstName}
               onChange={handleChange}
+              required
+              hasError={fieldErrors.firstName}
             />
-            <span style={{ marginLeft: "8px", fontSize: "14px" }}>
-              Yes, I would like to receive emails about special promotions and new
-              product information.
-            </span>
-          </div>
-
-          <div style={{ fontSize: "14px", marginBottom: "10px" }}>
-            By creating an account you agree to RoadReach.com{" "}
-            <a href="#" style={{ color: "#005DA6" }}>
-              terms and conditions
-            </a>{" "}
-            of use.
-          </div>
-
-          <button type="submit" style={styles.createBtn}>
-            Create Account
-          </button>
-        </form>
+            {/* Last Name */}
+            <FloatingInput
+              label="Last Name"
+              name="lastName"
+              value={form.lastName}
+              onChange={handleChange}
+              required
+              hasError={fieldErrors.lastName}
+            />
+            {/* Email Address */}
+            <FloatingInput
+              label="Email Address"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              type="email"
+              required
+              hasError={emailError || fieldErrors.email}
+            />
+            {/* Password */}
+            <FloatingInput
+              label="Password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              type="password"
+              required
+              hasError={fieldErrors.password}
+            />
+            {/* Confirm Password */}
+            <FloatingInput
+              label="Confirm Password"
+              name="confirmPassword"
+              value={form.confirmPassword}
+              onChange={handleChange}
+              type="password"
+              required
+              hasError={confirmPasswordError}
+            />
+            {/* Error Message */}
+            {mainError && (
+              <div style={{ color: "#D84343", fontWeight: 600, margin: "6px 0 0 2px", fontSize: "22px" }}>
+                {mainError}
+              </div>
+            )}
+            {/* Receive Emails */}
+            <div style={{ margin: "15px 0" }}>
+              <input
+                type="checkbox"
+                name="receiveEmails"
+                checked={form.receiveEmails}
+                onChange={handleChange}
+              />
+              <span style={{ marginLeft: "8px", fontSize: "14px" }}>
+                Yes, I would like to receive emails about special promotions and new
+                product information.
+              </span>
+            </div>
+            <div style={{ fontSize: "14px", marginBottom: "10px" }}>
+              By creating an account you agree to RoadReach.com{" "}
+              <a href="#" style={{ color: "#005DA6" }}>
+                terms and conditions
+              </a>{" "}
+              of use.
+            </div>
+            <button type="submit" style={styles.createBtn}>
+              Create Account
+            </button>
+          </form>
+        )}
         <div
           style={{
             marginTop: "20px",
