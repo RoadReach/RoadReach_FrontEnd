@@ -40,3 +40,25 @@
 .read-the-docs {
   color: #888;
 }
+
+.footer {
+  text-align: center;
+  padding: 10px;
+  background: #f9f9f9;
+  width: 100%;
+}
+
+/* Main content */
+.main-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 120px; /* offset for fixed header */
+}
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}

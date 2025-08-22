@@ -27,7 +27,10 @@ const Header: React.FC = () => {
 
         </div>
         <div style={styles.topRight}>
-          <a href="#" style={styles.topLink}>RoadReach.com</a>
+          <Link to="/" style={styles.topLink}>
+            RoadReach.com
+          </Link>
+          
           <span style={styles.separator}>|</span>
           <a href="#" style={styles.topLink}>Membership</a>
           <span style={styles.separator}>|</span>
@@ -59,8 +62,14 @@ const Header: React.FC = () => {
         </nav>
       </div>
     </header>
+    
   );
 };
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/25.3-dev
 const styles: { [key: string]: React.CSSProperties } = {
   topBar: {
     display: "flex",
