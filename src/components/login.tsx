@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface LoginFormData {
   email: string;
@@ -17,6 +17,7 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<{ email: boolean; password: boolean }>({ email: false, password: false });
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -34,14 +35,13 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const errors = {
       email: !formData.email,
       password: !formData.password,
     };
     setFieldErrors(errors);
-    // Show only one error message at a time, prioritizing email
     if (errors.email) {
       setPasswordError("");
       return;
@@ -50,8 +50,29 @@ const Login: React.FC = () => {
       setPasswordError("Password is required.");
       return;
     }
-    // Proceed with login logic
-    console.log("Login data:", formData);
+
+    // Check credentials with backend
+    try {
+      const response = await fetch("http://localhost:8080/api/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+      const data = await response.json();
+      if (response.ok && data.success) {
+        console.log("Hi there", data.firstname);
+        localStorage.setItem("firstname", data.firstname); // Save firstname
+        navigate("/dashboard");
+      } else {
+        // Invalid credentials
+        setPasswordError("Invalid email or password.");
+      }
+    } catch (error) {
+      setPasswordError("Server error. Please try again.");
+    }
   };
 
   return (
