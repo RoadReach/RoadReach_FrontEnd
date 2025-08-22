@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const FloatingInput = ({
   label,
@@ -67,6 +67,7 @@ const FloatingInput = ({
 };
 
 const CreateAccount: React.FC = () => {
+  const navigate = useNavigate();
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [form, setForm] = useState({
     firstName: "",
@@ -172,21 +173,15 @@ const CreateAccount: React.FC = () => {
         }),
       });
 
-      // Expecting backend to return JSON: { userId: "...", message: "..." }
-      const result = await response.json();
-      if (result.userId && result.message) {
-        setSuccessMsg("Successfully registered to RoadReach app! Your User ID is: ${result.userId}. Please check your email.");
-      } else if (result.message) {
-        setSuccessMsg(result.message);
-      } else {
-        setSuccessMsg("Registration completed. Please check your email.");
-      }
-      setMainError("");
-      // Optionally navigate to login after a delay
-      // setTimeout(() => navigate("/login"), 5000);
-    } catch {
-      setSuccessMsg("Error connecting to server");
-    }
+        const result = await response.text();
+        alert(result);
+
+        if (result.includes("successfully")) {
+            navigate("/login");
+        }
+        } catch (error) {
+            alert("Error connecting to server");
+        }
   };
 
 
