@@ -12,7 +12,7 @@ import Profile from "./components/profile";
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <div className='app-layout'>
+      <div>
       <Header />
       
       <main className="main-content">

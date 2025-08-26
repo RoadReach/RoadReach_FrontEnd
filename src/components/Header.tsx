@@ -55,7 +55,7 @@ const Header: React.FC = () => {
             <div style={{ position: "relative", display: "inline-block" }}>
               <span
                 style={{ color: "#004B8D", fontWeight: 500, cursor: "pointer" }}
-                onClick={() => navigate("/dashboard")}
+                onClick={() => setShowDropdown((prev) => !prev)}
               >
                 👤 {firstName}
               </span>

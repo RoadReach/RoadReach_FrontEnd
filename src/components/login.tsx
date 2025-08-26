@@ -63,8 +63,11 @@ const Login: React.FC = () => {
       });
       const data = await response.json();
       if (response.ok && data.success) {
-        console.log("Hi there", data.firstname);
-        localStorage.setItem("firstname", data.firstname); // Save firstname
+        console.log("Hi there", data);
+        localStorage.setItem("firstname", data.firstname);
+        localStorage.setItem("lastname", data.lastname);
+        localStorage.setItem("email", data.email);
+        localStorage.setItem("userid", data.userid);
         navigate("/dashboard");
       } else {
         // Invalid credentials

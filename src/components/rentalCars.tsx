@@ -20,7 +20,7 @@ const RentalCars: React.FC = () => {
       style={{
         background: "#337ab7",
         minHeight: "50vh",
-         maxWidth: 1200,
+        width: "100%",
         paddingTop: "40px",
       }}
     >

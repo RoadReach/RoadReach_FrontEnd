@@ -1,5 +1,5 @@
 #root {
-  max-width: 1280px;
+  width: 100%;
   margin: 0 auto;
   text-align: center;
 }
@@ -52,11 +52,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 120px; /* offset for fixed header */
-}
-
-.app-layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+  width: 100%;
+  margin-top: 100px;
 }
