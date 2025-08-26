@@ -1,37 +1,45 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import RoadReachLogo from "../assets/RoadReach_Logo_cropped.png";
 import { HelpCircle } from 'lucide-react';
-
 import CountryDropdown from './countryDropdown';
 
 const Header: React.FC = () => {
+  const navigate = useNavigate();
+  const firstName = localStorage.getItem("firstname");
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("firstname");
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
-// ...existing code...
-<header
-  style={{
-    fontFamily: "Arial, sans-serif",
-    borderBottom: "1px solid #ccc",
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    background: "#fff",
-    zIndex: 1000,
-  }}
->
+    <header
+      style={{
+        fontFamily: "Arial, sans-serif",
+        borderBottom: "1px solid #ccc",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        background: "#fff",
+        zIndex: 1000,
+      }}
+    >
       {/* Top bar */}
       <div style={styles.topBar}>
         <div style={styles.topLeft}> {/* Logo */}
-          
+
             <img src={RoadReachLogo} width={100} height={50} alt="RoadReach Logo" />
-          
+
         </div>
         <div style={styles.topRight}>
           <Link to="/" style={styles.topLink}>
             RoadReach.com
           </Link>
-          
+
           <span style={styles.separator}>|</span>
           <a href="#" style={styles.topLink}>Membership</a>
           <span style={styles.separator}>|</span>
@@ -42,10 +50,53 @@ const Header: React.FC = () => {
           </span>
           <span style={styles.separator}>|</span>
            <CountryDropdown />
-          <span style={styles.separator}>|</span>         
-          <Link to="/login" style={styles.login}>
-            <span style={{ fontSize: 18 }}>👤</span> Login
-          </Link>
+          <span style={styles.separator}>|</span>
+          {firstName ? (
+            <div style={{ position: "relative", display: "inline-block" }}>
+              <span
+                style={{ color: "#004B8D", fontWeight: 500, cursor: "pointer" }}
+                onClick={() => setShowDropdown((prev) => !prev)}
+              >
+                👤 {firstName}
+              </span>
+              {showDropdown && (
+                <div className="profile-dropdown">
+                  <Link
+                    to="/profile"
+                    style={{
+                      display: "block",
+                      color: "#005DA6",
+                      textDecoration: "none",
+                      fontSize: "13px",
+                      padding: "8px 12px",
+                    }}
+                    onClick={() => setShowDropdown(false)}
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    style={{
+                      width: "100%",
+                      background: "none",
+                      border: "none",
+                      color: "#005DA6",
+                      cursor: "pointer",
+                      fontSize: "13px",
+                      padding: "8px 12px",
+                      textAlign: "center",
+                    }}
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link to="/login" style={styles.login}>
+              <span style={{ fontSize: 18 }}>👤</span> Login
+            </Link>
+          )}
         </div>
       </div>
 
@@ -58,12 +109,12 @@ const Header: React.FC = () => {
           <a href="#" style={styles.navLink}>DESTINATIONS</a>
           <a href="#" style={styles.navLink}>BUILD YOUR OWN TRIP</a>
           <a href="#" style={styles.navLink}>CRUISES</a>
-          <a href="#" style={styles.navLink}>RENTAL CARS</a>
+          <Link to="/rental-cars" style={styles.navLink}>RENTAL CARS</Link>
           <a href="#" style={styles.navLink}>THEME PARKS & SPECIALTY</a>
         </nav>
       </div>
     </header>
-    
+
   );
 };
 
@@ -110,7 +161,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: "center",
     paddingTop: "10px",
     paddingBottom: "10px",
-    paddingLeft: "520px",
+    paddingLeft: "720px",
     //paddingRight: "220px",
     backgroundColor: "#fff",
   },

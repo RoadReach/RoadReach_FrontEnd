@@ -1,7 +1,6 @@
 #root {
-  max-width: 1280px;
+  width: 100%;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
@@ -43,7 +42,6 @@
 
 .footer {
   text-align: center;
-  padding: 10px;
   background: #f9f9f9;
   width: 100%;
 }
@@ -54,11 +52,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 120px; /* offset for fixed header */
+  width: 100%;
+  margin-top: 100px;
 }
 
-.app-layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  min-width: 120px;
+  z-index: 10;
+  padding: 4px 0;
 }
