@@ -9,7 +9,7 @@ interface LoginFormData {
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState<LoginFormData>({
-    email: "",
+    email: localStorage.getItem("email") || "",
     password: "",
     keepSignedIn: false,
   });

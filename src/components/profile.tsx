@@ -4,6 +4,40 @@ const Profile: React.FC = () => {
   const firstName = localStorage.getItem("firstname") || "";
   const lastName = localStorage.getItem("lastname") || "";
   const email = localStorage.getItem("email") || "";
+  // (already declared above, remove duplicate)
+
+  // Email editing state
+  const [isEditingEmail, setIsEditingEmail] = useState(false);
+  const [editedEmail, setEditedEmail] = useState(email);
+  const [emailError, setEmailError] = useState("");
+  const [emailSuccess, setEmailSuccess] = useState("");
+
+  // Email update handler
+  const handleSaveEmail = async () => {
+    setEmailError("");
+    setEmailSuccess("");
+    if (!editedEmail || !/^\S+@\S+\.\S+$/.test(editedEmail)) {
+      setEmailError("Please enter a valid email address.");
+      return;
+    }
+    try {
+      const response = await fetch("http://localhost:8080/api/users/updateEmail", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userid, email: editedEmail, firstname: firstName, lastname: lastName })
+      });
+      if (response.ok) {
+        localStorage.setItem("email", editedEmail);
+        //setEmailSuccess("Email updated successfully.");
+        setIsEditingEmail(false);
+        alert("Email updated successfully.");
+      } else {
+        setEmailError("Failed to update email. Please try again.");
+      }
+    } catch (err) {
+      setEmailError("Server error. Please try again later.");
+    }
+  };
   const userid = localStorage.getItem("userid") || "";
 
   const [form, setForm] = useState({
@@ -322,26 +356,39 @@ const Profile: React.FC = () => {
           minHeight: 60,
           flex: 1,
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center"
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "flex-start"
         }}>
-          <div>
-            <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>Email:</div>
-            <div style={{ fontSize: 18 }}>{email}</div>
-          </div>
-          <button
-            style={{
-              background: "none",
-              color: "#337ab7",
-              border: "none",
-              fontSize: "18px",
-              fontWeight: 500,
-              cursor: "pointer"
-            }}
-            // Add edit email logic if needed
-          >
-            Edit
-          </button>
+          <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>Email:</div>
+          {isEditingEmail ? (
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <input
+                type="email"
+                value={editedEmail}
+                onChange={e => setEditedEmail(e.target.value)}
+                style={inputStyle}
+              />
+              <button
+                style={{ background: "#337ab7", color: "#fff", border: "none", borderRadius: 4, padding: "8px 16px", cursor: "pointer", fontWeight: 500 }}
+                onClick={handleSaveEmail}
+              >Save</button>
+              <button
+                style={{ background: "#eee", color: "#337ab7", border: "none", borderRadius: 4, padding: "8px 16px", cursor: "pointer", fontWeight: 500 }}
+                onClick={() => { setIsEditingEmail(false); setEditedEmail(email); setEmailError(""); setEmailSuccess(""); }}
+              >Cancel</button>
+            </div>
+          ) : (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+              <span style={{ fontSize: 18 }}>{email}</span>
+              <button
+                style={{ background: "none", color: "#337ab7", border: "1px solid #337ab7", borderRadius: 4, padding: "6px 18px", fontSize: "18px", fontWeight: 500, cursor: "pointer" }}
+                onClick={() => setIsEditingEmail(true)}
+              >Edit</button>
+            </div>
+          )}
+          {emailError && <div style={{ color: "red", marginTop: 8 }}>{emailError}</div>}
+          {emailSuccess && <div style={{ color: "green", marginTop: 8 }}>{emailSuccess}</div>}
         </div>
         {/* Password Card */}
         <div style={{
