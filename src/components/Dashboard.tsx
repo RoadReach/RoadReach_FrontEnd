@@ -3,7 +3,6 @@ import Header from "./Header";
 
 const Dashboard: React.FC = () => {
   const firstName = localStorage.getItem("firstname") || "User";
-  console.log("firstName", firstName);
 
   return (
     <div>
