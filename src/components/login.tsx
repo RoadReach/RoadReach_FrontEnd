@@ -29,11 +29,12 @@ const Login: React.FC = () => {
     if (name === "email" && value) {
       setFieldErrors((prev) => ({ ...prev, email: false }));
     }
-    if (name === "password" && value) {
-      setPasswordError("");
-      setFieldErrors((prev) => ({ ...prev, password: false }));
-    }
-  };
+      if (name === "password") {
+        setPasswordError("");
+        setPasswordError("");
+        setFieldErrors((prev) => ({ ...prev, password: false }));
+      }
+    };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,6 +50,13 @@ const Login: React.FC = () => {
     if (errors.password) {
       setPasswordError("Password is required.");
       return;
+    }
+    // Password regex validation on submit
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+    if (!passwordRegex.test(formData.password)) {
+  setPasswordError("Invalid email or password.");
+  setFieldErrors((prev) => ({ ...prev, password: true }));
+  return;
     }
 
     // Check credentials with backend
@@ -119,8 +127,14 @@ const Login: React.FC = () => {
               onChange={handleChange}
               style={{
                 ...styles.floatingInput,
-                border: fieldErrors.password ? "2px solid #D84343" : "1px solid #222",
-                color: fieldErrors.password ? "#D84343" : "#222",
+                border:
+                  fieldErrors.password || passwordError
+                    ? "2px solid #D84343"
+                    : "1px solid #222",
+                color:
+                  fieldErrors.password || passwordError
+                    ? "#D84343"
+                    : "#222",
               }}
               id="login-password"
               autoComplete="current-password"
@@ -132,11 +146,25 @@ const Login: React.FC = () => {
                   ? {
                       ...styles.floatingLabel,
                       ...styles.floatingLabelActive,
-                      color: fieldErrors.password ? "#D84343" : "#222",
+                      color:
+                        formData.password.length === 0
+                          ? "#222"
+                          : formData.password.length < 8
+                          ? "#D84343"
+                          : formData.password.length < 10
+                          ? "#43D843"
+                          : "#005DA6",
                     }
                   : {
                       ...styles.floatingLabel,
-                      color: fieldErrors.password ? "#D84343" : "#444",
+                      color:
+                        formData.password.length === 0
+                          ? "#444"
+                          : formData.password.length < 8
+                          ? "#D84343"
+                          : formData.password.length < 10
+                          ? "#43D843"
+                          : "#444",
                     }
               }
             >
@@ -156,9 +184,19 @@ const Login: React.FC = () => {
               <span role="img" aria-label="Show password">👁️</span>
             </button>
           </div>
-          {passwordError && (
-            <div style={{ color: "#D84343", fontWeight: 600, margin: "6px 0 0 2px", fontSize: "22px" }}>
-              {fieldErrors.email ? "Email is required." : passwordError}
+          {/* Password error feedback only */}
+          {(fieldErrors.email || passwordError) && (
+            <div
+              style={{
+                color: "#D84343",
+                fontWeight: 600,
+                margin: "6px 0 0 2px",
+                fontSize: "18px"
+              }}
+            >
+              {fieldErrors.email
+                ? "Email is required."
+                : passwordError}
             </div>
           )}
 

@@ -121,7 +121,7 @@ const Profile: React.FC = () => {
         display: "flex",
         gap: "24px"
       }}>
-        
+
         {/* Personal Info Card */}
         <div
           style={{
