@@ -27,8 +27,8 @@ const Profile: React.FC = () => {
       const response = await fetch(`http://localhost:8080/api/users/profile/${userid}`);
       if (response.ok) {
         const data = await response.json();
-        console.log("Address Form Data:", data);
         if (data) {
+            console.log("User data found, populating form.");
           setUserExists(true);
           setForm({
             phonenumber: data.phonenumber || "",
@@ -41,6 +41,7 @@ const Profile: React.FC = () => {
           });
         } else {
           setUserExists(false);
+          console.log("No user data found, resetting form.");
           setForm({
             phonenumber: "",
             address1: "",
@@ -70,15 +71,16 @@ const Profile: React.FC = () => {
     e.preventDefault();
     setEditingAddress(false);
 
-    // Get user info from localStorage
     const userid = localStorage.getItem("userid") || "";
     const firstname = localStorage.getItem("firstname") || "";
     const lastname = localStorage.getItem("lastname") || "";
     const email = localStorage.getItem("email") || "";
 
-    // Send address and phone number to backend
+    // Use POST for insert, PUT for update
+    const method = userExists ? "PUT" : "POST";
+
     const response = await fetch("http://localhost:8080/api/users/userData", {
-      method: "POST", // or "PUT" if updating
+      method,
       headers: {
         "Content-Type": "application/json",
       },
@@ -97,7 +99,11 @@ const Profile: React.FC = () => {
       }),
     });
 
-    // Handle response if needed
+    if (response.ok) {
+      alert("Address updated successfully!");
+    } else {
+      alert("Failed to update address.");
+    }
   };
 
   return (
@@ -112,12 +118,13 @@ const Profile: React.FC = () => {
         fontWeight: 400,
         letterSpacing: "1px"
       }}>
-        <b>Profile</b>
+        <b>{"\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"}
+            PROFILE</b>
       </div>
       {/* Top Info Row: Name, UserID, Personal Info */}
       <div style={{
         width: "100%",
-        margin: "40px auto 0 auto",
+        margin: "5px auto 0 auto",
         display: "flex",
         gap: "24px"
       }}>
@@ -180,6 +187,19 @@ const Profile: React.FC = () => {
                       required
                     />
                   </div>
+                  <div style={{ marginBottom: 16 }}>
+                    <select
+                      name="country"
+                      value={form.country}
+                      onChange={handleChange}
+                      style={inputStyle}
+                      required
+                    >
+                        <option value="">Select Country</option>
+                      <option value="US">US</option>
+                      <option value="Canada">Canada</option>
+                    </select>
+                  </div>
                   <div style={{ marginBottom: 8 }}>
                     <input
                       type="text"
@@ -234,18 +254,7 @@ const Profile: React.FC = () => {
                       required
                     />
                   </div>
-                  <div style={{ marginBottom: 16 }}>
-                    <select
-                      name="country"
-                      value={form.country}
-                      onChange={handleChange}
-                      style={inputStyle}
-                      required
-                    >
-                      <option value="US">US</option>
-                      <option value="Canada">Canada</option>
-                    </select>
-                  </div>
+                  
                   <div style={{ display: "flex", gap: 12 }}>
                     <button
                       type="submit"
@@ -261,7 +270,7 @@ const Profile: React.FC = () => {
                         flex: 1
                       }}
                     >
-                      Save
+                      UPDATE
                     </button>
                     <button
                       type="button"
@@ -343,6 +352,38 @@ const Profile: React.FC = () => {
             Edit
           </button>
         </div>
+
+        {/* Phone Number Card */}
+        <div style={{
+          background: "#fff",
+          borderRadius: 6,
+          boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+          padding: "16px 32px",
+          minHeight: 60,
+          flex: 1,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}>
+          <div>
+            <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>Phone Number:</div>
+            <div style={{ fontSize: 18 }}>{form.phonenumber}</div>
+          </div>
+          <button
+            style={{
+              background: "none",
+              color: "#337ab7",
+              border: "none",
+              fontSize: "18px",
+              fontWeight: 500,
+              cursor: "pointer"
+            }}
+            // Add edit phone logic if needed
+          >
+            Edit
+          </button>
+        </div>
+
         {/* Password Card */}
         <div style={{
           background: "#fff",
@@ -373,6 +414,44 @@ const Profile: React.FC = () => {
             Edit
           </button>
         </div>
+      </div>
+      {/* Delete Account Button */}
+      <div style={{
+        width: "74%",
+        margin: "24px auto 0 auto",
+        display: "flex",
+        justifyContent: "center"
+      }}>
+        <button
+          style={{
+            background: "#d32f2f",
+            color: "#fff",
+            border: "none",
+            borderRadius: "6px",
+            fontSize: "18px",
+            fontWeight: 500,
+            cursor: "pointer",
+            padding: "10px 32px",
+            marginTop: "8px"
+          }}
+          onClick={async () => {
+            if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+              const userid = localStorage.getItem("userid") || "";
+              const response = await fetch(`http://localhost:8080/api/users/profile/${userid}`, {
+                method: "DELETE",
+              });
+              if (response.ok) {
+                alert("Your account has been deleted.");
+                localStorage.clear();
+                window.location.href = "/"; // Redirect to home page
+              } else {
+                alert("Failed to delete account. Please try again.");
+              }
+            }
+          }}
+        >
+          Delete Account
+        </button>
       </div>
     </div>
   );

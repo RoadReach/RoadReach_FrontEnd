@@ -20,7 +20,9 @@ const CountryDropdown: React.FC = () => {
     <select>
       <option value="">Select a country</option>
       {countries.map(country => (
-        <option key={country} value={country}>{country}</option>
+        <option key={country} value={country}>
+          {country === "US" ? "USA" : country === "CA" ? "CANADA" : country}
+        </option>
       ))}
     </select>
   );

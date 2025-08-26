@@ -174,7 +174,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: "center",
     paddingTop: "10px",
     paddingBottom: "10px",
-    paddingLeft: "520px",
+    paddingLeft: "510px",
     //paddingRight: "220px",
     backgroundColor: "#fff",
   },
