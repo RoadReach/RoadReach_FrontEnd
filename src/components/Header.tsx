@@ -55,25 +55,12 @@ const Header: React.FC = () => {
             <div style={{ position: "relative", display: "inline-block" }}>
               <span
                 style={{ color: "#004B8D", fontWeight: 500, cursor: "pointer" }}
-                onClick={() => navigate("/dashboard")}
+                onClick={() => setShowDropdown((prev) => !prev)}
               >
                 👤 {firstName}
               </span>
               {showDropdown && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "100%",
-                    left: 0,
-                    background: "#fff",
-                    border: "1px solid #ccc",
-                    borderRadius: "4px",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                    minWidth: "120px",
-                    zIndex: 10,
-                    padding: "4px 0",
-                  }}
-                >
+                <div className="profile-dropdown">
                   <Link
                     to="/profile"
                     style={{

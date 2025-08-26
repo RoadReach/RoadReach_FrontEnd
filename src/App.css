@@ -60,3 +60,16 @@
   flex-direction: column;
   min-height: 100vh;
 }
+
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  min-width: 120px;
+  z-index: 10;
+  padding: 4px 0;
+}

@@ -69,6 +69,7 @@ const FloatingInput = ({
 const CreateAccount: React.FC = () => {
   const navigate = useNavigate();
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [showToast, setShowToast] = useState(false);
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -173,15 +174,24 @@ const CreateAccount: React.FC = () => {
         }),
       });
 
-        const result = await response.text();
-        alert(result);
-
-        if (result.includes("successfully")) {
-            navigate("/login");
-        }
-        } catch (error) {
-            alert("Error connecting to server");
-        }
+      const result = await response.text();
+      if (result.includes("successfully")) {
+        setSuccessMsg(result);
+        setShowToast(true);
+        setTimeout(() => {
+          setShowToast(false);
+          navigate("/login");
+        }, 3000);
+      } else {
+        setSuccessMsg(result);
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+      }
+    } catch (error) {
+      setSuccessMsg("Error connecting to server");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
+    }
   };
 
 
@@ -189,86 +199,100 @@ const CreateAccount: React.FC = () => {
     <div style={styles.pageWrapper}>
       <div style={styles.card}>
         <h2 style={styles.heading}>Create Account</h2>
-        {successMsg ? (
-          <div style={{ color: "#005DA6", fontWeight: 600, margin: "20px 0", fontSize: "16px", textAlign: "center" }}>
+        {/* Toast message */}
+        {showToast && (
+          <div style={{
+            position: "fixed",
+            top: "30px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            background: "#005DA6",
+            color: "#fff",
+            padding: "16px 32px",
+            borderRadius: "8px",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+            fontWeight: 600,
+            fontSize: "18px",
+            zIndex: 9999,
+            textAlign: "center"
+          }}>
             {successMsg}
           </div>
-        ) : (
-          <form onSubmit={handleSubmit}>
-            {/* First Name */}
-            <FloatingInput
-              label="First Name"
-              name="firstName"
-              value={form.firstName}
-              onChange={handleChange}
-              hasError={fieldErrors.firstName}
-            />
-            {/* Last Name */}
-            <FloatingInput
-              label="Last Name"
-              name="lastName"
-              value={form.lastName}
-              onChange={handleChange}
-              hasError={fieldErrors.lastName}
-            />
-            {/* Email Address */}
-            <FloatingInput
-              label="Email Address"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              type="email"
-              hasError={emailError || fieldErrors.email}
-            />
-            {/* Password */}
-            <FloatingInput
-              label="Password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              type="password"
-              hasError={fieldErrors.password}
-            />
-            {/* Confirm Password */}
-            <FloatingInput
-              label="Confirm Password"
-              name="confirmPassword"
-              value={form.confirmPassword}
-              onChange={handleChange}
-              type="password"
-              hasError={confirmPasswordError}
-            />
-            {/* Error Message */}
-            {mainError && (
-              <div style={{ color: "#D84343", fontWeight: 600, margin: "6px 0 0 2px", fontSize: "22px" }}>
-                {mainError}
-              </div>
-            )}
-            {/* Receive Emails */}
-            <div style={{ margin: "15px 0" }}>
-              <input
-                type="checkbox"
-                name="receiveEmails"
-                checked={form.receiveEmails}
-                onChange={handleChange}
-              />
-              <span style={{ marginLeft: "8px", fontSize: "14px" }}>
-                Yes, I would like to receive emails about special promotions and new
-                product information.
-              </span>
-            </div>
-            <div style={{ fontSize: "14px", marginBottom: "10px" }}>
-              By creating an account you agree to RoadReach.com{" "}
-              <a href="#" style={{ color: "#005DA6" }}>
-                terms and conditions
-              </a>{" "}
-              of use.
-            </div>
-            <button type="submit" style={styles.createBtn}>
-              Create Account
-            </button>
-          </form>
         )}
+        <form onSubmit={handleSubmit}>
+          {/* First Name */}
+          <FloatingInput
+            label="First Name"
+            name="firstName"
+            value={form.firstName}
+            onChange={handleChange}
+            hasError={fieldErrors.firstName}
+          />
+          {/* Last Name */}
+          <FloatingInput
+            label="Last Name"
+            name="lastName"
+            value={form.lastName}
+            onChange={handleChange}
+            hasError={fieldErrors.lastName}
+          />
+          {/* Email Address */}
+          <FloatingInput
+            label="Email Address"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+            type="email"
+            hasError={emailError || fieldErrors.email}
+          />
+          {/* Password */}
+          <FloatingInput
+            label="Password"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+            type="password"
+            hasError={fieldErrors.password}
+          />
+          {/* Confirm Password */}
+          <FloatingInput
+            label="Confirm Password"
+            name="confirmPassword"
+            value={form.confirmPassword}
+            onChange={handleChange}
+            type="password"
+            hasError={confirmPasswordError}
+          />
+          {/* Error Message */}
+          {mainError && (
+            <div style={{ color: "#D84343", fontWeight: 600, margin: "6px 0 0 2px", fontSize: "22px" }}>
+              {mainError}
+            </div>
+          )}
+          {/* Receive Emails */}
+          <div style={{ margin: "15px 0" }}>
+            <input
+              type="checkbox"
+              name="receiveEmails"
+              checked={form.receiveEmails}
+              onChange={handleChange}
+            />
+            <span style={{ marginLeft: "8px", fontSize: "14px" }}>
+              Yes, I would like to receive emails about special promotions and new
+              product information.
+            </span>
+          </div>
+          <div style={{ fontSize: "14px", marginBottom: "10px" }}>
+            By creating an account you agree to RoadReach.com{" "}
+            <a href="#" style={{ color: "#005DA6" }}>
+              terms and conditions
+            </a>{" "}
+            of use.
+          </div>
+          <button type="submit" style={styles.createBtn}>
+            Create Account
+          </button>
+        </form>
         <div
           style={{
             marginTop: "20px",
