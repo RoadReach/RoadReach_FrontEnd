@@ -4,13 +4,17 @@ const Profile: React.FC = () => {
   const firstName = localStorage.getItem("firstname") || "";
   const lastName = localStorage.getItem("lastname") || "";
   const email = localStorage.getItem("email") || "";
-  // (already declared above, remove duplicate)
+  const userid = localStorage.getItem("userid") || "";
 
   // Email editing state
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const [editedEmail, setEditedEmail] = useState(email);
   const [emailError, setEmailError] = useState("");
   const [emailSuccess, setEmailSuccess] = useState("");
+
+  // Phone number editing state
+  const [isEditingPhone, setIsEditingPhone] = useState(false);
+  const [editedPhone, setEditedPhone] = useState("");
 
   // Email update handler
   const handleSaveEmail = async () => {
@@ -38,7 +42,6 @@ const Profile: React.FC = () => {
       setEmailError("Server error. Please try again later.");
     }
   };
-  const userid = localStorage.getItem("userid") || "";
 
   const [form, setForm] = useState({
     phonenumber: "",
@@ -74,6 +77,7 @@ const Profile: React.FC = () => {
             zipcode: data.zipcode || "",
             country: data.country || "",
           });
+          setEditedPhone(data.phonenumber || "");
         } else {
           setUserExists(false);
           console.log("No user data found, resetting form.");
@@ -97,7 +101,7 @@ const Profile: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     if (name === "phonenumber") {
-      // US phone format: +1 520-482-2345
+      // US phone format: +1 123-456-7890
       const phoneRegex = /^\+1\s\d{3}-\d{3}-\d{4}$/;
       if (!phoneRegex.test(value)) {
         setPhoneError("Phone number must be in format:+1 123-456-7890");
@@ -109,6 +113,9 @@ const Profile: React.FC = () => {
       ...prev,
       [name]: value,
     }));
+    if (name === "phonenumber" && isEditingPhone) {
+      setEditedPhone(value);
+    }
   };
 
   const handleAddressSubmit = async (e: React.FormEvent) => {
@@ -429,26 +436,80 @@ const Profile: React.FC = () => {
           minHeight: 60,
           flex: 1,
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center"
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "flex-start"
         }}>
-          <div>
-            <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>Phone Number:</div>
-            <div style={{ fontSize: 18 }}>{form.phonenumber}</div>
-          </div>
-          <button
-            style={{
-              background: "none",
-              color: "#337ab7",
-              border: "none",
-              fontSize: "18px",
-              fontWeight: 500,
-              cursor: "pointer"
-            }}
-            // Add edit phone logic if needed
-          >
-            Edit
-          </button>
+          <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>Phone Number:</div>
+          {isEditingPhone ? (
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <input
+                type="text"
+                value={editedPhone}
+                onChange={e => {
+                  setEditedPhone(e.target.value);
+                  const phoneRegex = /^\+1\s\d{3}-\d{3}-\d{4}$/;
+                  if (!phoneRegex.test(e.target.value)) {
+                    setPhoneError("Phone number must be in format: +1 123-456-7890");
+                  } else {
+                    setPhoneError("");
+                  }
+                }}
+                placeholder="Phone Number (+1 123-456-7890)"
+                style={inputStyle}
+              />
+              <button
+                style={{ background: "#337ab7", color: "#fff", border: "none", borderRadius: 4, padding: "8px 16px", cursor: "pointer", fontWeight: 500 }}
+                onClick={async () => {
+                  if (!editedPhone) {
+                    setPhoneError("Phone number is required and must be in format: +1 123-456-7890");
+                    return;
+                  }
+                  const phoneRegex = /^\+1\s\d{3}-\d{3}-\d{4}$/;
+                  if (!phoneRegex.test(editedPhone)) {
+                    setPhoneError("Phone number must be in format: +1 123-456-7890");
+                    return;
+                  }
+                  setPhoneError("");
+                  // Save phone number in address (backend update)
+                  const response = await fetch("http://localhost:8080/api/users/userData", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      userid,
+                      phonenumber: editedPhone,
+                      address1: form.address1,
+                      address2: form.address2,
+                      city: form.city,
+                      state: form.state,
+                      zipcode: form.zipcode,
+                      country: form.country,
+                    })
+                  });
+                  if (response.ok) {
+                    setForm(prev => ({ ...prev, phonenumber: editedPhone }));
+                    setIsEditingPhone(false);
+                    alert("Phone number updated successfully.");
+                  } else {
+                    setPhoneError("Failed to update phone number. Please try again.");
+                  }
+                }}
+              >Save</button>
+              <button
+                style={{ background: "#eee", color: "#337ab7", border: "none", borderRadius: 4, padding: "8px 16px", cursor: "pointer", fontWeight: 500 }}
+                onClick={() => { setIsEditingPhone(false); setEditedPhone(form.phonenumber); setPhoneError(""); }}
+              >Cancel</button>
+            </div>
+          ) : (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+              <span style={{ fontSize: 18 }}>{form.phonenumber}</span>
+              <button
+                style={{ background: "none", color: "#337ab7", border: "1px solid #337ab7", borderRadius: 4, padding: "6px 18px", fontSize: "18px", fontWeight: 500, cursor: "pointer" }}
+                onClick={() => { setIsEditingPhone(true); setEditedPhone(form.phonenumber); }}
+              >Edit</button>
+            </div>
+          )}
+          {phoneError && <div style={{ color: "red", marginTop: 8 }}>{phoneError}</div>}
         </div>
 
         {/* Password Card */}
