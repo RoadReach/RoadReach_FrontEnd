@@ -49,6 +49,7 @@ const Profile: React.FC = () => {
     zipcode: "",
     country: "",
   });
+  const [phoneError, setPhoneError] = useState("");
 
   const [editingAddress, setEditingAddress] = useState(false);
   const [userExists, setUserExists] = useState(false);
@@ -95,6 +96,15 @@ const Profile: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    if (name === "phonenumber") {
+      // US phone format: +1 520-482-2345
+      const phoneRegex = /^\+1\s\d{3}-\d{3}-\d{4}$/;
+      if (!phoneRegex.test(value)) {
+        setPhoneError("Phone number must be in format:+1 123-456-7890");
+      } else {
+        setPhoneError("");
+      }
+    }
     setForm((prev) => ({
       ...prev,
       [name]: value,
@@ -103,6 +113,13 @@ const Profile: React.FC = () => {
 
   const handleAddressSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!form.phonenumber) {
+      setPhoneError("Phone number is required and must be in format:+1 ***-***-****");
+      return;
+    }
+    if (phoneError) {
+      return;
+    }
     setEditingAddress(false);
 
     const userid = localStorage.getItem("userid") || "";
@@ -216,10 +233,13 @@ const Profile: React.FC = () => {
                       name="phonenumber"
                       value={form.phonenumber}
                       onChange={handleChange}
-                      placeholder="Phone Number"
+                      placeholder="Phone Number (+1 ***-***-****)"
                       style={inputStyle}
                       required
                     />
+                    {phoneError && (
+                      <div style={{ color: "red", marginTop: 4 }}>{phoneError}</div>
+                    )}
                   </div>
                   <div style={{ marginBottom: 16 }}>
                     <select
@@ -288,7 +308,7 @@ const Profile: React.FC = () => {
                       required
                     />
                   </div>
-                  
+
                   <div style={{ display: "flex", gap: 12 }}>
                     <button
                       type="submit"
