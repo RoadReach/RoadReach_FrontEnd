@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface LoginFormData {
   email: string;
@@ -44,21 +46,23 @@ const Login: React.FC = () => {
     };
     setFieldErrors(errors);
     if (errors.email) {
+      toast.error("Email is required.");
       setPasswordError("");
       return;
     }
     if (errors.password) {
+      toast.error("Password is required.");
       setPasswordError("Password is required.");
       return;
     }
     // Password regex validation on submit
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
     if (!passwordRegex.test(formData.password)) {
-  setPasswordError("Invalid email or password.");
-  setFieldErrors((prev) => ({ ...prev, password: true }));
-  return;
+      toast.error("Invalid email or password.");
+      setPasswordError("Invalid email or password.");
+      setFieldErrors((prev) => ({ ...prev, password: true }));
+      return;
     }
-
     // Check credentials with backend
     try {
       const response = await fetch("http://localhost:8080/api/users/login", {
@@ -71,17 +75,20 @@ const Login: React.FC = () => {
       });
       const data = await response.json();
       if (response.ok && data.success) {
-        console.log("Hi there", data);
         localStorage.setItem("firstname", data.firstname);
         localStorage.setItem("lastname", data.lastname);
         localStorage.setItem("email", data.email);
         localStorage.setItem("userid", data.userid);
-        navigate("/dashboard");
+        toast.success("Login successful!");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1500);
       } else {
-        // Invalid credentials
+        toast.error("Invalid email or password.");
         setPasswordError("Invalid email or password.");
       }
     } catch (error) {
+      toast.error("Server error. Please try again.");
       setPasswordError("Server error. Please try again.");
     }
   };
@@ -90,6 +97,7 @@ const Login: React.FC = () => {
     <div style={styles.pageWrapper}>
       <div style={styles.card}>
         <h2 style={styles.heading}>Sign In</h2>
+        <ToastContainer position="top-right" autoClose={3000} />
         <form onSubmit={handleSubmit}>
           {/* Email */}
           <div style={styles.floatingGroup}>
@@ -146,14 +154,6 @@ const Login: React.FC = () => {
                   ? {
                       ...styles.floatingLabel,
                       ...styles.floatingLabelActive,
-                      color:
-                        formData.password.length === 0
-                          ? "#222"
-                          : formData.password.length < 8
-                          ? "#D84343"
-                          : formData.password.length < 10
-                          ? "#43D843"
-                          : "#005DA6",
                     }
                   : {
                       ...styles.floatingLabel,

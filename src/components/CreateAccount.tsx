@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const FloatingInput = ({
   label,
@@ -69,8 +71,6 @@ const FloatingInput = ({
 const CreateAccount: React.FC = () => {
   const [passwordStrength, setPasswordStrength] = useState("");
   const navigate = useNavigate();
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
-  const [showToast, setShowToast] = useState(false);
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -137,8 +137,6 @@ const CreateAccount: React.FC = () => {
     }
   };
 
-  // const navigate = useNavigate();
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const errors = {
@@ -189,24 +187,17 @@ const CreateAccount: React.FC = () => {
           lastName: form.lastName,
         }),
       });
-
       const result = await response.text();
       if (result.includes("successfully")) {
-        setSuccessMsg(result);
-        setShowToast(true);
+        toast.success(result);
         setTimeout(() => {
-          setShowToast(false);
           navigate("/login");
         }, 3000);
       } else {
-        setSuccessMsg(result);
-        setShowToast(true);
-        setTimeout(() => setShowToast(false), 3000);
+        toast.error(result);
       }
     } catch (error: unknown) {
-      setSuccessMsg("Error connecting to server");
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
+      toast.error("Error connecting to server");
     }
   };
 
@@ -215,26 +206,8 @@ const CreateAccount: React.FC = () => {
     <div style={styles.pageWrapper}>
       <div style={styles.card}>
         <h2 style={styles.heading}>Create Account</h2>
-        {/* Toast message */}
-        {showToast && (
-          <div style={{
-            position: "fixed",
-            top: "30px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            background: "#005DA6",
-            color: "#fff",
-            padding: "16px 32px",
-            borderRadius: "8px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-            fontWeight: 600,
-            fontSize: "18px",
-            zIndex: 9999,
-            textAlign: "center"
-          }}>
-            {successMsg}
-          </div>
-        )}
+        {/* Toastify container */}
+        <ToastContainer position="top-right" autoClose={3000} />
         <form onSubmit={handleSubmit}>
           {/* First Name */}
           <FloatingInput

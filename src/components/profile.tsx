@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Profile: React.FC = () => {
   const firstName = localStorage.getItem("firstname") || "";
@@ -39,7 +41,7 @@ const Profile: React.FC = () => {
         localStorage.setItem("email", editedEmail);
         //setEmailSuccess("Email updated successfully.");
         setIsEditingEmail(false);
-        alert("Email updated successfully.");
+        toast.success("Email updated successfully.");
       } else {
         setEmailError("Failed to update email. Please try again.");
       }
@@ -163,17 +165,21 @@ const Profile: React.FC = () => {
     });
 
     if (response.ok) {
-      alert("Address updated successfully!");
+      toast.success("Address updated successfully!");
     } else {
-      alert("Failed to update address.");
+      toast.error("Failed to update address.");
     }
   };
 
   // Password validation function
-  function validatePassword(pw) {
+  interface ValidatePassword {
+    (pw: string): boolean;
+  }
+
+  const validatePassword: ValidatePassword = (pw) => {
     // At least 8 chars, one special char, one number
     return /^(?=.*[!@#$%^&*])(?=.*\d)[A-Za-z\d!@#$%^&*]{8,}$/.test(pw);
-  }
+  };
 
   return (
     <div style={{ background: "#f4f4f4", minHeight: "100vh" , width: "100%"}}>
@@ -429,7 +435,7 @@ const Profile: React.FC = () => {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
               <span style={{ fontSize: 18 }}>{email}</span>
               <button
-                style={{ background: "none", color: "#337ab7", padding: "6px 18px", fontSize: "18px", fontWeight: 500, cursor: "pointer",position: "absolute",right:"65%",bottom:"36%" }}
+                style={{ background: "none", color: "#337ab7", padding: "6px 18px", fontSize: "18px", fontWeight: 500, cursor: "pointer",position: "absolute",right:"65%",bottom:"32%" }}
                 onClick={() => setIsEditingEmail(true)}
               >Edit</button>
             </div>
@@ -500,7 +506,7 @@ const Profile: React.FC = () => {
                   if (response.ok) {
                     setForm(prev => ({ ...prev, phonenumber: editedPhone }));
                     setIsEditingPhone(false);
-                    alert("Phone number updated successfully.");
+                    toast.success("Phone number updated successfully.");
                   } else {
                     setPhoneError("Failed to update phone number. Please try again.");
                   }
@@ -562,7 +568,7 @@ const Profile: React.FC = () => {
                   }
                   setPasswordError("");
                   // Show password in UI before sending
-                  alert(`New password to be saved: ${editedPassword}`);
+                  toast.success(`New password to be saved: ${editedPassword}`);
                   // Save password in backend
                   const response = await fetch("http://localhost:8080/api/users/updatePassword", {
                     method: "PUT",
@@ -574,7 +580,7 @@ const Profile: React.FC = () => {
                   });
                   if (response.ok) {
                     setIsEditingPassword(false);
-                    alert("Password updated successfully. You can now log in with your new password.");
+                    toast.success("Password updated successfully. You can now log in with your new password.");
                   } else {
                     setPasswordError("Failed to update password. Please try again.");
                   }
@@ -623,11 +629,11 @@ const Profile: React.FC = () => {
                 method: "DELETE",
               });
               if (response.ok) {
-                alert("Your account has been deleted.");
+                toast.success("Your account has been deleted.");
                 localStorage.clear();
                 window.location.href = "/"; // Redirect to home page
               } else {
-                alert("Failed to delete account. Please try again.");
+                toast.error("Failed to delete account. Please try again.");
               }
             }
           }}
@@ -635,6 +641,7 @@ const Profile: React.FC = () => {
           Delete Account
         </button>
       </div>
+      <ToastContainer />
     </div>
   );
 };
