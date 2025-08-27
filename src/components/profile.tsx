@@ -411,7 +411,7 @@ const Profile: React.FC = () => {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
               <span style={{ fontSize: 18 }}>{email}</span>
               <button
-                style={{ background: "none", color: "#337ab7", border: "1px solid #337ab7", borderRadius: 4, padding: "6px 18px", fontSize: "18px", fontWeight: 500, cursor: "pointer" }}
+                style={{ background: "none", color: "#337ab7", padding: "6px 18px", fontSize: "18px", fontWeight: 500, cursor: "pointer",position: "absolute",right:"65%",bottom:"36%" }}
                 onClick={() => setIsEditingEmail(true)}
               >Edit</button>
             </div>
