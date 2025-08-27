@@ -11,7 +11,7 @@ interface LoginFormData {
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState<LoginFormData>({
-    email: localStorage.getItem("email") || "",
+    email: "",
     password: "",
     keepSignedIn: false,
   });
@@ -75,6 +75,12 @@ const Login: React.FC = () => {
       });
       const data = await response.json();
       if (response.ok && data.success) {
+        // Store sign-in flag in localStorage or sessionStorage
+        if (formData.keepSignedIn) {
+          localStorage.setItem("keepSignedIn", "true");
+        } else {
+          sessionStorage.setItem("keepSignedIn", "true");
+        }
         localStorage.setItem("firstname", data.firstname);
         localStorage.setItem("lastname", data.lastname);
         localStorage.setItem("email", data.email);

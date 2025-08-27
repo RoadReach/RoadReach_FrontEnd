@@ -78,6 +78,7 @@ const CreateAccount: React.FC = () => {
     password: "",
     confirmPassword: "",
     receiveEmails: false,
+    keepSignedIn: false, // Add keepSignedIn to form state
   });
 
   const [emailError, setEmailError] = useState(false);
@@ -189,6 +190,12 @@ const CreateAccount: React.FC = () => {
       });
       const result = await response.text();
       if (result.includes("successfully")) {
+        // Store sign-in flag in localStorage or sessionStorage
+        if (form.keepSignedIn) {
+          localStorage.setItem("keepSignedIn", "true");
+        } else {
+          sessionStorage.setItem("keepSignedIn", "true");
+        }
         toast.success(result);
         setTimeout(() => {
           navigate("/login");
@@ -284,6 +291,18 @@ const CreateAccount: React.FC = () => {
             <span style={{ marginLeft: "8px", fontSize: "14px" }}>
               Yes, I would like to receive emails about special promotions and new
               product information.
+            </span>
+          </div>
+          {/* Keep me signed in */}
+          <div style={{ margin: "15px 0" }}>
+            <input
+              type="checkbox"
+              name="keepSignedIn"
+              checked={form.keepSignedIn}
+              onChange={handleChange}
+            />
+            <span style={{ marginLeft: "8px", fontSize: "14px" }}>
+              Keep me signed in
             </span>
           </div>
           <div style={{ fontSize: "14px", marginBottom: "10px" }}>
