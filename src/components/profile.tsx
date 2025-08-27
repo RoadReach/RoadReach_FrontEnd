@@ -16,6 +16,11 @@ const Profile: React.FC = () => {
   const [isEditingPhone, setIsEditingPhone] = useState(false);
   const [editedPhone, setEditedPhone] = useState("");
 
+  // Password editing state
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
+  const [editedPassword, setEditedPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
   // Email update handler
   const handleSaveEmail = async () => {
     setEmailError("");
@@ -163,6 +168,12 @@ const Profile: React.FC = () => {
       alert("Failed to update address.");
     }
   };
+
+  // Password validation function
+  function validatePassword(pw) {
+    // At least 8 chars, one special char, one number
+    return /^(?=.*[!@#$%^&*])(?=.*\d)[A-Za-z\d!@#$%^&*]{8,}$/.test(pw);
+  }
 
   return (
     <div style={{ background: "#f4f4f4", minHeight: "100vh" , width: "100%"}}>
@@ -521,26 +532,69 @@ const Profile: React.FC = () => {
           minHeight: 60,
           flex: 1,
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center"
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "flex-start"
         }}>
-          <div>
-            <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>Password:</div>
-            <div style={{ fontSize: 18 }}>**********</div>
-          </div>
-          <button
-            style={{
-              background: "none",
-              color: "#337ab7",
-              border: "none",
-              fontSize: "18px",
-              fontWeight: 500,
-              cursor: "pointer"
-            }}
-            // Add edit password logic if needed
-          >
-            Edit
-          </button>
+          <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>Password:</div>
+          {isEditingPassword ? (
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <input
+                type="text" // Show password as plain text
+                value={editedPassword}
+                onChange={e => {
+                  setEditedPassword(e.target.value);
+                  if (!validatePassword(e.target.value)) {
+                    setPasswordError("Password must be at least 8 characters, include a number and a special character.");
+                  } else {
+                    setPasswordError("");
+                  }
+                }}
+                placeholder="New Password"
+                style={inputStyle}
+              />
+              <button
+                style={{ background: "#337ab7", color: "#fff", border: "none", borderRadius: 4, padding: "8px 16px", cursor: "pointer", fontWeight: 500 }}
+                onClick={async () => {
+                  if (!validatePassword(editedPassword)) {
+                    setPasswordError("Password must be at least 8 characters, include a number and a special character.");
+                    return;
+                  }
+                  setPasswordError("");
+                  // Show password in UI before sending
+                  alert(`New password to be saved: ${editedPassword}`);
+                  // Save password in backend
+                  const response = await fetch("http://localhost:8080/api/users/updatePassword", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      userid,
+                      password: editedPassword
+                    })
+                  });
+                  if (response.ok) {
+                    setIsEditingPassword(false);
+                    alert("Password updated successfully. You can now log in with your new password.");
+                  } else {
+                    setPasswordError("Failed to update password. Please try again.");
+                  }
+                }}
+              >Save</button>
+              <button
+                style={{ background: "#eee", color: "#337ab7", border: "none", borderRadius: 4, padding: "8px 16px", cursor: "pointer", fontWeight: 500 }}
+                onClick={() => { setIsEditingPassword(false); setEditedPassword(""); setPasswordError(""); }}
+              >Cancel</button>
+            </div>
+          ) : (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+              <span style={{ fontSize: 18 }}>**********</span>
+              <button
+                style={{ background: "none", color: "#337ab7", border: "1px solid #337ab7", borderRadius: 4, padding: "6px 18px", fontSize: "18px", fontWeight: 500, cursor: "pointer" }}
+                onClick={() => { setIsEditingPassword(true); setEditedPassword(""); }}
+              >Edit</button>
+            </div>
+          )}
+          {passwordError && <div style={{ color: "red", marginTop: 8 }}>{passwordError}</div>}
         </div>
       </div>
       {/* Delete Account Button */}
