@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import RoadReachLogo from "../assets/RoadReach_Logo_cropped.png";
 import { HelpCircle } from 'lucide-react';
-import CountryDropdown from './countryDropdown';
+import GeoDropdown from './GeoDropdown';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ const Header: React.FC = () => {
             📞 1-520-482-8859
           </span>
           <span style={styles.separator}>|</span>
-           <CountryDropdown />
+           <GeoDropdown showOnlyCountry={true} />
           <span style={styles.separator}>|</span>
           {firstName ? (
             <div style={{ position: "relative", display: "inline-block" }}>

@@ -64,6 +64,9 @@ const Profile: React.FC = () => {
   const [editingAddress, setEditingAddress] = useState(false);
   const [userExists, setUserExists] = useState(false);
 
+  const [states, setStates] = useState<string[]>([]);
+  const [stateError, setStateError] = useState("");
+
   // Fetch user data on mount
   useEffect(() => {
     console.log("==fetchUserData==", userid);
@@ -104,6 +107,27 @@ const Profile: React.FC = () => {
     }
     fetchUserData();
   }, [userid]);
+
+  useEffect(() => {
+    if (form.country === "US" || form.country === "CA") {
+      fetch(`http://localhost:8080/api/countries/${form.country}/states`)
+        .then((res) => {
+          if (!res.ok) throw new Error("No states found");
+          return res.json();
+        })
+        .then((data) => {
+          setStates(data);
+          setStateError("");
+        })
+        .catch(() => {
+          setStates([]);
+          setStateError("No states found");
+        });
+    } else {
+      setStates([]);
+      setStateError("");
+    }
+  }, [form.country]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -274,8 +298,8 @@ const Profile: React.FC = () => {
                       required
                     >
                         <option value="">Select Country</option>
-                      <option value="US">US</option>
-                      <option value="Canada">Canada</option>
+                      <option value="US">United States</option>
+                      <option value="CA">Canada</option>
                     </select>
                   </div>
                   <div style={{ marginBottom: 8 }}>
@@ -311,15 +335,32 @@ const Profile: React.FC = () => {
                     />
                   </div>
                   <div style={{ marginBottom: 8 }}>
-                    <input
-                      type="text"
-                      name="state"
-                      value={form.state}
-                      onChange={handleChange}
-                      placeholder="State"
-                      style={inputStyle}
-                      required
-                    />
+                    {(form.country === "US" || form.country === "CA") ? (
+                      <select
+                        name="state"
+                        value={form.state}
+                        onChange={handleChange}
+                        style={inputStyle}
+                        required
+                        disabled={!states.length}
+                      >
+                        <option value="">Select State</option>
+                        {states.map((s) => (
+                          <option key={s} value={s}>{s}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type="text"
+                        name="state"
+                        value={form.state}
+                        onChange={handleChange}
+                        placeholder="State"
+                        style={inputStyle}
+                        required
+                      />
+                    )}
+                    {stateError && <div style={{ color: "red" }}>{stateError}</div>}
                   </div>
                   <div style={{ marginBottom: 8 }}>
                     <input
@@ -435,7 +476,7 @@ const Profile: React.FC = () => {
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
               <span style={{ fontSize: 18 }}>{email}</span>
               <button
-                style={{ background: "none", color: "#337ab7", padding: "6px 18px", fontSize: "18px", fontWeight: 500, cursor: "pointer",position: "absolute",right:"65%",bottom:"32%" }}
+                style={{ background: "none", color: "#337ab7", border: "1px solid #337ab7", borderRadius: 4, padding: "6px 18px", fontSize: "18px", fontWeight: 500, cursor: "pointer" }}
                 onClick={() => setIsEditingEmail(true)}
               >Edit</button>
             </div>
