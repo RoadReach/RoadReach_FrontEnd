@@ -65,6 +65,8 @@ const Profile: React.FC = () => {
   const [userExists, setUserExists] = useState(false);
 
   const [states, setStates] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+  const [cityError, setCityError] = useState("");
   const [stateError, setStateError] = useState("");
 
   // Fetch user data on mount
@@ -109,7 +111,7 @@ const Profile: React.FC = () => {
   }, [userid]);
 
   useEffect(() => {
-    if (form.country === "US" || form.country === "CA") {
+    if (form.country) {
       fetch(`http://localhost:8080/api/countries/${form.country}/states`)
         .then((res) => {
           if (!res.ok) throw new Error("No states found");
@@ -128,6 +130,27 @@ const Profile: React.FC = () => {
       setStateError("");
     }
   }, [form.country]);
+
+  useEffect(() => {
+    if (form.country && form.state) {
+      fetch(`http://localhost:8080/api/countries/${form.country}/states/${form.state}/cities`)
+        .then((res) => {
+          if (!res.ok) throw new Error("No cities found");
+          return res.json();
+        })
+        .then((data) => {
+          setCities(data);
+          setCityError("");
+        })
+        .catch(() => {
+          setCities([]);
+          setCityError("No cities found");
+        });
+    } else {
+      setCities([]);
+      setCityError("");
+    }
+  }, [form.country, form.state]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -297,7 +320,7 @@ const Profile: React.FC = () => {
                       style={inputStyle}
                       required
                     >
-                        <option value="">Select Country</option>
+                      <option value="">Select Country</option>
                       <option value="US">United States</option>
                       <option value="CA">Canada</option>
                     </select>
@@ -324,15 +347,32 @@ const Profile: React.FC = () => {
                     />
                   </div>
                   <div style={{ marginBottom: 8 }}>
-                    <input
-                      type="text"
-                      name="city"
-                      value={form.city}
-                      onChange={handleChange}
-                      placeholder="City"
-                      style={inputStyle}
-                      required
-                    />
+                    {cities.length > 0 ? (
+                      <select
+                        name="city"
+                        value={form.city}
+                        onChange={handleChange}
+                        style={inputStyle}
+                        required
+                        disabled={!cities.length}
+                      >
+                        <option value="">Select City</option>
+                        {cities.map((c) => (
+                          <option key={c} value={c}>{c}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type="text"
+                        name="city"
+                        value={form.city}
+                        onChange={handleChange}
+                        placeholder="City"
+                        style={inputStyle}
+                        required
+                      />
+                    )}
+                    {cityError && <div style={{ color: "red" }}>{cityError}</div>}
                   </div>
                   <div style={{ marginBottom: 8 }}>
                     {(form.country === "US" || form.country === "CA") ? (

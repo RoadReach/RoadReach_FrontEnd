@@ -68,3 +68,128 @@
   z-index: 10;
   padding: 4px 0;
 }
+
+/* Rental Car Form Styles */
+.rental-form-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px;
+}
+.rental-form-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(51,122,183,0.12);
+  padding: 32px;
+}
+.rental-form-radio-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.rental-form-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+}
+.rental-form-radio-label-margin {
+  margin-left: 24px;
+}
+.rental-form-radio-input {
+  accent-color: #337ab7;
+}
+.rental-form-required {
+  margin-left: auto;
+  color: #337ab7;
+  font-size: 16px;
+}
+.rental-form-fields-row {
+  display: flex;
+  gap: 0;
+  margin-bottom: 16px;
+  align-items: flex-end;
+}
+.rental-form-field {
+  flex: 1;
+  position: relative;
+}
+.rental-form-label {
+  font-weight: 500;
+  margin-bottom: 6px;
+  display: block;
+}
+.rental-form-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 12px;
+  font-size: 18px;
+  border: 2px solid #337ab7;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+.rental-form-suggest-list {
+  position: absolute;
+  background: white;
+  border: 1px solid #337ab7;
+  border-radius: 8px;
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  z-index: 10;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.rental-form-suggest-loading {
+  padding: 8px 12px;
+  color: #337ab7;
+}
+.rental-form-suggest-none {
+  padding: 8px 12px;
+  color: #D84343;
+}
+.rental-form-suggest-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.rental-form-check-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.rental-form-checkbox {
+  accent-color: #337ab7;
+  width: 20px;
+  height: 20px;
+}
+.rental-form-check-label {
+  margin-left: 8px;
+  font-size: 18px;
+  color: #337ab7;
+  font-weight: 500;
+}
+.rental-form-driven {
+  margin-left: auto;
+  font-size: 16px;
+  color: #337ab7;
+}
+.rental-form-driven-bold {
+  font-weight: 600;
+}
+.rental-form-submit-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+.rental-form-submit-btn {
+  background: #337ab7;
+  color: #fff;
+  padding: 16px 80px;
+  border: none;
+  border-radius: 8px;
+  font-size: 22px;
+  cursor: pointer;
+  font-weight: 500;
+}
