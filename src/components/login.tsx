@@ -85,6 +85,7 @@ const Login: React.FC = () => {
         localStorage.setItem("lastname", data.lastname);
         localStorage.setItem("email", data.email);
         localStorage.setItem("userid", data.userid);
+        localStorage.setItem("password", data.password);
         toast.success("Login successful!");
         setTimeout(() => {
           navigate("/dashboard");
