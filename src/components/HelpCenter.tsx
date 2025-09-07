@@ -26,15 +26,6 @@ const voteBtnStyle: React.CSSProperties = {
   borderRadius: 6,
   fontSize: 18
 };
-const printBtnStyle: React.CSSProperties = {
-  background: "#0c5394",
-  color: "#fff",
-  border: "none",
-  padding: "10px 18px",
-  borderRadius: 6,
-  cursor: "pointer",
-  fontSize: 14
-};
 
 // REPLACE old popularAnswers (string array) with objects (id,title)
 const popularAnswers = [

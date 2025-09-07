@@ -314,7 +314,7 @@ const Profile: React.FC = () => {
               <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 4 }}>Address:</div>
               {!editingAddress ? (
                 <div style={{ fontSize: 20 }}>
-                  
+
                   {form.address1}
                   {form.address2 && <><br />{form.address2}</>}
                   <br />
@@ -371,58 +371,42 @@ const Profile: React.FC = () => {
                     />
                   </div>
                   <div style={{ marginBottom: 8 }}>
-                    {cities.length > 0 ? (
-                      <select
-                        name="city"
-                        value={form.city}
-                        onChange={handleChange}
-                        style={inputStyle}
-                        required
-                        disabled={!cities.length}
-                      >
-                        <option value="">Select City</option>
-                        {cities.map((c) => (
-                          <option key={c} value={c}>{c}</option>
+                    <input
+                      type="text"
+                      name="city"
+                      list="cityOptions"
+                      value={form.city}
+                      onChange={handleChange}
+                      placeholder={cities.length ? "City (type or choose)" : "City"}
+                      style={inputStyle}
+                      required
+                    />
+                    {cities.length > 0 && (
+                      <datalist id="cityOptions">
+                        {cities.map(c => (
+                          <option key={c} value={c} />
                         ))}
-                      </select>
-                    ) : (
-                      <input
-                        type="text"
-                        name="city"
-                        value={form.city}
-                        onChange={handleChange}
-                        placeholder="City"
-                        style={inputStyle}
-                        required
-                      />
+                      </datalist>
                     )}
                     {cityError && <div style={{ color: "red" }}>{cityError}</div>}
                   </div>
                   <div style={{ marginBottom: 8 }}>
-                    {(form.country === "US" || form.country === "CA") ? (
-                      <select
-                        name="state"
-                        value={form.state}
-                        onChange={handleChange}
-                        style={inputStyle}
-                        required
-                        disabled={!states.length}
-                      >
-                        <option value="">Select State</option>
-                        {states.map((s) => (
-                          <option key={s} value={s}>{s}</option>
+                    <input
+                      type="text"
+                      name="state"
+                      list="stateOptions"
+                      value={form.state}
+                      onChange={handleChange}
+                      placeholder={states.length ? "State / Province (type or choose)" : "State / Province"}
+                      style={inputStyle}
+                      required
+                    />
+                    {states.length > 0 && (
+                      <datalist id="stateOptions">
+                        {states.map(s => (
+                          <option key={s} value={s} />
                         ))}
-                      </select>
-                    ) : (
-                      <input
-                        type="text"
-                        name="state"
-                        value={form.state}
-                        onChange={handleChange}
-                        placeholder="State"
-                        style={inputStyle}
-                        required
-                      />
+                      </datalist>
                     )}
                     {stateError && <div style={{ color: "red" }}>{stateError}</div>}
                   </div>
@@ -701,7 +685,7 @@ const Profile: React.FC = () => {
                   style={{ background: "#337ab7", color: "#fff", border: "none", borderRadius: 4, padding: "8px 16px", cursor: "pointer", fontWeight: 500 }}
                   onClick={async () => {
                     if (oldPasswordError || !editedOldPassword) return;
-                    
+
                     if (editedPassword !== retypePassword) {
                       setPasswordError("New passwords do not match.");
                       return;
@@ -749,7 +733,7 @@ const Profile: React.FC = () => {
               >Edit</button>
             </div>
           )}
-          
+
         </div>
       </div>
       {/* Delete Account Button */}
