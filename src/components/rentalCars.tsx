@@ -320,9 +320,7 @@ const RentalCars: React.FC = () => {
             <span className="rental-form-check-label">
               Yes, I am at least 25 years old.*
             </span>
-            <span className="rental-form-driven">
-              Driven by <span className="rental-form-driven-bold">Low Price Finder™</span>
-            </span>
+            
           </div>
           <div className="rental-form-submit-row">
             <button

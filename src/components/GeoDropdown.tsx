@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 interface GeoDropdownProps {
   showOnlyCountry?: boolean;
+  onCountryChange?: () => void;
 }
 
 const API_BASE = "http://localhost:8080/api";
@@ -11,7 +12,7 @@ const countryOptions = [
   { code: "CA", name: "Canada" },
 ];
 
-const GeoDropdown: React.FC<GeoDropdownProps> = ({ showOnlyCountry }) => {
+const GeoDropdown: React.FC<GeoDropdownProps> = ({ showOnlyCountry, onCountryChange }) => {
   const [country, setCountry] = useState(() => localStorage.getItem("selectedCountry") || "");
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
@@ -74,6 +75,11 @@ const GeoDropdown: React.FC<GeoDropdownProps> = ({ showOnlyCountry }) => {
     }
   }, [country, state, showOnlyCountry]);
 
+  const handleCountrySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCountry(e.target.value);
+    if (onCountryChange) onCountryChange();
+  };
+
   return (
     <div>
       {/* Country Dropdown */}
@@ -81,7 +87,7 @@ const GeoDropdown: React.FC<GeoDropdownProps> = ({ showOnlyCountry }) => {
       <select
         id="country"
         value={country}
-        onChange={(e) => setCountry(e.target.value)}
+        onChange={handleCountrySelect}
       >
         <option value="">Select Country</option>
         {countryOptions.map((c) => (

@@ -51,7 +51,7 @@ const Header: React.FC = () => {
             📞 1-520-483-8758
           </span>
           <span style={styles.separator}>|</span>
-           <GeoDropdown showOnlyCountry={true} />
+           <GeoDropdown showOnlyCountry={true} onCountryChange={() => window.location.reload()} />
           <span style={styles.separator}>|</span>
           {firstName ? (
             <div style={{ position: "relative", display: "inline-block" }}>

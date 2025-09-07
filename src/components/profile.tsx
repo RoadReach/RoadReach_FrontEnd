@@ -21,7 +21,10 @@ const Profile: React.FC = () => {
   // Password editing state
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [editedPassword, setEditedPassword] = useState("");
+  const [editedOldPassword, setEditedOldPassword] = useState("");
+  const [retypePassword, setRetypePassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [oldPasswordError, setOldPasswordError] = useState("");
 
   // Email update handler
   const handleSaveEmail = async () => {
@@ -155,21 +158,44 @@ const Profile: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     if (name === "phonenumber") {
-      // US phone format: +1 123-456-7890
+      // Remove all non-digit characters
+      let digits = value.replace(/\D/g, "");
+
+      // If the first digit is "1", remove it (since +1 is always added)
+      if (digits.startsWith("1")) {
+        digits = digits.slice(1);
+      }
+
+      if (digits.length > 10) digits = digits.slice(0, 10); // Limit to 10 digits
+
+      // Format as +1 123-456-7890
+      let formatted = "+1 ";
+      if (digits.length > 0) formatted += digits.slice(0, 3);
+      if (digits.length > 3) formatted += "-" + digits.slice(3, 6);
+      if (digits.length > 6) formatted += "-" + digits.slice(6, 10);
+
+      setForm((prev) => ({
+        ...prev,
+        phonenumber: formatted,
+      }));
+
+      if (isEditingPhone) {
+        setEditedPhone(formatted);
+      }
+
       const phoneRegex = /^\+1\s\d{3}-\d{3}-\d{4}$/;
-      if (!phoneRegex.test(value)) {
-        setPhoneError("Phone number must be in format:+1 123-456-7890");
+      if (!phoneRegex.test(formatted)) {
+        setPhoneError("Phone number must be in format: +1 123-456-7890");
       } else {
         setPhoneError("");
       }
+      return; // Don't run the rest for phone number
     }
+
     setForm((prev) => ({
       ...prev,
       [name]: value,
     }));
-    if (name === "phonenumber" && isEditingPhone) {
-      setEditedPhone(value);
-    }
   };
 
   const handleAddressSubmit = async (e: React.FormEvent) => {
@@ -223,10 +249,10 @@ const Profile: React.FC = () => {
     (pw: string): boolean;
   }
 
-  const validatePassword: ValidatePassword = (pw) => {
-    // At least 8 chars, one special char, one number
-    return /^(?=.*[!@#$%^&*])(?=.*\d)[A-Za-z\d!@#$%^&*]{8,}$/.test(pw);
-  };
+   const validatePassword: ValidatePassword = (pw) => {
+  // At least 8 chars, one uppercase, one lowercase, one number, one special char
+  return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/.test(pw);
+};
 
   return (
     <div style={{ background: "#f4f4f4", minHeight: "100vh" , width: "100%"}}>
@@ -288,9 +314,7 @@ const Profile: React.FC = () => {
               <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 4 }}>Address:</div>
               {!editingAddress ? (
                 <div style={{ fontSize: 20 }}>
-                  <div>
-                    <span style={{ fontWeight: 600 }}>Phone:</span> {form.phonenumber}
-                  </div>
+                  
                   {form.address1}
                   {form.address2 && <><br />{form.address2}</>}
                   <br />
@@ -625,52 +649,96 @@ const Profile: React.FC = () => {
         }}>
           <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>Password:</div>
           {isEditingPassword ? (
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, width: "100%" }}>
+              {/* Old Password */}
               <input
-                type="text" // Show password as plain text
+                type="password"
+                value={editedOldPassword}
+                onChange={e => {
+                  setEditedOldPassword(e.target.value);
+                  if (e.target.value !== (localStorage.getItem("password") || "")) {
+                    setOldPasswordError("Old password does not match.");
+                  } else {
+                    setOldPasswordError("");
+                  }
+                }}
+                placeholder="Old Password"
+                style={{
+                  ...inputStyle,
+                  border: oldPasswordError ? "2px solid red" : inputStyle.border
+                }}
+              />
+              {/* New Password */}
+              <input
+                type="password"
                 value={editedPassword}
                 onChange={e => {
                   setEditedPassword(e.target.value);
                   if (!validatePassword(e.target.value)) {
-                    setPasswordError("Password must be at least 8 characters, include a number and a special character.");
+                    setPasswordError("Password must be at least 8 characters, include a number, one uppercase letter, one lowercase letter, and a special character.");
                   } else {
                     setPasswordError("");
                   }
                 }}
                 placeholder="New Password"
                 style={inputStyle}
+                disabled={!!oldPasswordError || !editedOldPassword}
               />
-              <button
-                style={{ background: "#337ab7", color: "#fff", border: "none", borderRadius: 4, padding: "8px 16px", cursor: "pointer", fontWeight: 500 }}
-                onClick={async () => {
-                  if (!validatePassword(editedPassword)) {
-                    setPasswordError("Password must be at least 8 characters, include a number and a special character.");
-                    return;
-                  }
-                  setPasswordError("");
-                  // Show password in UI before sending
-                  toast.success(`New password to be saved: ${editedPassword}`);
-                  // Save password in backend
-                  const response = await fetch("http://localhost:8080/api/users/updatePassword", {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      userid,
-                      password: editedPassword
-                    })
-                  });
-                  if (response.ok) {
-                    setIsEditingPassword(false);
-                    toast.success("Password updated successfully. You can now log in with your new password.");
-                  } else {
-                    setPasswordError("Failed to update password. Please try again.");
-                  }
+              {/* Retype New Password */}
+              <input
+                type="password"
+                value={retypePassword}
+                onChange={e => setRetypePassword(e.target.value)}
+                placeholder="Retype New Password"
+                style={{
+                  ...inputStyle,
+                  border: retypePassword && retypePassword !== editedPassword ? "2px solid red" : inputStyle.border
                 }}
-              >Save</button>
-              <button
-                style={{ background: "#eee", color: "#337ab7", border: "none", borderRadius: 4, padding: "8px 16px", cursor: "pointer", fontWeight: 500 }}
-                onClick={() => { setIsEditingPassword(false); setEditedPassword(""); setPasswordError(""); }}
-              >Cancel</button>
+                disabled={!!oldPasswordError || !editedOldPassword}
+              />
+              <div style={{ display: "flex", gap: 8 }}>
+                <button
+                  style={{ background: "#337ab7", color: "#fff", border: "none", borderRadius: 4, padding: "8px 16px", cursor: "pointer", fontWeight: 500 }}
+                  onClick={async () => {
+                    if (oldPasswordError || !editedOldPassword) return;
+                    
+                    if (editedPassword !== retypePassword) {
+                      setPasswordError("New passwords do not match.");
+                      return;
+                    }
+                    setPasswordError("");
+                    // Save password in backend
+                    const response = await fetch("http://localhost:8080/api/users/updatePassword", {
+                      method: "PUT",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        userid,
+                        password: editedPassword
+                      })
+                    });
+                    if (response.ok) {
+                      setIsEditingPassword(false);
+                      toast.success("Password updated successfully. You can now log in with your new password.");
+                      localStorage.setItem("password", editedPassword);
+                    } else {
+                      setPasswordError("Failed to update password. Please try again.");
+                    }
+                  }}
+                >Save</button>
+                <button
+                  style={{ background: "#eee", color: "#337ab7", border: "none", borderRadius: 4, padding: "8px 16px", cursor: "pointer", fontWeight: 500 }}
+                  onClick={() => {
+                    setIsEditingPassword(false);
+                    setEditedPassword("");
+                    setEditedOldPassword("");
+                    setRetypePassword("");
+                    setPasswordError("");
+                    setOldPasswordError("");
+                  }}
+                >Cancel</button>
+              </div>
+              {oldPasswordError && <div style={{ color: "red", marginTop: 4 }}>{oldPasswordError}</div>}
+              {passwordError && <div style={{ color: "red", marginTop: 4 }}>{passwordError}</div>}
             </div>
           ) : (
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
@@ -681,7 +749,7 @@ const Profile: React.FC = () => {
               >Edit</button>
             </div>
           )}
-          {passwordError && <div style={{ color: "red", marginTop: 8 }}>{passwordError}</div>}
+          
         </div>
       </div>
       {/* Delete Account Button */}
