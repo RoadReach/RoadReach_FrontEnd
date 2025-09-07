@@ -18,10 +18,8 @@ const InfoIcon = () => <span style={{fontSize: 28, color: "#1565c0"}}>ℹ️</sp
 const CarIcon = () => <span style={{fontSize: 28, color: "#1565c0"}}>🚗</span>;
 
 const popularAnswers = [
-  "Digital Costco Shop Card",
-  "Hotel (Room Only) Changes & Cancellation",
   "Rental Car Only Bookings",
-  "Costco Travel Account",
+  "RoadReach Travel Account",
   "Rental Car Only Changes & Cancellations",
 ];
 
