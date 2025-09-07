@@ -3,11 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import RoadReachLogo from "../assets/RoadReach_Logo_cropped.png";
 import { HelpCircle } from 'lucide-react';
 import GeoDropdown from './GeoDropdown';
+import HelpCenter from './HelpCenter';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const firstName = localStorage.getItem("firstname");
   const [showDropdown, setShowDropdown] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("firstname");
@@ -43,10 +45,10 @@ const Header: React.FC = () => {
           <span style={styles.separator}>|</span>
           <a href="#" style={styles.topLink}>Membership</a>
           <span style={styles.separator}>|</span>
-          <a href="#" style={styles.topLink}><HelpCircle style={{ color: "#ff0000ff" }} size={13} /> Help Center</a>
+          <a href="#" style={styles.topLink} onClick={() => setHelpOpen(true)}><HelpCircle style={{ color: "#ff0000ff" }} size={13} /> Help Center</a>
           <span style={styles.separator}>|</span>
           <span style={{ color: "#004B8D", fontWeight: 600 }}>
-            📞 1-520-482-8859
+            📞 1-520-483-8758
           </span>
           <span style={styles.separator}>|</span>
            <GeoDropdown showOnlyCountry={true} />
@@ -113,6 +115,7 @@ const Header: React.FC = () => {
           <a href="#" style={styles.navLink}>THEME PARKS & SPECIALTY</a>
         </nav>
       </div>
+      <HelpCenter open={helpOpen} onClose={() => setHelpOpen(false)} />
     </header>
 
   );
