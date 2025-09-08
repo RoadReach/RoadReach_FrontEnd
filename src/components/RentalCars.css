@@ -1,0 +1,46 @@
+/* Rental Cars Form Styles */
+.rental-form-container { display:flex; justify-content:center; padding:40px 20px; }
+.rental-form-card { background:#fff; border:1px solid #d9dde1; border-radius:12px; padding:32px 34px 36px; max-width:1180px; width:100%; box-shadow:0 4px 18px rgba(0,0,0,0.06); }
+.rental-form-card form { margin:0; }
+.rental-form-radio-row { display:flex; flex-wrap:wrap; align-items:center; gap:18px; margin-bottom:26px; }
+.rental-form-radio-label { display:flex; align-items:center; gap:8px; font-size:14px; font-weight:500; }
+.rental-form-radio-label-margin { margin-right:12px; }
+.rental-form-radio-input { width:16px; height:16px; cursor:pointer; }
+.rental-form-required { margin-left:auto; font-size:12px; color:#5a6a74; font-weight:500; }
+.rental-form-fields-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); column-gap:20px; row-gap:12px; align-items:end; margin-bottom:28px; }
+.rental-form-field { position:relative; min-width:0; }
+/* Make first field (location) span two columns when space allows */
+.rental-form-fields-row .rental-form-field:first-child { grid-column:span 2; }
+.rental-form-label { display:block; font-size:14px; font-weight:600; margin:0 0 6px; color:#0d2f45; }
+.rental-form-input { width:100%; padding:10px 5px; border:1px solid #cfd6dc; border-radius:6px; font-size:15px; outline:none; transition:border-color .18s, box-shadow .18s; background:#fff; }
+.rental-form-input:focus { border-color:#1565c0; box-shadow:0 0 0 2px rgba(21,101,192,0.15); }
+.rental-form-suggest-list { list-style:none; margin:6px 0 0; padding:6px 0; position:absolute; top:100%; left:0; right:0; background:#fff; border:1px solid #cfd6dc; border-radius:6px; max-height:260px; overflow-y:auto; box-shadow:0 6px 22px -4px rgba(0,0,0,0.18); z-index:30; }
+.rental-form-suggest-item { padding:8px 12px; cursor:pointer; display:flex; align-items:center; gap:8px; font-size:14px; }
+.rental-form-suggest-item:hover { background:#f2f6fa; }
+.rental-form-suggest-loading, .rental-form-suggest-none { padding:8px 12px; font-size:13px; color:#5d6a72; }
+.rental-form-check-row { display:flex; align-items:center; gap:12px; margin-top:4px; margin-bottom:28px; }
+.rental-form-checkbox { width:16px; height:16px; cursor:pointer; }
+.rental-form-check-label { font-size:14px; font-weight:500; }
+.rental-form-submit-row { display:flex; justify-content:flex-end; }
+.rental-form-submit-btn { background:#1565c0; color:#fff; border:none; border-radius:8px; padding:14px 26px; font-size:16px; font-weight:600; cursor:pointer; letter-spacing:.5px; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 14px -2px rgba(21,101,192,.35); transition:background .2s, transform .15s; }
+.rental-form-submit-btn:hover { background:#0d5199; }
+.rental-form-submit-btn:active { transform:translateY(1px); }
+
+/* Icon alignment inside suggestions (FontAwesome) */
+.rental-form-suggest-item svg { font-size:14px; opacity:.85; }
+
+/* Responsive tweaks */
+@media (max-width: 900px) {
+  .rental-form-card { padding:28px 26px 32px; }
+  .rental-form-fields-row { gap:16px 20px; }
+}
+/* Wide screen: keep all fields on one line while allowing dropdowns to overlay */
+@media (max-width:700px){
+  .rental-form-fields-row .rental-form-field:first-child { grid-column:span 1; }
+}
+@media (max-width: 640px) {
+  .rental-form-radio-row { flex-direction:column; align-items:flex-start; gap:10px; }
+  .rental-form-required { margin-left:0; }
+  .rental-form-submit-row { justify-content:stretch; }
+  .rental-form-submit-btn { width:100%; justify-content:center; }
+}

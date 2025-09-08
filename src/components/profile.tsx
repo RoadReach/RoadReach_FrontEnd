@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import './Profile.css';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -48,7 +49,7 @@ const Profile: React.FC = () => {
       } else {
         setEmailError("Failed to update email. Please try again.");
       }
-    } catch (err) {
+    } catch {
       setEmailError("Server error. Please try again later.");
     }
   };
@@ -255,300 +256,102 @@ const Profile: React.FC = () => {
 };
 
   return (
-    <div style={{ background: "#f4f4f4", minHeight: "100vh" , width: "100%"}}>
-      {/* Header Bar */}
-      <div style={{
-        background: "#00395d",
-        color: "#fff",
-        padding: "32px 0 24px 0",
-        textAlign: "left",
-        fontSize: "40px",
-        fontWeight: 400,
-        letterSpacing: "1px"
-      }}>
-        <b>{"\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"}
-            PROFILE</b>
-      </div>
-      {/* Top Info Row: Name, UserID, Personal Info */}
-      <div style={{
-        width: "100%",
-        margin: "5px auto 0 auto",
-        display: "flex",
-        gap: "24px"
-      }}>
-
-        {/* Personal Info Card */}
-        <div
-          style={{
-            background: "#fff",
-            borderRadius: 6,
-            boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-            padding: "32px 32px 24px 32px",
-            width: "70%",
-            margin: "40px auto 0 auto",
-            minHeight: 60,
-          }}
-        >
-          <div style={{ fontWeight: 600, fontSize: 24, marginBottom: 18, textAlign: "left" }}>Personal Information</div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: "48px",
-              position: "relative",
-              justifyContent: "center"
-            }}
-          >
-            {/* Name */}
-            <div style={{ flex: 1, textAlign: "left" }}>
-              <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 4 }}>Name:</div>
-              <div style={{ fontSize: 20 }}>{`${firstName} ${lastName}`}</div>
+    <div className="profile-page">
+      <div className="profile-hero"><h1 className="profile-hero__title">PROFILE</h1></div>
+      <div className="profile-row">
+        <div className="profile-card">
+          <div className="profile-card__title">Personal Information</div>
+          <div className="profile-flex">
+            <div className="profile-field">
+              <div className="profile-field__label">Name:</div>
+              <div className="profile-field__value">{`${firstName} ${lastName}`}</div>
             </div>
-            {/* UserID */}
-            <div style={{ flex: 1, textAlign: "center" }}>
-              <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 4 }}>UserID:</div>
-              <div style={{ fontSize: 20 }}>{userid}</div>
+            <div className="profile-field profile-field--center">
+              <div className="profile-field__label">UserID:</div>
+              <div className="profile-field__value">{userid}</div>
             </div>
-            {/* Address */}
-            <div style={{ flex: 1, textAlign: "left" }}>
-              <div style={{ fontWeight: 600, fontSize: 18, marginBottom: 4 }}>Address:</div>
+            <div className="profile-field">
+              <div className="profile-field__label">Address:</div>
               {!editingAddress ? (
-                <div style={{ fontSize: 20 }}>
-
+                <div className="profile-field__value">
                   {form.address1}
-                  {form.address2 && <><br />{form.address2}</>}
-                  <br />
+                  {form.address2 && (<><br />{form.address2}</>)}<br />
                   {form.city}, {form.state} {form.country} - {form.zipcode}
                 </div>
               ) : (
-                <form onSubmit={handleAddressSubmit}>
-                  <div style={{ marginBottom: 8 }}>
-                    <input
-                      type="text"
-                      name="phonenumber"
-                      value={form.phonenumber}
-                      onChange={handleChange}
-                      placeholder="Phone Number (+1 ***-***-****)"
-                      style={inputStyle}
-                      required
-                    />
-                    {phoneError && (
-                      <div style={{ color: "red", marginTop: 4 }}>{phoneError}</div>
-                    )}
+                <form onSubmit={handleAddressSubmit} className="profile-address-form">
+                  <div>
+                    <input className="profile-input" type="text" name="phonenumber" value={form.phonenumber} onChange={handleChange} placeholder="Phone Number (+1 ***-***-****)" required />
+                    {phoneError && <div className="profile-error">{phoneError}</div>}
                   </div>
-                  <div style={{ marginBottom: 16 }}>
-                    <select
-                      name="country"
-                      value={form.country}
-                      onChange={handleChange}
-                      style={inputStyle}
-                      required
-                    >
+                  <div>
+                    <select className="profile-input" name="country" value={form.country} onChange={handleChange} required title="Country">
                       <option value="">Select Country</option>
                       <option value="US">United States</option>
                       <option value="CA">Canada</option>
                     </select>
                   </div>
-                  <div style={{ marginBottom: 8 }}>
-                    <input
-                      type="text"
-                      name="address1"
-                      value={form.address1}
-                      onChange={handleChange}
-                      placeholder="Address 1"
-                      style={inputStyle}
-                      required
-                    />
-                  </div>
-                  <div style={{ marginBottom: 8 }}>
-                    <input
-                      type="text"
-                      name="address2"
-                      value={form.address2}
-                      onChange={handleChange}
-                      placeholder="Address 2"
-                      style={inputStyle}
-                    />
-                  </div>
-                  <div style={{ marginBottom: 8 }}>
-                    <input
-                      type="text"
-                      name="city"
-                      list="cityOptions"
-                      value={form.city}
-                      onChange={handleChange}
-                      placeholder={cities.length ? "City (type or choose)" : "City"}
-                      style={inputStyle}
-                      required
-                    />
+                  <div><input className="profile-input" type="text" name="address1" value={form.address1} onChange={handleChange} placeholder="Address 1" required /></div>
+                  <div><input className="profile-input" type="text" name="address2" value={form.address2} onChange={handleChange} placeholder="Address 2" /></div>
+                  <div>
+                    <input className="profile-input" type="text" name="city" list="cityOptions" value={form.city} onChange={handleChange} placeholder={cities.length ? 'City (type or choose)' : 'City'} required />
                     {cities.length > 0 && (
-                      <datalist id="cityOptions">
-                        {cities.map(c => (
-                          <option key={c} value={c} />
-                        ))}
-                      </datalist>
+                      <datalist id="cityOptions">{cities.map(c => <option key={c} value={c} />)}</datalist>
                     )}
-                    {cityError && <div style={{ color: "red" }}>{cityError}</div>}
+                    {cityError && <div className="profile-error">{cityError}</div>}
                   </div>
-                  <div style={{ marginBottom: 8 }}>
-                    <input
-                      type="text"
-                      name="state"
-                      list="stateOptions"
-                      value={form.state}
-                      onChange={handleChange}
-                      placeholder={states.length ? "State / Province (type or choose)" : "State / Province"}
-                      style={inputStyle}
-                      required
-                    />
+                  <div>
+                    <input className="profile-input" type="text" name="state" list="stateOptions" value={form.state} onChange={handleChange} placeholder={states.length ? 'State / Province (type or choose)' : 'State / Province'} required />
                     {states.length > 0 && (
-                      <datalist id="stateOptions">
-                        {states.map(s => (
-                          <option key={s} value={s} />
-                        ))}
-                      </datalist>
+                      <datalist id="stateOptions">{states.map(s => <option key={s} value={s} />)}</datalist>
                     )}
-                    {stateError && <div style={{ color: "red" }}>{stateError}</div>}
+                    {stateError && <div className="profile-error">{stateError}</div>}
                   </div>
-                  <div style={{ marginBottom: 8 }}>
-                    <input
-                      type="text"
-                      name="zipcode"
-                      value={form.zipcode}
-                      onChange={handleChange}
-                      placeholder="Zipcode"
-                      style={inputStyle}
-                      required
-                    />
-                  </div>
-
-                  <div style={{ display: "flex", gap: 12 }}>
-                    <button
-                      type="submit"
-                      style={{
-                        background: "#337ab7",
-                        color: "#fff",
-                        padding: "8px 24px",
-                        border: "none",
-                        borderRadius: "6px",
-                        fontSize: "16px",
-                        cursor: "pointer",
-                        fontWeight: 500,
-                        flex: 1
-                      }}
-                    >
-                      UPDATE
-                    </button>
-                    <button
-                      type="button"
-                      style={{
-                        background: "#eee",
-                        color: "#337ab7",
-                        padding: "8px 24px",
-                        border: "none",
-                        borderRadius: "6px",
-                        fontSize: "16px",
-                        cursor: "pointer",
-                        fontWeight: 500,
-                        flex: 1
-                      }}
-                      onClick={() => setEditingAddress(false)}
-                    >
-                      Cancel
-                    </button>
+                  <div><input className="profile-input" type="text" name="zipcode" value={form.zipcode} onChange={handleChange} placeholder="Zipcode" required /></div>
+                  <div className="profile-address-actions">
+                    <button type="submit" className="profile-action-btn profile-flex-grow">UPDATE</button>
+                    <button type="button" className="profile-action-btn profile-action-btn--light profile-flex-grow" onClick={() => setEditingAddress(false)}>Cancel</button>
                   </div>
                 </form>
               )}
             </div>
-            {/* Edit Button */}
             {!editingAddress && (
-              <button
-                style={{
-                  background: "none",
-                  color: "#337ab7",
-                  border: "none",
-                  fontSize: "18px",
-                  fontWeight: 500,
-                  cursor: "pointer",
-                  position: "absolute",
-                  right: "-30px", // move right
-                  top: "-10px"    // move up
-                }}
-                onClick={() => setEditingAddress(true)}
-              >
-                Edit
-              </button>
+              <button className="profile-edit-btn" onClick={() => setEditingAddress(true)}>Edit</button>
             )}
           </div>
         </div>
       </div>
-      {/* Email and Password Cards Side by Side */}
-      <div style={{
-        width: "74%",
-        margin: "10px auto",
-        display: "flex",
-        gap: "24px"
-      }}>
+      <div className="profile-subrow">
         {/* Email Card */}
-        <div style={{
-          background: "#fff",
-          borderRadius: 6,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-          padding: "16px 32px",
-          minHeight: 60,
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "flex-start"
-        }}>
-          <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>Email:</div>
+        <div className="profile-small-card">
+          <div className="profile-small-card__label">Email:</div>
           {isEditingEmail ? (
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <div className="profile-inline profile-inline-stretch">
               <input
                 type="email"
                 value={editedEmail}
-                onChange={e => setEditedEmail(e.target.value)}
-                style={inputStyle}
+                onChange={e => setEditedEmail(e.target.value)} className="profile-input"
+        title="Email"
+        placeholder="Email address"
               />
-              <button
-                style={{ background: "#337ab7", color: "#fff", border: "none", borderRadius: 4, padding: "8px 16px", cursor: "pointer", fontWeight: 500 }}
-                onClick={handleSaveEmail}
-              >Save</button>
-              <button
-                style={{ background: "#eee", color: "#337ab7", border: "none", borderRadius: 4, padding: "8px 16px", cursor: "pointer", fontWeight: 500 }}
-                onClick={() => { setIsEditingEmail(false); setEditedEmail(email); setEmailError(""); setEmailSuccess(""); }}
-              >Cancel</button>
+              <button className="profile-action-btn" onClick={handleSaveEmail}>Save</button>
+              <button className="profile-action-btn profile-action-btn--light" onClick={() => { setIsEditingEmail(false); setEditedEmail(email); setEmailError(""); setEmailSuccess(""); }}>Cancel</button>
             </div>
           ) : (
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-              <span style={{ fontSize: 18 }}>{email}</span>
-              <button
-                style={{ background: "none", color: "#337ab7", border: "1px solid #337ab7", borderRadius: 4, padding: "6px 18px", fontSize: "18px", fontWeight: 500, cursor: "pointer" }}
-                onClick={() => setIsEditingEmail(true)}
-              >Edit</button>
+            <div className="profile-inline">
+              <span className="profile-field__value">{email}</span>
+              <button className="profile-inline-btn" onClick={() => setIsEditingEmail(true)}>Edit</button>
             </div>
           )}
-          {emailError && <div style={{ color: "red", marginTop: 8 }}>{emailError}</div>}
-          {emailSuccess && <div style={{ color: "green", marginTop: 8 }}>{emailSuccess}</div>}
+          {emailError && <div className="profile-error">{emailError}</div>}
+          {emailSuccess && <div className="profile-success">{emailSuccess}</div>}
         </div>
 
         {/* Phone Number Card */}
-        <div style={{
-          background: "#fff",
-          borderRadius: 6,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-          padding: "16px 32px",
-          minHeight: 60,
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "flex-start"
-        }}>
-          <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>Phone Number:</div>
+        <div className="profile-small-card">
+          <div className="profile-small-card__label">Phone Number:</div>
           {isEditingPhone ? (
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div className="profile-inline profile-inline-stretch">
               <input
                 type="text"
                 value={editedPhone}
@@ -561,12 +364,9 @@ const Profile: React.FC = () => {
                     setPhoneError("");
                   }
                 }}
-                placeholder="Phone Number (+1 123-456-7890)"
-                style={inputStyle}
+                placeholder="Phone Number (+1 123-456-7890)" className="profile-input"
               />
-              <button
-                style={{ background: "#337ab7", color: "#fff", border: "none", borderRadius: 4, padding: "8px 16px", cursor: "pointer", fontWeight: 500 }}
-                onClick={async () => {
+              <button className="profile-action-btn" onClick={async () => {
                   if (!editedPhone) {
                     setPhoneError("Phone number is required and must be in format: +1 123-456-7890");
                     return;
@@ -599,41 +399,23 @@ const Profile: React.FC = () => {
                   } else {
                     setPhoneError("Failed to update phone number. Please try again.");
                   }
-                }}
-              >Save</button>
-              <button
-                style={{ background: "#eee", color: "#337ab7", border: "none", borderRadius: 4, padding: "8px 16px", cursor: "pointer", fontWeight: 500 }}
-                onClick={() => { setIsEditingPhone(false); setEditedPhone(form.phonenumber); setPhoneError(""); }}
-              >Cancel</button>
+                }}>Save</button>
+              <button className="profile-action-btn profile-action-btn--light" onClick={() => { setIsEditingPhone(false); setEditedPhone(form.phonenumber); setPhoneError(""); }}>Cancel</button>
             </div>
           ) : (
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-              <span style={{ fontSize: 18 }}>{form.phonenumber}</span>
-              <button
-                style={{ background: "none", color: "#337ab7", border: "1px solid #337ab7", borderRadius: 4, padding: "6px 18px", fontSize: "18px", fontWeight: 500, cursor: "pointer" }}
-                onClick={() => { setIsEditingPhone(true); setEditedPhone(form.phonenumber); }}
-              >Edit</button>
+            <div className="profile-inline">
+              <span className="profile-field__value">{form.phonenumber}</span>
+              <button className="profile-inline-btn" onClick={() => { setIsEditingPhone(true); setEditedPhone(form.phonenumber); }}>Edit</button>
             </div>
           )}
-          {phoneError && <div style={{ color: "red", marginTop: 8 }}>{phoneError}</div>}
+          {phoneError && <div className="profile-error">{phoneError}</div>}
         </div>
 
         {/* Password Card */}
-        <div style={{
-          background: "#fff",
-          borderRadius: 6,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-          padding: "16px 32px",
-          minHeight: 60,
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "flex-start"
-        }}>
-          <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>Password:</div>
+        <div className="profile-small-card">
+          <div className="profile-small-card__label">Password:</div>
           {isEditingPassword ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: 8, width: "100%" }}>
+            <div className="profile-password-col">
               {/* Old Password */}
               <input
                 type="password"
@@ -647,10 +429,7 @@ const Profile: React.FC = () => {
                   }
                 }}
                 placeholder="Old Password"
-                style={{
-                  ...inputStyle,
-                  border: oldPasswordError ? "2px solid red" : inputStyle.border
-                }}
+                className="profile-input"
               />
               {/* New Password */}
               <input
@@ -665,7 +444,7 @@ const Profile: React.FC = () => {
                   }
                 }}
                 placeholder="New Password"
-                style={inputStyle}
+                className="profile-input"
                 disabled={!!oldPasswordError || !editedOldPassword}
               />
               {/* Retype New Password */}
@@ -674,16 +453,11 @@ const Profile: React.FC = () => {
                 value={retypePassword}
                 onChange={e => setRetypePassword(e.target.value)}
                 placeholder="Retype New Password"
-                style={{
-                  ...inputStyle,
-                  border: retypePassword && retypePassword !== editedPassword ? "2px solid red" : inputStyle.border
-                }}
+                className="profile-input"
                 disabled={!!oldPasswordError || !editedOldPassword}
               />
-              <div style={{ display: "flex", gap: 8 }}>
-                <button
-                  style={{ background: "#337ab7", color: "#fff", border: "none", borderRadius: 4, padding: "8px 16px", cursor: "pointer", fontWeight: 500 }}
-                  onClick={async () => {
+              <div className="profile-address-actions">
+                <button className="profile-action-btn" onClick={async () => {
                     if (oldPasswordError || !editedOldPassword) return;
 
                     if (editedPassword !== retypePassword) {
@@ -707,55 +481,30 @@ const Profile: React.FC = () => {
                     } else {
                       setPasswordError("Failed to update password. Please try again.");
                     }
-                  }}
-                >Save</button>
-                <button
-                  style={{ background: "#eee", color: "#337ab7", border: "none", borderRadius: 4, padding: "8px 16px", cursor: "pointer", fontWeight: 500 }}
-                  onClick={() => {
+                  }}>Save</button>
+                <button className="profile-action-btn profile-action-btn--light" onClick={() => {
                     setIsEditingPassword(false);
                     setEditedPassword("");
                     setEditedOldPassword("");
                     setRetypePassword("");
                     setPasswordError("");
                     setOldPasswordError("");
-                  }}
-                >Cancel</button>
+                  }}>Cancel</button>
               </div>
-              {oldPasswordError && <div style={{ color: "red", marginTop: 4 }}>{oldPasswordError}</div>}
-              {passwordError && <div style={{ color: "red", marginTop: 4 }}>{passwordError}</div>}
+              {oldPasswordError && <div className="profile-error profile-error-inline">{oldPasswordError}</div>}
+              {passwordError && <div className="profile-error profile-error-inline">{passwordError}</div>}
             </div>
           ) : (
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
-              <span style={{ fontSize: 18 }}>**********</span>
-              <button
-                style={{ background: "none", color: "#337ab7", border: "1px solid #337ab7", borderRadius: 4, padding: "6px 18px", fontSize: "18px", fontWeight: 500, cursor: "pointer" }}
-                onClick={() => { setIsEditingPassword(true); setEditedPassword(""); }}
-              >Edit</button>
+            <div className="profile-inline">
+              <span className="profile-field__value">**********</span>
+              <button className="profile-inline-btn" onClick={() => { setIsEditingPassword(true); setEditedPassword(""); }}>Edit</button>
             </div>
           )}
 
         </div>
       </div>
-      {/* Delete Account Button */}
-      <div style={{
-        width: "74%",
-        margin: "24px auto 0 auto",
-        display: "flex",
-        justifyContent: "center"
-      }}>
-        <button
-          style={{
-            background: "#d32f2f",
-            color: "#fff",
-            border: "none",
-            borderRadius: "6px",
-            fontSize: "18px",
-            fontWeight: 500,
-            cursor: "pointer",
-            padding: "10px 32px",
-            marginTop: "8px"
-          }}
-          onClick={async () => {
+      <div className="profile-delete-row">
+        <button className="profile-delete-btn" onClick={async () => {
             if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
               const userid = localStorage.getItem("userid") || "";
               const response = await fetch(`http://localhost:8080/api/users/profile/${userid}`, {
@@ -769,24 +518,11 @@ const Profile: React.FC = () => {
                 toast.error("Failed to delete account. Please try again.");
               }
             }
-          }}
-        >
-          Delete Account
-        </button>
+          }}>Delete Account</button>
       </div>
       <ToastContainer />
     </div>
   );
-};
-
-const inputStyle: React.CSSProperties = {
-  width: "100%",
-  padding: "10px",
-  fontSize: "16px",
-  borderRadius: "6px",
-  border: "1px solid #337ab7",
-  marginBottom: "4px",
-  boxSizing: "border-box",
 };
 
 export default Profile;

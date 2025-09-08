@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import './GeoDropdown.css';
 
 interface GeoDropdownProps {
   showOnlyCountry?: boolean;
@@ -81,7 +82,7 @@ const GeoDropdown: React.FC<GeoDropdownProps> = ({ showOnlyCountry, onCountryCha
   };
 
   return (
-    <div>
+  <div className="geo">
       {/* Country Dropdown */}
       <label htmlFor="country">Country:</label>
       <select
@@ -110,7 +111,7 @@ const GeoDropdown: React.FC<GeoDropdownProps> = ({ showOnlyCountry, onCountryCha
               <option key={s} value={s}>{s}</option>
             ))}
           </select>
-          {stateError && <div style={{ color: "red" }}>{stateError}</div>}
+          {stateError && <div className="geo-error">{stateError}</div>}
 
           {/* City Dropdown */}
           <label htmlFor="city">City:</label>
@@ -125,7 +126,7 @@ const GeoDropdown: React.FC<GeoDropdownProps> = ({ showOnlyCountry, onCountryCha
               <option key={c} value={c}>{c}</option>
             ))}
           </select>
-          {cityError && <div style={{ color: "red" }}>{cityError}</div>}
+          {cityError && <div className="geo-error">{cityError}</div>}
         </>
       )}
     </div>

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { LocationSuggestion } from "./LocationDropdown";
 import useRentalLocationSuggest from "./useRentalLocationSuggest";
+import './RentalCars.css';
 
 const RentalCars: React.FC = () => {
   const [sameLocation, setSameLocation] = useState(true);
@@ -122,6 +123,8 @@ const RentalCars: React.FC = () => {
                     onChange={(e) => setPickupDate(e.target.value)}
                     required
                     className="rental-form-input"
+                    aria-label="Pick-Up Date"
+                    title="Pick-Up Date"
                   />
                 </div>
                 <div className="rental-form-field">
@@ -131,6 +134,8 @@ const RentalCars: React.FC = () => {
                     onChange={(e) => setPickupTime(e.target.value)}
                     required
                     className="rental-form-input"
+                    aria-label="Pick-Up Time"
+                    title="Pick-Up Time"
                   >
                     {Array.from({ length: 48 }, (_, i) => {
                       const hour = Math.floor(i / 2);
@@ -149,6 +154,8 @@ const RentalCars: React.FC = () => {
                     onChange={(e) => setDropoffDate(e.target.value)}
                     required
                     className="rental-form-input"
+                    aria-label="Drop-Off Date"
+                    title="Drop-Off Date"
                   />
                 </div>
                 <div className="rental-form-field">
@@ -158,6 +165,8 @@ const RentalCars: React.FC = () => {
                     onChange={(e) => setDropoffTime(e.target.value)}
                     required
                     className="rental-form-input"
+                    aria-label="Drop-Off Time"
+                    title="Drop-Off Time"
                   >
                     {Array.from({ length: 48 }, (_, i) => {
                       const hour = Math.floor(i / 2);
@@ -220,6 +229,8 @@ const RentalCars: React.FC = () => {
                     onChange={(e) => setPickupDate(e.target.value)}
                     required
                     className="rental-form-input"
+                    aria-label="Pick-Up Date"
+                    title="Pick-Up Date"
                   />
                 </div>
                 <div className="rental-form-field">
@@ -229,6 +240,8 @@ const RentalCars: React.FC = () => {
                     onChange={(e) => setPickupTime(e.target.value)}
                     required
                     className="rental-form-input"
+                    aria-label="Pick-Up Time"
+                    title="Pick-Up Time"
                   >
                     {Array.from({ length: 48 }, (_, i) => {
                       const hour = Math.floor(i / 2);
@@ -287,6 +300,8 @@ const RentalCars: React.FC = () => {
                     onChange={(e) => setDropoffDate(e.target.value)}
                     required
                     className="rental-form-input"
+                    aria-label="Drop-Off Date"
+                    title="Drop-Off Date"
                   />
                 </div>
                 <div className="rental-form-field">
@@ -296,6 +311,8 @@ const RentalCars: React.FC = () => {
                     onChange={(e) => setDropoffTime(e.target.value)}
                     required
                     className="rental-form-input"
+                    aria-label="Drop-Off Time"
+                    title="Drop-Off Time"
                   >
                     {Array.from({ length: 48 }, (_, i) => {
                       const hour = Math.floor(i / 2);
@@ -316,11 +333,13 @@ const RentalCars: React.FC = () => {
               onChange={(e) => setIs25(e.target.checked)}
               required
               className="rental-form-checkbox"
+              aria-label="Confirm age at least 25"
+              title="Confirm age at least 25"
             />
             <span className="rental-form-check-label">
               Yes, I am at least 25 years old.*
             </span>
-            
+
           </div>
           <div className="rental-form-submit-row">
             <button

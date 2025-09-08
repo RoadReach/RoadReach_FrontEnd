@@ -1,0 +1,6 @@
+.login { }
+.login__card { }
+.login__title { margin-bottom:10px; }
+.login__checkbox { display:flex; align-items:center; margin-top:15px; }
+.login__checkbox span { margin-left:5px; }
+.login__divider { margin:20px 0; }

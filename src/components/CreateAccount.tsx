@@ -1,69 +1,27 @@
 import React, { useState } from "react";
+import './CreateAccount.css';
 import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const FloatingInput = ({
-  label,
-  type = "text",
-  name,
-  value,
-  onChange,
-  hasError = false, // Add this prop
-}: {
-  label: string;
-  type?: string;
-  name: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  hasError?: boolean;
+const FloatingInput = ({ label, type = 'text', name, value, onChange, hasError = false }: {
+  label: string; type?: string; name: string; value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; hasError?: boolean;
 }) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const isActive = isFocused || value.length > 0;
+  const [focused, setFocused] = useState(false);
+  const active = focused || value.length > 0;
   return (
-    <div
-      style={{
-        position: "relative",
-        marginBottom: "18px",
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <div className="floating-group">
       <input
+        aria-label={label}
         type={type}
         name={name}
         value={value}
         onChange={onChange}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        style={{
-          width: "100%",
-          padding: "12px 8px 8px 8px",
-          fontSize: "18px",
-          border: hasError ? "1.5px solid red" : "1px solid #222", // Highlight in red if error
-          borderRadius: "6px",
-          outline: "none",
-          boxSizing: "border-box",
-          backgroundColor: "#fff",
-        }}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        className={`floating-input ${hasError ? 'error' : ''}`}
       />
-      <label
-        style={{
-          position: "absolute",
-          left: "12px",
-          top: isActive ? "-10px" : "16px",
-          fontSize: isActive ? "12px" : "14px",
-          color: isActive ? "#222" : "#444",
-          background: "#fff",
-          padding: "0 2px",
-          pointerEvents: "none",
-          transition: "0.2s",
-          zIndex: 1,
-        }}
-      >
-        {label}
-      </label>
+      <label className={`floating-label ${active ? 'active' : ''} ${hasError ? 'error' : ''}`}>{label}</label>
     </div>
   );
 };
@@ -203,16 +161,16 @@ const CreateAccount: React.FC = () => {
       } else {
         toast.error(result);
       }
-    } catch (error: unknown) {
+  } catch {
       toast.error("Error connecting to server");
     }
   };
 
 
   return (
-    <div style={styles.pageWrapper}>
-      <div style={styles.card}>
-        <h2 style={styles.heading}>Create Account</h2>
+  <div className="auth-page create-account">
+      <div className="card card--narrow create-account__card">
+        <h2 className="create-account__title">Create Account</h2>
         {/* Toastify container */}
         <ToastContainer position="top-right" autoClose={3000} />
         <form onSubmit={handleSubmit}>
@@ -260,122 +218,53 @@ const CreateAccount: React.FC = () => {
             hasError={confirmPasswordError}
           />
           {/* Error Message */}
-            {mainError && (
-              <div style={{ color: "#D84343", fontWeight: 600, margin: "6px 0 0 2px", fontSize: "22px" }}>
-                {mainError}
-              </div>
-            )}
+            {mainError && (<div className="error-text error-text--main">{mainError}</div>)}
             {form.password && (
-              <div style={{
-                color:
-                  form.password.length < 8
-                    ? "#D84343"
-                    : form.password.length < 10
-                    ? "#43D843"
-                    : "#005DA6",
-                fontWeight: 600,
-                margin: "6px 0 0 2px",
-                fontSize: "18px"
-              }}>
-                {passwordStrength}
-              </div>
+              <div className={`strength-text ${form.password.length < 8 ? 'strength--weak' : form.password.length < 10 ? 'strength--strong' : 'strength--very-strong'}`}>{passwordStrength}</div>
             )}
           {/* Receive Emails */}
-          <div style={{ margin: "15px 0" }}>
+          <div className="check-row">
             <input
               type="checkbox"
               name="receiveEmails"
               checked={form.receiveEmails}
               onChange={handleChange}
+              aria-label="Receive promotional emails"
             />
-            <span style={{ marginLeft: "8px", fontSize: "14px" }}>
+            <span>
               Yes, I would like to receive emails about special promotions and new
               product information.
             </span>
           </div>
           {/* Keep me signed in */}
-          <div style={{ margin: "15px 0" }}>
+          <div className="check-row">
             <input
               type="checkbox"
               name="keepSignedIn"
               checked={form.keepSignedIn}
               onChange={handleChange}
+              aria-label="Keep me signed in"
             />
-            <span style={{ marginLeft: "8px", fontSize: "14px" }}>
+            <span>
               Keep me signed in
             </span>
           </div>
-          <div style={{ fontSize: "14px", marginBottom: "10px" }}>
+          <div className="create-account__terms">
             By creating an account you agree to RoadReach.com{" "}
-            <a href="#" style={{ color: "#005DA6" }}>
+            <a href="#">
               terms and conditions
             </a>{" "}
             of use.
           </div>
-          <button type="submit" style={styles.createBtn}>
-            Create Account
-          </button>
+          <button type="submit" className="btn btn--primary create-account__submit mt-10">Create Account</button>
         </form>
-        <div
-          style={{
-            marginTop: "20px",
-            textAlign: "center",
-            fontSize: "14px",
-          }}
-        >
+        <div className="create-account__footer">
           Already have an account?{" "}
-          <Link to="/login" style={{ color: "#005DA6" }}>
-            Sign In
-          </Link>
+          <Link to="/login">Sign In</Link>
         </div>
       </div>
     </div>
   );
-};
-
-const styles: { [key: string]: React.CSSProperties } = {
-  pageWrapper: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "90vh",
-    backgroundColor: "#f5f5f5",
-  },
-  card: {
-    background: "#fff",
-    padding: "30px",
-    borderRadius: "8px",
-    boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-    width: "400px",
-    fontFamily: "Arial, sans-serif",
-  },
-  heading: {
-    marginBottom: "10px",
-  },
-  label: {
-    fontSize: "14px",
-    margin: "10px 0 5px",
-    display: "block",
-  },
-  input: {
-    width: "100%",
-    padding: "8px",
-    fontSize: "14px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-    marginBottom: "10px",
-  },
-  createBtn: {
-    background: "#005DA6",
-    color: "#fff",
-    padding: "10px",
-    border: "none",
-    borderRadius: "4px",
-    width: "100%",
-    fontSize: "16px",
-    cursor: "pointer",
-    marginTop: "10px",
-  },
 };
 
 export default CreateAccount;

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import './TextBox.css';
 
 interface TextBoxProps {
   label: string;
@@ -29,7 +30,7 @@ const TextBox: React.FC<TextBoxProps> = ({
   const isActive = isFocused || inputValue.length > 0;
 
   return (
-    <div style={{ position: "relative", marginBottom: "18px", width: "100%" }}>
+    <div className="textbox-group">
       <input
         type={type}
         placeholder={placeholder}
@@ -37,31 +38,10 @@ const TextBox: React.FC<TextBoxProps> = ({
         onChange={handleChange}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        style={{
-          width: "100%",
-          padding: "12px 8px 8px 8px",
-          fontSize: "18px",
-          border: "1px solid #222",
-          borderRadius: "6px",
-          outline: "none",
-          boxSizing: "border-box",
-        }}
+        className="textbox-input"
+        aria-label={label}
       />
-      <label
-        style={{
-          position: "absolute",
-          left: "12px",
-          top: isActive ? "-10px" : "8px",
-          fontSize: isActive ? "12px" : "14px",
-          color: isActive ? "#222" : "#444",
-          background: "#fff",
-          padding: "0 2px",
-          pointerEvents: "none",
-          transition: "0.2s",
-        }}
-      >
-        {label}
-      </label>
+      <label className={`textbox-label ${isActive ? 'active' : ''}`}>{label}</label>
     </div>
   );
 };
@@ -79,62 +59,19 @@ const LoginForm = () => {
         onChange={(val) => setFormData({ ...formData, email: val })}
         type="text"
       />
-      <div style={{ position: "relative", marginBottom: "18px", width: "100%" }}>
+      <div className="textbox-group">
         <input
-          type={showPassword ? "text" : "password"}
+          type={showPassword ? 'text' : 'password'}
           value={formData.password}
           onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-          style={{
-            width: "100%",
-            padding: "12px 36px 8px 8px", // extra right padding for icon
-            fontSize: "18px",
-            border: "1px solid #222",
-            borderRadius: "6px",
-            outline: "none",
-            boxSizing: "border-box",
-          }}
+          className="textbox-input"
+          aria-label="Password"
         />
-        <label
-          style={{
-            position: "absolute",
-            left: "12px",
-            top: formData.password || showPassword ? "-10px" : "8px",
-            fontSize: formData.password || showPassword ? "12px" : "14px",
-            color: formData.password || showPassword ? "#222" : "#444",
-            background: "#fff",
-            padding: "0 2px",
-            pointerEvents: "none",
-            transition: "0.2s",
-          }}
-        >
-          Password
-          <TextBox
-        label="Password"
-        value={formData.password}
-        onChange={(val) => setFormData({ ...formData, password: val })}
-        type="text"
-      />
-        </label>
-        <button
-          type="button"
-          onClick={() => setShowPassword((prev) => !prev)}
-          style={{
-            position: "absolute",
-            right: "10px",
-            top: "50%",
-            transform: "translateY(-50%)",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            fontSize: "22px",
-            padding: 0,
-          }}
-          tabIndex={-1}
-        >
+        <label className={`textbox-label ${formData.password || showPassword ? 'active' : ''}`}>Password</label>
+        <button type="button" onClick={() => setShowPassword(p => !p)} className="password-toggle" tabIndex={-1}>
           <span role="img" aria-label="Show password">👁️</span>
         </button>
       </div>
-      {/* ...rest of your form... */}
     </form>
   );
 };

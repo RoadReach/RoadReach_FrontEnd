@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlane, faBuilding } from '@fortawesome/free-solid-svg-icons';
+import './LocationDropdown.css';
 
 // LocationSuggestion component for displaying a city or airport with icon
 export function LocationSuggestion({ type, name, state, country }: {
@@ -10,11 +11,9 @@ export function LocationSuggestion({ type, name, state, country }: {
   country: string;
 }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <FontAwesomeIcon icon={type === 'airport' ? faPlane : faBuilding} style={{ marginRight: 8 }} />
-      <span>
-        {name} {state ? `(${state}, ${country})` : `(${country})`}
-      </span>
+    <div className="loc-result">
+      <FontAwesomeIcon icon={type === 'airport' ? faPlane : faBuilding} />
+      <span>{name} {state ? `(${state}, ${country})` : `(${country})`}</span>
     </div>
   );
 }
@@ -42,9 +41,9 @@ export function LocationDropdown({ locations }: {
         value={query}
         onChange={e => setQuery(e.target.value)}
         placeholder="Enter city or airport"
-        style={{ width: '100%', marginBottom: 8 }}
+        className="loc-input"
       />
-      <div style={{ maxHeight: 300, overflowY: 'auto', border: '1px solid #ccc', borderRadius: 4 }}>
+      <div className="loc-results">
         {filteredLocations.map(loc => (
           <LocationSuggestion
             key={loc.id}
@@ -54,7 +53,7 @@ export function LocationDropdown({ locations }: {
             country={loc.countryCode}
           />
         ))}
-        {filteredLocations.length === 0 && <div style={{ padding: 8 }}>No results found</div>}
+        {filteredLocations.length === 0 && <div className="loc-empty">No results found</div>}
       </div>
     </div>
   );

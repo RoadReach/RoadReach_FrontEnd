@@ -1,0 +1,8 @@
+.create-account { width:100%; }
+.create-account__card { }
+.create-account__title { margin-bottom:10px; }
+.create-account__terms { font-size:14px; margin-bottom:10px; }
+.create-account__terms a { color:#005DA6; }
+.create-account__footer { margin-top:20px; text-align:center; font-size:14px; }
+.create-account__submit { width:100%; }
+.error-text--main { font-size:22px; }
