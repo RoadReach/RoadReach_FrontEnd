@@ -18,6 +18,10 @@
 .dual-range input[type=range]::-webkit-slider-runnable-track { height:6px; background:transparent; }
 .dual-range__track { position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); height:6px; background:#d9e2ec; border-radius:4px; }
 .dual-range__fill { position:absolute; top:0; height:100%; background:#005DA6; border-radius:4px; }
+.dual-range__fill { left:var(--slider-fill-left,0%); width:var(--slider-fill-width,0%); }
+.empty-actions { margin-top:8px; }
+.ml-6 { margin-left:6px; }
+.select-vehicle__error { background:#ffe9e9; border:1px solid #e7b4b4; color:#7d1212; padding:10px 14px; border-radius:8px; font-size:13px; margin-top:10px; }
 .price-inputs { display:flex; gap:12px; align-items:flex-end; }
 .price-inputs label { font-size:12px; display:flex; flex-direction:column; gap:4px; font-weight:600; color:#0b395c; }
 .price-inputs input { width:90px; padding:4px 6px; font-size:13px; border:1px solid #c4ccd3; border-radius:6px; }

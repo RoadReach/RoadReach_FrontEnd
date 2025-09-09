@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import React, { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { fetchVehicles, fetchVehiclePriceRange } from './vehicleService';
 import type { Vehicle } from './vehicleService';
@@ -36,6 +36,17 @@ const SelectVehicle: React.FC = () => {
     is25: params.get('a25') === '1'
   } : undefined;
   const criteria = search || fromQuery;
+  // Stable hash for dependency arrays (object reference would change each render)
+  const criteriaHash = criteria ? [
+    criteria.pickupLocation,
+    criteria.dropoffLocation,
+    criteria.pickupDate,
+    criteria.pickupTime,
+    criteria.dropoffDate,
+    criteria.dropoffTime,
+    criteria.is25 ? '1' : '0',
+    criteria.sameLocation ? '1' : '0'
+  ].join('|') : '';
 
   // Filters & vehicle data hooks (must be unconditional)
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
@@ -59,6 +70,8 @@ const SelectVehicle: React.FC = () => {
   // All vehicles returned from backend for current price range (no type filter so we can compute counts)
   const [vehiclesAll, setVehiclesAll] = useState<Vehicle[]>([]);
   const [activeVehicle, setActiveVehicle] = useState<Vehicle | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const lastSearchRef = useRef<string>('');
 
   // Persist query params so page is shareable/bookmarkable
   useEffect(() => {
@@ -72,14 +85,23 @@ const SelectVehicle: React.FC = () => {
     p.set('dt', criteria.dropoffTime);
     if (criteria.sameLocation) p.set('same', '1');
     if (criteria.is25) p.set('a25', '1');
-  if (minPrice !== priceRange[0]) p.set('minP', String(minPrice));
-  if (maxPrice !== priceRange[1]) p.set('maxP', String(maxPrice));
+    if (minPrice !== priceRange[0]) p.set('minP', String(minPrice));
+    if (maxPrice !== priceRange[1]) p.set('maxP', String(maxPrice));
     if (typeFilters.length) p.set('types', typeFilters.join(','));
     if (capacityFilters.length) p.set('cap', capacityFilters.join(','));
     if (bagFilters.length) p.set('bags', bagFilters.join(','));
     if (agencyFilters.length) p.set('ag', agencyFilters.join(','));
-    navigate({ search: '?' + p.toString() }, { replace: true });
-  }, [criteria, minPrice, maxPrice, priceRange, typeFilters, capacityFilters, bagFilters, agencyFilters, navigate]);
+    const newSearch = '?' + p.toString();
+    // Only navigate if search string actually changed (prevents update loops)
+    if (newSearch !== lastSearchRef.current) {
+      lastSearchRef.current = newSearch;
+      if (newSearch !== location.search) {
+        navigate({ search: newSearch }, { replace: true });
+      }
+    }
+  // criteria object is represented via criteriaHash to avoid referential churn
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [criteriaHash, minPrice, maxPrice, priceRange, typeFilters, capacityFilters, bagFilters, agencyFilters, navigate, location.search]);
 
   // Fetch dynamic price range on first load (does not depend on filters beyond criteria)
   useEffect(() => {
@@ -98,12 +120,17 @@ const SelectVehicle: React.FC = () => {
       setMaxPrice(range[1]);
       setSliderMin(range[0]);
       setSliderMax(range[1]);
+      setError(null);
+    }).catch(() => {
+      setError('Failed to load price range. Please retry.');
     });
-  }, [criteria]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [criteriaHash]);
 
   // Fetch vehicles whenever committed min/max or criteria change
   useEffect(() => {
     if (!criteria) return;
+    setError(null);
     if (vehiclesAll.length === 0) setLoading(true); else setRefreshing(true);
     fetchVehicles({
       pickupLocation: criteria.pickupLocation,
@@ -119,9 +146,14 @@ const SelectVehicle: React.FC = () => {
       setVehiclesAll(list);
       setLoading(false);
       setRefreshing(false);
-    }).catch(() => { setLoading(false); setRefreshing(false); });
+      setError(null);
+    }).catch(() => {
+      setLoading(false);
+      setRefreshing(false);
+      setError('Failed to load vehicles. Please try again.');
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [criteria, minPrice, maxPrice]);
+  }, [criteriaHash, minPrice, maxPrice]);
 
   const noCriteria = !criteria;
 
@@ -186,6 +218,22 @@ const SelectVehicle: React.FC = () => {
     });
     return map;
   }, [vehiclesAll, matchesCapacity, matchesBags, matchesAgency, sliderMin, sliderMax]);
+
+  // Slider fill percentages
+  const sliderFill = useMemo(() => {
+    const [minR, maxR] = priceRange;
+    const span = Math.max(1, maxR - minR);
+    const leftPct = ((sliderMin - minR) / span) * 100;
+    const rightPct = ((sliderMax - minR) / span) * 100;
+    return { left: leftPct, width: Math.max(0, rightPct - leftPct) };
+  }, [priceRange, sliderMin, sliderMax]);
+
+  // Update CSS vars for slider fill (no inline style enforcement)
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty('--slider-fill-left', sliderFill.left + '%');
+    root.style.setProperty('--slider-fill-width', sliderFill.width + '%');
+  }, [sliderFill]);
 
   return (
     <div className="select-vehicle__layout">
@@ -320,8 +368,35 @@ const SelectVehicle: React.FC = () => {
       <div><strong>Drop-Off:</strong> {criteria?.dropoffLocation} • {criteria?.dropoffDate} {criteria?.dropoffTime}</div>
       <div><strong>Age 25+:</strong> {criteria?.is25 ? 'Yes' : 'No'}</div>
         </div>
+        {error && (
+          <div className="select-vehicle__error" role="alert">
+            {error} <button className="btn btn--secondary" onClick={() => {
+              // simple refetch trigger: adjust maxPrice by +0 then back to force effect if criteria stable
+              setError(null);
+              setMinPrice(m => m);
+            }}>Retry</button>
+          </div>
+        )}
         {loading && <div className="select-vehicle__loading" role="status">Loading vehicles...</div>}
-        {!loading && filteredVehicles.length === 0 && <div className="select-vehicle__empty">No vehicles match filters.</div>}
+        {!loading && !error && filteredVehicles.length === 0 && (
+          <div className="select-vehicle__empty">
+            No vehicles match filters.
+            {(vehiclesAll.length > 0) && (
+              <div className="empty-actions">
+                <button className="btn btn--secondary" onClick={() => {
+                  setSliderMin(priceRange[0]);
+                  setSliderMax(priceRange[1]);
+                  setPendingPriceChange(true);
+                }}>Expand Price Range</button>
+                {' '}or
+                <button className="btn btn--secondary ml-6" onClick={() => {
+                  setTypeFilters([]); setCapacityFilters([]); setBagFilters([]); setAgencyFilters([]);
+                  setSliderMin(priceRange[0]); setSliderMax(priceRange[1]); setPendingPriceChange(true);
+                }}>Clear All Filters</button>
+              </div>
+            )}
+          </div>
+        )}
         {!loading && (
           <div className={`select-vehicle__grid-wrapper${refreshing ? ' is-refreshing' : ''}`}>
             {refreshing && (
