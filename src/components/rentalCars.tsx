@@ -71,7 +71,7 @@ const RentalCars: React.FC = () => {
             </label>
             <span className="rental-form-required">* Indicates required fields</span>
           </div>
-          <div className="rental-form-fields-row">
+          <div className={`rental-form-fields-row${sameLocation ? " rental-form-fields-row--span" : ""}`}>
             {sameLocation ? (
               <>
                 <div className="rental-form-field">
