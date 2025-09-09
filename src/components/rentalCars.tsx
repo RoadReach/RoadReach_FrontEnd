@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import { LocationSuggestion } from "./LocationDropdown";
 import useRentalLocationSuggest from "./useRentalLocationSuggest";
 import './RentalCars.css';
 
 const RentalCars: React.FC = () => {
   const [sameLocation, setSameLocation] = useState(true);
+  const navigate = useNavigate();
   // Country from header (GeoDropdown)
   const [country, setCountry] = useState<'us' | 'ca'>((localStorage.getItem("selectedCountry")?.toLowerCase() as 'us' | 'ca') || 'us');
 
@@ -43,7 +45,30 @@ const RentalCars: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Add search logic here
+    const params = new URLSearchParams({
+      same: sameLocation ? '1' : '0',
+      ploc: pickupLocation,
+      dloc: sameLocation ? pickupLocation : dropoffLocation,
+      pd: pickupDate,
+      pt: pickupTime,
+      dd: dropoffDate,
+      dt: dropoffTime,
+      a25: is25 ? '1' : '0'
+    });
+    navigate(`/select-vehicle?${params.toString()}`, {
+      state: {
+        search: {
+          sameLocation,
+          pickupLocation,
+          dropoffLocation: sameLocation ? pickupLocation : dropoffLocation,
+          pickupDate,
+          pickupTime,
+          dropoffDate,
+          dropoffTime,
+          is25
+        }
+      }
+    });
   };
 
   return (

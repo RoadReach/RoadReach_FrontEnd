@@ -8,6 +8,7 @@ import Home from "./components/home";
 import Dashboard from './components/Dashboard';
 import RentalCars from './components/rentalCars';
 import Profile from "./components/profile";
+import SelectVehicle from './components/SelectVehicle';
 
 const App: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ const App: React.FC = () => {
           <Route path="/create-account" element={<CreateAccount />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/rental-cars" element={<RentalCars />} /> {/* rental cars page */}
+          <Route path="/select-vehicle" element={<SelectVehicle />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </main>

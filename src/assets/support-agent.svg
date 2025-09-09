@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" role="img" aria-labelledby="title desc">
+  <title>Support Agent Icon</title>
+  <desc>Minimal headset avatar icon representing customer support.</desc>
+  <circle cx="70" cy="70" r="70" fill="#0b4a72"/>
+  <circle cx="70" cy="60" r="30" fill="#fff" stroke="#0b4a72" stroke-width="4"/>
+  <path d="M32 112c6-22 26-28 38-28s32 6 38 28" fill="#fff" stroke="#0b4a72" stroke-width="4" stroke-linecap="round"/>
+  <path d="M40 66h-6a10 10 0 0 0-10 10v6a10 10 0 0 0 10 10h4" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+  <path d="M100 66h6a10 10 0 0 1 10 10v6a10 10 0 0 1-10 10h-4" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+  <path d="M60 58c0 6-4 10-10 10" stroke="#0b4a72" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <path d="M80 58c0 6 4 10 10 10" stroke="#0b4a72" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <path d="M58 78c4 4 20 4 24 0" stroke="#0b4a72" stroke-width="5" stroke-linecap="round" fill="none"/>
+</svg>

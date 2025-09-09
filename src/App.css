@@ -57,3 +57,7 @@ a:hover { text-decoration:underline; }
 /* Generic car hero variation */
 .page-hero--car { position:relative; background:linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.55)), url('./assets/hero-car.svg') center/cover no-repeat; min-height:calc(50vh - var(--header-height)); display:flex; justify-content:center; align-items:center; padding:48px 20px; color:#fff; text-shadow:2px 2px 6px rgba(0,0,0,0.7); }
 .page-hero--car .page-hero__title { margin:0; font-size:clamp(2.2rem,5.2vw,3.2rem); font-weight:600; letter-spacing:.5px; }
+
+/* Alternate car hero background (cool teal gradient + outline silhouette) */
+.page-hero--car-alt { position:relative; background:linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.55)), url('./assets/hero-car-alt.svg') center/cover no-repeat; min-height:calc(50vh - var(--header-height)); display:flex; justify-content:center; align-items:center; padding:48px 20px; color:#fff; text-shadow:2px 2px 6px rgba(0,0,0,0.6); }
+.page-hero--car-alt .page-hero__title { margin:0; font-size:clamp(2.2rem,5.2vw,3.2rem); font-weight:600; letter-spacing:.5px; }

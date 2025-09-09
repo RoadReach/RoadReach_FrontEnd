@@ -12,3 +12,6 @@
 
 /* Utility for relative container (password field) */
 .login__relative { position:relative; }
+/* Unified button sizing */
+.login__full-btn,
+.login__center-btn { padding:2px 0px !important; min-height:30px; }
