@@ -56,14 +56,7 @@ const Login: React.FC = () => {
       setPasswordError("Password is required.");
       return;
     }
-    // Password regex validation on submit
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
-    if (!passwordRegex.test(formData.password)) {
-      toast.error("Invalid email or password.");
-      setPasswordError("Invalid email or password.");
-      setFieldErrors((prev) => ({ ...prev, password: true }));
-      return;
-    }
+   
     // Check credentials with backend
     try {
       const response = await fetch("http://localhost:8080/api/users/login", {

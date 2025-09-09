@@ -8,10 +8,12 @@ const Dashboard: React.FC = () => {
   return (
     <div>
       <Header />
-  <main className="dashboard-main">
-        <h2>Welcome, {firstName}!</h2>
-        <p>This is your dashboard.</p>
-      </main>
+      <div className="dashboard-outer">
+        <main className="dashboard-main">
+          <h2>Welcome, {firstName}!</h2>
+          <p>This is your dashboard.</p>
+        </main>
+      </div>
     </div>
   );
 };
