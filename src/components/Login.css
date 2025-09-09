@@ -1,6 +1,14 @@
-.login { }
-.login__card { }
+.login { position:relative; min-height:calc(100vh - var(--header-height)); display:flex; justify-content:center; align-items:center; padding:40px 20px; box-sizing:border-box; }
+.login::before { content:""; position:absolute; inset:0; background:linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.55)), url('../assets/hero-car.svg') center/cover no-repeat; filter:saturate(110%); }
+.login__card { position:relative; z-index:1; }
 .login__title { margin-bottom:10px; }
 .login__checkbox { display:flex; align-items:center; margin-top:15px; }
 .login__checkbox span { margin-left:5px; }
-.login__divider { margin:20px 0; }
+.login__divider { margin:30px 0; }
+.login__full-btn { width:100%; }
+
+/* Center the Create Account button with natural width */
+.login__center-btn { display:block; margin:0 auto; width:100%; text-align:center; }
+
+/* Utility for relative container (password field) */
+.login__relative { position:relative; }

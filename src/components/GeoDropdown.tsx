@@ -82,7 +82,7 @@ const GeoDropdown: React.FC<GeoDropdownProps> = ({ showOnlyCountry, onCountryCha
   };
 
   return (
-  <div className="geo">
+  <div className={`geo ${showOnlyCountry ? 'geo--inline' : ''}`}>
       {/* Country Dropdown */}
       <label htmlFor="country">Country:</label>
       <select

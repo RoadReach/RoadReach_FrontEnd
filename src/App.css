@@ -50,3 +50,10 @@ a:hover { text-decoration:underline; }
 .main-content { padding-top: var(--header-height); box-sizing:border-box; }
 
 @media print { body * { visibility:hidden; } .printable, .printable * { visibility:visible; } .printable { position:absolute; left:0; top:0; width:100%; } }
+
+/* Global hero (originally from Home.css) so any page can reuse */
+.home-hero { background-image:url('./assets/backgroundImageHome.jpeg'); background-size:cover; background-position:center; min-height:calc(100vh - var(--header-height)); width:100%; display:flex; justify-content:center; align-items:center; color:#fff; font-size:2rem; font-weight:bold; text-shadow:2px 2px 8px rgba(0,0,0,0.7); padding:40px 20px; box-sizing:border-box; }
+.home-hero__title { color:#fff; text-align:center; margin:0; font-size:clamp(2rem,5vw,3.5rem); }
+/* Generic car hero variation */
+.page-hero--car { position:relative; background:linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.55)), url('./assets/hero-car.svg') center/cover no-repeat; min-height:calc(50vh - var(--header-height)); display:flex; justify-content:center; align-items:center; padding:48px 20px; color:#fff; text-shadow:2px 2px 6px rgba(0,0,0,0.7); }
+.page-hero--car .page-hero__title { margin:0; font-size:clamp(2.2rem,5.2vw,3.2rem); font-weight:600; letter-spacing:.5px; }

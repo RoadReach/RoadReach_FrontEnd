@@ -1,4 +1,8 @@
 .geo { font-size:14px; }
 .geo label { display:block; margin-top:8px; font-weight:500; }
-.geo select { margin-top:4px; padding:6px 8px; border:1px solid #337ab7; border-radius:4px; font-size:14px; }
+.geo select { margin-top:4px; padding:6px 10px; border:1px solid #004B8D; border-radius:4px; font-size:14px; background:#fff; }
+.geo select:focus { outline:2px solid #005DA6; outline-offset:1px; }
+.geo--inline { display:flex; align-items:center; gap:8px; }
+.geo--inline label { margin:0; display:inline; }
+.geo--inline select { margin:0; }
 .geo .geo-error { color:#d32f2f; margin-top:4px; font-size:12px; }

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1600" height="800" viewBox="0 0 1600 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Abstract car background">
+  <defs>
+    <linearGradient id="gradSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0b3458"/>
+      <stop offset="100%" stop-color="#0a253d"/>
+    </linearGradient>
+    <linearGradient id="gradCar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1d72b8"/>
+      <stop offset="100%" stop-color="#104e85"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.9" r="0.6">
+      <stop offset="0%" stop-color="#ffffff22"/>
+      <stop offset="100%" stop-color="#ffffff00"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="800" fill="url(#gradSky)"/>
+  <circle cx="1300" cy="160" r="90" fill="#ffffff18"/>
+  <ellipse cx="800" cy="760" rx="900" ry="180" fill="#02121f"/>
+  <g transform="translate(300 470) scale(3.2)">
+    <path d="M40 40 L60 10 Q70 5 90 5 L150 5 Q170 5 180 15 L205 40 Q230 45 240 55 Q245 60 245 68 L245 82 Q245 90 235 90 L225 90 Q220 102 205 102 Q190 102 185 90 L115 90 Q110 102 95 102 Q80 102 75 90 L55 90 Q45 90 40 82 Q20 80 15 75 Q5 65 5 55 Q5 45 15 42 L40 40 Z" fill="url(#gradCar)" stroke="#0a2e4a" stroke-width="2"/>
+    <circle cx="95" cy="90" r="18" fill="#0d1f2c" stroke="#1d72b8" stroke-width="4"/>
+    <circle cx="205" cy="90" r="18" fill="#0d1f2c" stroke="#1d72b8" stroke-width="4"/>
+    <circle cx="95" cy="90" r="7" fill="#1d72b8"/>
+    <circle cx="205" cy="90" r="7" fill="#1d72b8"/>
+  </g>
+  <rect width="1600" height="800" fill="url(#glow)"/>
+</svg>

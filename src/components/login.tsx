@@ -127,7 +127,7 @@ const Login: React.FC = () => {
           </div>
 
           {/* Password */}
-          <div className="floating-group" style={{ position:'relative' }}>
+          <div className="floating-group login__relative">
             <input
               type={showPassword ? "text" : "password"}
               name="password"
@@ -175,10 +175,10 @@ const Login: React.FC = () => {
           </div>
 
           {/* Submit */}
-          <button type="submit" className="btn btn--primary mt-20" style={{ width:'100%' }}>Sign In</button>
+          <button type="submit" className="btn btn--primary login__full-btn mt-20">Sign In</button>
 
           <hr className="login__divider" />
-          <Link to="/create-account" className="btn btn--secondary" style={{ width:'100%' }}>
+          <Link to="/create-account" className="btn btn--secondary login__center-btn">
             Create Account
           </Link>
         </form>
