@@ -28,7 +28,7 @@ const App: React.FC = () => {
         </Routes>
       </main>
 
-      <footer className='footer'>
+      <footer style={{ textAlign: 'center', padding: '5px 0', backgroundColor: '#f5f5f5', marginTop: '40px' }}>
         <p>© 2025 RoadReach. All rights reserved.</p>
       </footer>
       </div>

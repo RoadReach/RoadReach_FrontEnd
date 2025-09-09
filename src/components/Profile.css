@@ -1,8 +1,8 @@
-.profile-page { background:#f4f4f4; min-height:100vh; width:100%; }
+.profile-page { background:#f4f4f4; min-height:80vh; width:100%; }
 .profile-hero { background:#00395d; color:#fff; padding:28px 0 20px; font-size:32px; font-weight:400; letter-spacing:1px; }
 .profile-hero__title { margin:0; padding-left:60px; font-size:clamp(26px,4.2vw,32px); }
 .profile-row { width:100%; margin:5px auto 0; display:flex; gap:24px; }
-.profile-card { background:#fff; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.08); padding:32px 32px 24px; width:74%; margin:40px auto 0; min-height:60px; }
+.profile-card { background:#fff; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.08); padding:32px 32px 24px; width:70%; margin:40px auto 0; min-height:60px; }
 .profile-card__title { font-weight:600; font-size:24px; margin-bottom:18px; text-align:left; }
 .profile-flex { display:flex; align-items:flex-start; gap:48px; position:relative; justify-content:center; flex-wrap:wrap; }
 .profile-field { flex:1 1 240px; text-align:left; min-width:220px; }
