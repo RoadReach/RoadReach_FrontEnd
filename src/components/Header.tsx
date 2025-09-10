@@ -34,7 +34,11 @@ const Header: React.FC = () => {
           <span className="header__sep">|</span>
           <a href="#" className="header__link" onClick={() => setHelpOpen(true)}><HelpCircle size={13} /> Help Center</a>
           <span className="header__sep">|</span>
-          <span className="header__phone">📞 1-520-483-8758</span>
+          <a
+            href="tel:+15204838758"
+            className="header__phone"
+            aria-label="Call 1 520 483 8758"
+          >📞 1-520-483-8758</a>
           <span className="header__sep">|</span>
           <GeoDropdown showOnlyCountry={true} onCountryChange={() => window.location.reload()} />
           <span className="header__sep">|</span>
