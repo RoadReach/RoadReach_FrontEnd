@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import RoadReachLogo from "../assets/RoadReach_Logo_cropped.png";
 import { HelpCircle } from 'lucide-react';
@@ -11,6 +11,30 @@ const Header: React.FC = () => {
   const firstName = localStorage.getItem("firstname");
   const [showDropdown, setShowDropdown] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+
+  // Add refs
+  const userBtnRef = useRef<HTMLSpanElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Effect to close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        userBtnRef.current &&
+        !userBtnRef.current.contains(event.target as Node)
+      ) {
+        setShowDropdown(false);
+      }
+    }
+    if (showDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showDropdown]);
 
   const handleLogout = () => {
     localStorage.removeItem("firstname");
@@ -40,9 +64,15 @@ const Header: React.FC = () => {
           <span className="header__sep">|</span>
           {firstName ? (
             <div className="header__user-wrapper">
-              <span className="header__user" onClick={() => setShowDropdown(prev => !prev)}>👤 {firstName}</span>
+              <span
+                className="header__user"
+                onClick={() => setShowDropdown(prev => !prev)}
+                ref={userBtnRef}
+              >
+                👤 {firstName}
+              </span>
               {showDropdown && (
-                <div className="profile-dropdown">
+                <div className="profile-dropdown" ref={dropdownRef}>
                   <Link
                     to="/profile"
                     className="header__dropdown-link"
@@ -80,7 +110,6 @@ const Header: React.FC = () => {
       </div>
       <HelpCenter open={helpOpen} onClose={() => setHelpOpen(false)} />
     </header>
-
   );
 };
 
