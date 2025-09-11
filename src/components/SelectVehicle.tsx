@@ -335,13 +335,7 @@ const SelectVehicle: React.FC = () => {
             ))}
           </ul>
         </div>
-        <div className="support-help">
-          <img src={new URL('../assets/support-agent.svg', import.meta.url).href} alt="Support" className="support-help__img" width={104} height={104} />
-          <h3 className="support-help__title">Need Help?</h3>
-          <p className="support-help__phone">Call 1-866-921-7925</p>
-          <p className="support-help__hours">Weekdays 05:00 AM - 07:00 PM<br/>Weekends 06:00 AM - 05:00 PM<br/>Pacific Time</p>
-        </div>
-    {(typeFilters.length > 0 || capacityFilters.length > 0 || bagFilters.length > 0 || agencyFilters.length > 0 || minPrice !== priceRange[0] || maxPrice !== priceRange[1]) && (
+        {(typeFilters.length > 0 || capacityFilters.length > 0 || bagFilters.length > 0 || agencyFilters.length > 0 || minPrice !== priceRange[0] || maxPrice !== priceRange[1]) && (
           <button
             className="filters__clear btn btn--secondary"
             onClick={() => {
@@ -357,6 +351,14 @@ const SelectVehicle: React.FC = () => {
             }}
           >Reset Filters</button>
         )}
+        <div className="support-help" aria-label="Need help">
+          <img src={new URL('../assets/support-agent.svg', import.meta.url).href} alt="Support" className="support-help__img" width={64} height={64} />
+          <h3 className="support-help__title">Need Help?</h3>
+          <p className="support-help__phone">
+            <a href="tel:+18669217925" aria-label="Call 1 866 921 7925">Call 1-866-921-7925</a>
+          </p>
+          <p className="support-help__hours">Weekdays 05:00 AM - 07:00 PM<br/>Weekends 06:00 AM - 05:00 PM<br/>Pacific Time</p>
+        </div>
     </aside>
     <main className="select-vehicle__main">
         <div className="select-vehicle__header">

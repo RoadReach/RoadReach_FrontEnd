@@ -50,20 +50,20 @@
 .chevron { width:10px; height:10px; border-right:2px solid #0b395c; border-bottom:2px solid #0b395c; transform:rotate(45deg); transition:transform .25s; margin-left:auto; }
 .chevron--open { transform:rotate(225deg); }
 .filters__count { color:#666; font-weight:400; margin-left:4px; }
-.support-help { margin-top:8px; background:#f5f7fa; border:1px solid #d9e2ec; border-radius:12px; padding:18px 16px 20px; text-align:left; font-size:13px; line-height:1.35; position:sticky; bottom:8px; }
-.support-help__img { display:block; border-radius:10px; margin:0 0 12px; width:104px; height:104px; object-fit:cover; }
-.support-help__title { margin:0 0 4px; font-size:20px; color:#003a5c; }
-.support-help__phone { margin:0 0 8px; font-weight:600; font-size:15px; color:#002b44; }
+.support-help { margin-top:10px; background:#f5f7fa; border:1px solid #d9e2ec; border-radius:12px; padding:12px 12px 14px; text-align:left; font-size:12px; line-height:1.35; }
+.support-help__img { display:block; border-radius:10px; margin:0 0 10px; width:64px; height:64px; object-fit:cover; }
+.support-help__title { margin:0 0 2px; font-size:16px; color:#003a5c; }
+.support-help__phone { margin:0 0 6px; font-weight:700; font-size:14px; color:#0b395c; }
 .support-help__phone a { color:inherit; text-decoration:none; }
 .support-help__phone a:hover { text-decoration:underline; }
-.support-help__hours { margin:0 0 4px; color:#444; white-space:pre-line; }
+.support-help__hours { margin:0 0 2px; color:#444; white-space:pre-line; }
 .support-help__hours--error { color:#c21c1c; font-weight:600; }
 .support-help__chat { margin-top:8px; background:#005DA6; color:#fff; border:none; border-radius:6px; padding:8px 14px; cursor:pointer; font-size:14px; box-shadow:0 2px 4px rgba(0,0,0,0.15); }
 .support-help__chat:hover { background:#004a86; }
-.support-help { margin-top:8px; background:#f5f7fa; border:1px solid #d9e2ec; border-radius:12px; padding:18px 16px 20px; text-align:left; font-size:13px; line-height:1.35; }
-.support-help__img { display:block; border-radius:10px; margin:0 0 12px; width:104px; height:104px; object-fit:cover; }
-.support-help__title { margin:0 0 4px; font-size:20px; color:#003a5c; }
-.support-help__phone { margin:0 0 8px; font-weight:600; font-size:15px; color:#002b44; }
+.support-help { margin-top:10px; background:#f5f7fa; border:1px solid #d9e2ec; border-radius:12px; padding:12px; text-align:left; font-size:12px; line-height:1.35; }
+.support-help__img { display:block; border-radius:10px; margin:0 0 10px; width:64px; height:64px; object-fit:cover; }
+.support-help__title { margin:0 0 2px; font-size:16px; color:#003a5c; }
+.support-help__phone { margin:0 0 6px; font-weight:700; font-size:14px; color:#0b395c; }
 .support-help__hours { margin:0; color:#444; }
 .select-vehicle__main { min-width:0; }
 .select-vehicle__loading { padding:20px 0; font-size:14px; }
