@@ -91,13 +91,13 @@ const Header: React.FC = () => {
                       <div className="profile-dropdown__email">{localStorage.getItem("email")}</div>
                     </div>
                   </div>
-                  <Link
-                    to="/profile"
-                    className="profile-dropdown__item"
-                    onClick={() => setShowDropdown(false)}
-                  >
-                    Account
-                  </Link>
+                    <Link
+                      to="/profile"
+                      className="profile-dropdown__item"
+                      onClick={() => setShowDropdown(false)}
+                    >
+                      Profile
+                    </Link>
                   <Link
                     to="/bookings"
                     className="profile-dropdown__item"
