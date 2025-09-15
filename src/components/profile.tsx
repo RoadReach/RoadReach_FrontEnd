@@ -4,6 +4,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Profile: React.FC = () => {
+  const [deleting, setDeleting] = useState(false);
   const firstName = localStorage.getItem("firstname") || "";
   const lastName = localStorage.getItem("lastname") || "";
   const email = localStorage.getItem("email") || "";
@@ -266,7 +267,7 @@ const Profile: React.FC = () => {
               <div className="profile-field__label">Name:</div>
               <div className="profile-field__value">{`${firstName} ${lastName}`}</div>
             </div>
-            <div className="profile-field profile-field--center">
+            <div className="profile-field">
               <div className="profile-field__label">UserID:</div>
               <div className="profile-field__value">{userid}</div>
             </div>
@@ -280,34 +281,102 @@ const Profile: React.FC = () => {
                 </div>
               ) : (
                 <form onSubmit={handleAddressSubmit} className="profile-address-form">
-                  <div>
-                    <input className="profile-input" type="text" name="phonenumber" value={form.phonenumber} onChange={handleChange} placeholder="Phone Number (+1 ***-***-****)" required />
+                  <div className="floating-label-group">
+                    <input
+                      className="profile-input"
+                      type="text"
+                      name="phonenumber"
+                      value={form.phonenumber}
+                      onChange={handleChange}
+                      required
+                      title="Phone Number"
+                      placeholder="Phone Number (+1 123-456-7890)"
+                    />
+                    <label className={form.phonenumber ? 'floating-label filled' : 'floating-label'}>Phone Number</label>
                     {phoneError && <div className="profile-error">{phoneError}</div>}
                   </div>
-                  <div>
-                    <select className="profile-input" name="country" value={form.country} onChange={handleChange} required title="Country">
-                      <option value="">Select Country</option>
+                  <div className="floating-label-group">
+                    <select className="profile-input" name="country" value={form.country} onChange={handleChange} required aria-label="Country">
+                      <option value="" disabled hidden></option>
                       <option value="US">United States</option>
                       <option value="CA">Canada</option>
                     </select>
+                    <label className={form.country ? 'floating-label filled' : 'floating-label'}>Country</label>
                   </div>
-                  <div><input className="profile-input" type="text" name="address1" value={form.address1} onChange={handleChange} placeholder="Address 1" required /></div>
-                  <div><input className="profile-input" type="text" name="address2" value={form.address2} onChange={handleChange} placeholder="Address 2" /></div>
-                  <div>
-                    <input className="profile-input" type="text" name="city" list="cityOptions" value={form.city} onChange={handleChange} placeholder={cities.length ? 'City (type or choose)' : 'City'} required />
+                  <div className="floating-label-group">
+                    <input
+                      className="profile-input"
+                      type="text"
+                      name="address1"
+                      value={form.address1}
+                      onChange={handleChange}
+                      required
+                      title="Address 1"
+                      placeholder="Address 1"
+                    />
+                    <label className={form.address1 ? 'floating-label filled' : 'floating-label'}>Address 1</label>
+                  </div>
+                  <div className="floating-label-group">
+                    <input
+                      className="profile-input"
+                      type="text"
+                      name="address2"
+                      value={form.address2}
+                      onChange={handleChange}
+                      title="Address 2"
+                      placeholder="Address 2"
+                    />
+                    <label className={form.address2 ? 'floating-label filled' : 'floating-label'}>Address 2</label>
+                  </div>
+                  <div className="floating-label-group">
+                    <input
+                      className="profile-input"
+                      type="text"
+                      name="city"
+                      list="cityOptions"
+                      value={form.city}
+                      onChange={handleChange}
+                      required
+                      title="City"
+                      placeholder="City"
+                    />
+                    <label className={form.city ? 'floating-label filled' : 'floating-label'}>City</label>
                     {cities.length > 0 && (
                       <datalist id="cityOptions">{cities.map(c => <option key={c} value={c} />)}</datalist>
                     )}
                     {cityError && <div className="profile-error">{cityError}</div>}
                   </div>
-                  <div>
-                    <input className="profile-input" type="text" name="state" list="stateOptions" value={form.state} onChange={handleChange} placeholder={states.length ? 'State / Province (type or choose)' : 'State / Province'} required />
+                  <div className="floating-label-group">
+                    <input
+                      className="profile-input"
+                      type="text"
+                      name="state"
+                      list="stateOptions"
+                      value={form.state}
+                      onChange={handleChange}
+                      required
+                      title="State / Province"
+                      placeholder="State / Province"
+                    />
+                    <label className={form.state ? 'floating-label filled' : 'floating-label'}>State / Province</label>
                     {states.length > 0 && (
                       <datalist id="stateOptions">{states.map(s => <option key={s} value={s} />)}</datalist>
                     )}
                     {stateError && <div className="profile-error">{stateError}</div>}
                   </div>
-                  <div><input className="profile-input" type="text" name="zipcode" value={form.zipcode} onChange={handleChange} placeholder="Zipcode" required /></div>
+                  <div className="floating-label-group">
+                    <input
+                      className="profile-input"
+                      type="text"
+                      name="zipcode"
+                      value={form.zipcode}
+                      onChange={handleChange}
+                      required
+                      title="Zipcode"
+                      placeholder="Zipcode"
+                    />
+                    <label className={form.zipcode ? 'floating-label filled' : 'floating-label'}>Zipcode</label>
+                  </div>
                   <div className="profile-address-actions">
                     <button type="submit" className="profile-action-btn profile-flex-grow">UPDATE</button>
                     <button type="button" className="profile-action-btn profile-action-btn--light profile-flex-grow" onClick={() => setEditingAddress(false)}>Cancel</button>
@@ -316,7 +385,7 @@ const Profile: React.FC = () => {
               )}
             </div>
             {!editingAddress && (
-              <button className="profile-edit-btn" onClick={() => setEditingAddress(true)}>Edit</button>
+              <button className="profile-inline-btn" onClick={() => setEditingAddress(true)}>Edit</button>
             )}
           </div>
         </div>
@@ -504,21 +573,27 @@ const Profile: React.FC = () => {
         </div>
       </div>
       <div className="profile-delete-row">
-        <button className="profile-delete-btn" onClick={async () => {
+        <button className="profile-delete-btn" disabled={deleting} onClick={async () => {
+            if (deleting) return;
             if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+              setDeleting(true);
               const userid = localStorage.getItem("userid") || "";
-              const response = await fetch(`http://localhost:8080/api/users/profile/${userid}`, {
-                method: "DELETE",
-              });
-              if (response.ok) {
-                toast.success("Your account has been deleted.");
-                localStorage.clear();
-                window.location.href = "/"; // Redirect to home page
-              } else {
-                toast.error("Failed to delete account. Please try again.");
+              try {
+                const response = await fetch(`http://localhost:8080/api/users/profile/${userid}`, {
+                  method: "DELETE",
+                });
+                if (response.ok) {
+                  toast.success("Your account has been deleted.");
+                  localStorage.clear();
+                  window.location.href = "/"; // Redirect to home page
+                } else {
+                  toast.error("Failed to delete account. Please try again.");
+                }
+              } finally {
+                setDeleting(false);
               }
             }
-          }}>Delete Account</button>
+          }}>{deleting ? "Deleting..." : "Delete Account"}</button>
       </div>
       <ToastContainer />
     </div>
