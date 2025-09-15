@@ -87,7 +87,11 @@ const Header: React.FC = () => {
                   <div className="profile-dropdown__user">
                     <div className="profile-dropdown__avatar">{firstName ? firstName[0].toUpperCase() : "U"}</div>
                     <div className="profile-dropdown__info">
-                      <div className="profile-dropdown__name">{localStorage.getItem("firstname") && localStorage.getItem("lastname") ? `${localStorage.getItem("firstname").toUpperCase()} ${localStorage.getItem("lastname").toUpperCase()}` : firstName}</div>
+                      <div className="profile-dropdown__name">
+                        {localStorage.getItem("firstname") && localStorage.getItem("lastname")
+                          ? `${(localStorage.getItem("firstname") || "").toUpperCase()} ${(localStorage.getItem("lastname") || "").toUpperCase()}`
+                          : firstName}
+                      </div>
                       <div className="profile-dropdown__email">{localStorage.getItem("email")}</div>
                     </div>
                   </div>

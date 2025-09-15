@@ -59,8 +59,6 @@ export function validateEmail(email: string, allowedTLDs = DEFAULT_SUGGEST): str
       return ".' is used at a wrong position in '" + domain + "'.";
     }
     // Custom error for TLD restriction
-    const tld = domain.split('.').pop();
-    const allowedTLDSet = new Set(allowedTLDs.map(tld => tld.toLowerCase()));
     if (!allowedTLDs.some(allowed => domain.toLowerCase().endsWith(allowed))) {
       return "Please use a common email provider (e.g., gmail.com, outlook.com, yahoo.com, etc.).";
     }
