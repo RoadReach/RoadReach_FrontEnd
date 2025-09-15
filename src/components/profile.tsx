@@ -595,6 +595,7 @@ const Profile: React.FC = () => {
             }
           }}>{deleting ? "Deleting..." : "Delete Account"}</button>
       </div>
+      <br />
       <ToastContainer />
     </div>
   );

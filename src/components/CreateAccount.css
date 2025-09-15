@@ -10,3 +10,17 @@
 .create-account__footer { margin-top:20px; text-align:center; font-size:14px; }
 .create-account__submit { width:100%; }
 .error-text--main { font-size:22px; }
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #005ea6;
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

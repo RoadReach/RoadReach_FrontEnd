@@ -12,6 +12,7 @@ const API_BASE = meta.env?.VITE_API_BASE_URL || 'http://localhost:8080/api';
 
 export interface Vehicle {
   id: string;
+  city: string;
   type: string;
   company: string;
   price: number;

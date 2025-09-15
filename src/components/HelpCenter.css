@@ -56,3 +56,17 @@
 .hc-answer-help-label { font-weight:500; }
 .hc-quick-links-wrap { margin-top:10px; }
 .hc-more-arrow { font-size:18px; }
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #e15b87;
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

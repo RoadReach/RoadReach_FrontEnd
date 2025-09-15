@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import RoadReachLogo from "../assets/RoadReach_Logo_cropped.png";
-import './HelpCenter.css';
 
 // Validation helpers
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -14,11 +13,19 @@ const formatPhone = (v: string) => {
 };
 
 // Dummy icons (replace with SVG or icon components as needed)
-const TroubleshootIcon = () => <span className="hc-icon">🛠️</span>;
-const InfoIcon = () => <span className="hc-icon">ℹ️</span>;
-const CarIcon = () => <span className="hc-icon">🚗</span>;
+const TroubleshootIcon = () => <span style={{fontSize: 28, color: "#1565c0"}}>🛠️</span>;
+const InfoIcon = () => <span style={{fontSize: 28, color: "#1565c0"}}>ℹ️</span>;
+const CarIcon = () => <span style={{fontSize: 28, color: "#1565c0"}}>🚗</span>;
 
-// Removed voteBtnStyle in favor of .hc-vote-btn class
+// MOVE these style objects ABOVE articleContent so they are defined before use
+const voteBtnStyle: React.CSSProperties = {
+  background: "#eef2f6",
+  border: "1px solid #d0d8df",
+  cursor: "pointer",
+  padding: "8px 14px",
+  borderRadius: 6,
+  fontSize: 18
+};
 
 // REPLACE old popularAnswers (string array) with objects (id,title)
 const popularAnswers = [
@@ -28,18 +35,18 @@ const popularAnswers = [
 ];
 
 // NEW article content map
-const articleContent: Record<string, { title: string; body: React.ReactElement }> = {
+const articleContent: Record<string, { title: string; body: React.JSX.Element }> = {
   "rental-car-only-bookings": {
     title: "Rental Car Only Bookings",
     body: (
-  <div className="printable hc-article-body">
+      <div className="printable" style={{ fontSize: 15, lineHeight: 1.55 }}>
         <p>
           RoadReach offers members exclusive rental car rates and one free additional driver with our
           rental partners. Executive Members earn a 2% reward per rental.
         </p>
 
         <h4>In this article:</h4>
-  <ul className="hc-article-toc">
+        <ul style={{ lineHeight: 1.5 }}>
           <li><a href="#additional-driver">Additional driver</a></li>
           <li><a href="#booking">Booking</a></li>
           <li><a href="#email-confirmations">Email confirmations</a></li>
@@ -49,7 +56,7 @@ const articleContent: Record<string, { title: string; body: React.ReactElement }
           <li><a href="#restrictions">Restrictions</a></li>
         </ul>
 
-  <h3 id="additional-driver" className="hc-article-sub">Additional driver</h3>
+        <h3 id="additional-driver" style={{ marginTop: 32, fontSize: 18 }}>Additional driver</h3>
         <p>
           When booking a Rental Car with RoadReach, one additional driver fee is waived for qualifying members:
         </p>
@@ -61,7 +68,7 @@ const articleContent: Record<string, { title: string; body: React.ReactElement }
           Additional drivers are added at pick‑up and must meet the rental agency’s requirements (license & major credit card). Charges may apply for drivers under 25.
         </p>
 
-  <h3 id="booking" className="hc-article-sub">Booking a rental car</h3>
+        <h3 id="booking" style={{ marginTop: 32, fontSize: 18 }}>Booking a rental car</h3>
         <p>To book:</p>
         <ol>
           <li>Sign in to your account</li>
@@ -78,12 +85,12 @@ const articleContent: Record<string, { title: string; body: React.ReactElement }
           <li>Follow prompts for account assistance if needed</li>
         </ol>
 
-  <h3 id="email-confirmations" className="hc-article-sub">Email confirmations</h3>
+        <h3 id="email-confirmations" style={{ marginTop: 32, fontSize: 18 }}>Email confirmations</h3>
         <p>
           You’ll receive a confirmation email with RoadReach and agency confirmation numbers. Check spam/junk if missing or resend from your account.
         </p>
 
-  <h3 id="insurance-options" className="hc-article-sub">Insurance options</h3>
+        <h3 id="insurance-options" style={{ marginTop: 32, fontSize: 18 }}>Insurance options</h3>
         <p>Insurance isn’t included; you may add coverage via:</p>
         <ul>
           <li>Third‑party travel insurance</li>
@@ -92,32 +99,32 @@ const articleContent: Record<string, { title: string; body: React.ReactElement }
           <li>Personal auto insurance</li>
         </ul>
 
-  <h3 id="loyalty-numbers" className="hc-article-sub">Loyalty numbers</h3>
+        <h3 id="loyalty-numbers" style={{ marginTop: 32, fontSize: 18 }}>Loyalty numbers</h3>
         <p>Enter supported loyalty numbers under Driver Details. Contact the rewards program for point eligibility.</p>
 
-  <h3 id="optional-equipment" className="hc-article-sub">Optional equipment / add‑ons</h3>
+        <h3 id="optional-equipment" style={{ marginTop: 32, fontSize: 18 }}>Optional equipment / add‑ons</h3>
         <p>
           Add navigation, child seats, satellite radio during booking (availability varies). To add later you may need to cancel/rebook or request at pick‑up (pricing may change).
         </p>
 
-  <h3 id="restrictions" className="hc-article-sub">Restrictions</h3>
+        <h3 id="restrictions" style={{ marginTop: 32, fontSize: 18 }}>Restrictions</h3>
         <p>
           Review geographic & cross‑border restrictions. Confirm terms for international or one‑way trips.
         </p>
 
-  <hr className="hc-article-sep" />
+        <hr style={{ margin: "32px 0" }} />
 
-        <div className="hc-answer-help">
-          <span className="hc-answer-help-label">Is this answer helpful?</span>
-          <div className="hc-inline-flex">
-            <button className="hc-vote-btn" aria-label="Helpful">👍</button>
-            <button className="hc-vote-btn" aria-label="Not helpful">👎</button>
+        <div style={{ display: "flex", alignItems: "center", gap: 20, marginTop: 12 }}>
+          <span style={{ fontWeight: 500 }}>Is this answer helpful?</span>
+          <div style={{ display: "flex", gap: 12 }}>
+            <button style={voteBtnStyle} aria-label="Helpful">👍</button>
+            <button style={voteBtnStyle} aria-label="Not helpful">👎</button>
           </div>
         </div>
 
-        <div className="hc-related">
-          <h4>Related Answers</h4>
-          <ul>
+        <div style={{ marginTop: 32 }}>
+          <h4 style={{ marginBottom: 12 }}>Related Answers</h4>
+          <ul style={{ lineHeight: 1.6 }}>
             <li>Rental Car Only General Information</li>
             <li>Rental Car Only Changes &amp; Cancellations</li>
             <li>RoadReach Rewards Program</li>
@@ -141,11 +148,17 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
     description: "",
   });
   const [error, setError] = useState("");
+<<<<<<< Updated upstream
   const [toast, setToast] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+=======
+  const [success, setSuccess] = useState("");
+  const [toast, setToast] = useState<string | null>(null); // <--- NEW
+>>>>>>> Stashed changes
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [selectedArticle, setSelectedArticle] = useState<string | null>(null); // NEW
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -156,7 +169,8 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
       // live-format phone as user types
       const formatted = formatPhone(value);
       setForm({ ...form, phoneNumber: formatted });
-  setError("");
+      setError("");
+      setSuccess("");
       if (formatted && !isValidPhone(formatted)) {
         setPhoneError("Phone number must be 10 digits");
       } else {
@@ -166,7 +180,8 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
     }
 
     setForm({ ...form, [name]: value });
-  setError("");
+    setError("");
+    setSuccess("");
 
     if (name === "email") {
       if (!value) setEmailError("Email is required");
@@ -177,6 +192,7 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+<<<<<<< Updated upstream
     if (submitting) return;
     setSubmitting(true);
     setError("");
@@ -184,22 +200,39 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
     if (!form.fullName || !form.email || !form.requestType || !form.description) {
       setError("Please fill in all required fields.");
       setSubmitting(false);
+=======
+    setError("");
+    setSuccess("");
+    setLoading(true); // Start loading
+
+    if (!form.fullName || !form.email || !form.requestType || !form.description) {
+      setError("Please fill in all required fields.");
+      setLoading(false); // Stop loading
+>>>>>>> Stashed changes
       return;
     }
     if (!emailRegex.test(form.email.trim())) {
       setEmailError("Enter a valid email");
+<<<<<<< Updated upstream
       setSubmitting(false);
+=======
+      setLoading(false); // Stop loading
+>>>>>>> Stashed changes
       return;
     }
     if (form.phoneNumber && !isValidPhone(form.phoneNumber)) {
       setPhoneError("Phone number must be 10 digits");
+<<<<<<< Updated upstream
       setSubmitting(false);
+=======
+      setLoading(false); // Stop loading
+>>>>>>> Stashed changes
       return;
     }
 
     const payload = {
       ...form,
-      phoneNumber: normalizePhone(form.phoneNumber) // send only digits
+      phoneNumber: normalizePhone(form.phoneNumber)
     };
 
     try {
@@ -211,9 +244,16 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
       const text = await res.text();
       if (!res.ok) {
         setError(text || "Failed to submit request.");
+<<<<<<< Updated upstream
         setSubmitting(false);
         return;
       }
+=======
+        setLoading(false); // Stop loading
+        return;
+      }
+      setSuccess("");
+>>>>>>> Stashed changes
       setToast("Request submitted successfully");
       setForm({
         fullName: "",
@@ -223,72 +263,117 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
         description: "",
       });
       setTimeout(() => setToast(null), 4000);
+<<<<<<< Updated upstream
     } catch {
       setError("Failed to submit request. Please try again.");
     } finally {
       setSubmitting(false);
+=======
+      setLoading(false); // Stop loading
+    } catch (err) {
+      setError("Failed to submit request. Please try again.");
+      setLoading(false); // Stop loading
+>>>>>>> Stashed changes
     }
   };
 
   if (!open) return null;
 
   return (
-    <div className="hc-overlay" onClick={onClose}>
+    <div style={styles.overlay} onClick={onClose}>
+      {/* Toast (outside modal to ensure always visible) */}
       {toast && (
-        <div role="alert" className="hc-toast">
+        <div role="alert" style={styles.toast}>
           {toast}
-          <button onClick={() => setToast(null)} className="hc-toast-close" aria-label="Close notification">×</button>
+          <button
+            onClick={() => setToast(null)}
+            style={styles.toastClose}
+            aria-label="Close notification"
+          >
+            ×
+          </button>
         </div>
       )}
-      <div className="hc-modal" onClick={e => e.stopPropagation()}>
-        <button className="hc-close" onClick={onClose}>&times;</button>
+      <div style={styles.modal} onClick={e => e.stopPropagation()}>
+        <button style={styles.closeBtn} onClick={onClose}>&times;</button>
 
         {/* ARTICLE VIEW */}
         {selectedArticle && articleContent[selectedArticle] ? (
           <div>
-            <div className="hc-back-header">
-              <button onClick={() => setSelectedArticle(null)} className="hc-back-btn-icon" aria-label="Back">←</button>
-              <div className="hc-header hc-header--inline">
-                <img src={RoadReachLogo} alt="RoadReach Logo" />
-                <span className="hc-header-title">Help Center</span>
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              marginBottom: 12,
+              borderBottom: "1px solid #e2e6ea",
+              paddingBottom: 8
+            }}>
+              <button
+                onClick={() => setSelectedArticle(null)}
+                style={{ background: "none", border: "1px solid #c7d2da", borderRadius: 6, padding: "6px 10px", cursor: "pointer", fontSize: 16 }}
+                aria-label="Back"
+              >←</button>
+              <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 10 }}>
+                <img src={RoadReachLogo} alt="RoadReach Logo" style={{ height: 36 }} />
+                <span style={{ fontSize: 30, fontWeight: 500 }}>Help Center</span>
               </div>
+              <div style={{ width: 40 }} />
             </div>
-            <div className="hc-article-search">
-              <input className="hc-article-search-input" placeholder="How can we help?" value={search} onChange={(e) => setSearch(e.target.value)} />
-              <button className="hc-article-search-btn">🔍</button>
+            <div style={{ background: "#0c5394", display: "flex", borderRadius: 6, marginBottom: 26, padding: 10 }}>
+              <input
+                placeholder="How can we help?"
+                style={{ flex: 1, padding: "8px 10px", fontSize: 15, border: "none", borderRadius: 4 }}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <button style={{
+                background: "#fff",
+                border: "1px solid #0c5394",
+                marginLeft: 10,
+                padding: "4px 14px",
+                fontSize: 20,
+                cursor: "pointer",
+                borderRadius: 6
+              }}>🔍</button>
             </div>
-            <h1 className="hc-article-title">
+            <h1 style={{ fontSize: 26, fontWeight: 600, marginTop: 0, marginBottom: 18 }}>
               {articleContent[selectedArticle].title}
             </h1>
-            <div className="hc-article-layout">
-              <div className="hc-article-main">
+            <div style={styles.articleLayout}>
+              <div style={styles.articleMain}>
                 {articleContent[selectedArticle].body}
-                <div className="hc-print-bar">
-                  <button onClick={() => window.print()} className="hc-print-btn">🖨️ Print</button>
+                <div style={styles.printBar}>
+                  <button onClick={() => window.print()} style={styles.printBtn}>🖨️ Print</button>
                 </div>
               </div>
-              <aside className="hc-contact">
-                <div className="hc-contact-heading">Contact Us</div>
-                <div className="hc-contact-section">
-                  <div className="hc-contact-icon">📞</div>
+              <aside style={styles.contactPanel}>
+                <div style={styles.contactHeading}>Contact Us</div>
+
+                <div style={styles.contactSection}>
+                  <div style={styles.contactIcon}>📞</div>
                   <div>
-                    <div className="hc-contact-label">Questions or Book Now</div>
-                    <a href="tel:1-866-921-7925" className="hc-contact-phone">1-866-921-7925</a>
-                    <div className="hc-contact-small">Mon - Fri: 5AM to 7PM<br/>Sat - Sun: 6AM to 5PM PT</div>
+                    <div style={styles.contactLabel}>Questions or Book Now</div>
+                    <a href="tel:1-866-921-7925" style={styles.contactPhone}>1-866-921-7925</a>
+                    <div style={styles.contactSmall}>
+                      Mon - Fri: 5AM to 7PM<br/>
+                      Sat - Sun: 6AM to 5PM PT
+                    </div>
                   </div>
                 </div>
-                <div className="hc-contact-section">
-                  <div className="hc-contact-icon">🌐</div>
+
+                <div style={styles.contactSection}>
+                  <div style={styles.contactIcon}>🌐</div>
                   <div>
-                    <div className="hc-contact-label">Help While Traveling</div>
-                    <a href="tel:1-866-317-4711" className="hc-contact-phone">1-866-317-4711</a>
+                    <div style={styles.contactLabel}>Help While Traveling</div>
+                    <a href="tel:1-866-317-4711" style={styles.contactPhone}>1-866-317-4711</a>
                   </div>
                 </div>
-                <div className="hc-contact-section">
-                  <div className="hc-contact-icon">🗂️</div>
+
+                <div style={styles.contactSection}>
+                  <div style={styles.contactIcon}>🗂️</div>
                   <div>
-                    <div className="hc-contact-label">Post-Travel Inquiry</div>
-                    <a href="#" className="hc-contact-phone">File a claim</a>
+                    <div style={styles.contactLabel}>Post-Travel Inquiry</div>
+                    <a href="#" style={styles.contactPhone}>File a claim</a>
                   </div>
                 </div>
               </aside>
@@ -297,49 +382,81 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
         ) : !showForm ? (
           // HOME VIEW (update list items to be clickable)
           <>
-            <div className="hc-header">
-              <img src={RoadReachLogo} alt="RoadReach Logo" />
-              <span className="hc-header-title">Help Center</span>
+            {/* Logo and Title */}
+            <div style={{display: "flex", alignItems: "center", gap: 10, marginBottom: 8}}>
+              <img src={RoadReachLogo} alt="RoadReach Logo" style={{height: 36, borderRadius: 6}} />
+              <span style={{fontSize: 32, fontWeight: 500, letterSpacing: "-1px"}}>Help Center</span>
             </div>
-            <div className="hc-search-bar">
-              <form onSubmit={e => e.preventDefault()}>
-                <input className="hc-search-input" placeholder="How can we help?" value={search} onChange={e => setSearch(e.target.value)} />
-                <button type="submit" className="hc-search-submit"><span role="img" aria-label="search">🔍</span></button>
+            {/* Search Bar */}
+            <div style={{background: "#1565c0", padding: 16, borderRadius: 8, marginBottom: 18}}>
+              <form onSubmit={e => e.preventDefault()} style={{display: "flex"}}>
+                <input
+                  style={{
+                    flex: 1,
+                    padding: "10px 12px",
+                    border: "none",
+                    borderRadius: 4,
+                    fontSize: 16,
+                  }}
+                  placeholder="How can we help?"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                />
+                <button type="submit" style={{
+                  background: "#fff",
+                  border: "none",
+                  borderRadius: "0 4px 4px 0",
+                  padding: "0 16px",
+                  cursor: "pointer"
+                }}>
+                  <span role="img" aria-label="search" style={{fontSize: 22, color: "#1565c0"}}>🔍</span>
+                </button>
               </form>
             </div>
+            {/* Popular Answers */}
             <div>
-              <div className="hc-popular-title">Popular Answers</div>
-              <ul className="hc-popular-list">
+              <div style={{fontSize: 22, color: "#1565c0", fontWeight: 500, marginBottom: 8}}>Popular Answers</div>
+              <ul style={{paddingLeft: 18, marginBottom: 12}}>
                 {popularAnswers.map(ans => (
-                  <li key={ans.id} className="hc-popular-item" onClick={() => setSelectedArticle(ans.id)}>{ans.title}</li>
+                  <li
+                    key={ans.id}
+                    style={{ marginBottom: 4, fontSize: 16, cursor: "pointer", color: "#0b60a8" }}
+                    onClick={() => setSelectedArticle(ans.id)}
+                  >
+                    {ans.title}
+                  </li>
                 ))}
               </ul>
-              <a href="#" className="hc-show-more">Show more Published Answers <span className="hc-more-arrow">›</span></a>
+              <a href="#" style={{color: "#1565c0", fontSize: 15, textDecoration: "underline", marginBottom: 18, display: "inline-block"}}>
+                Show more Published Answers <span style={{fontSize: 18}}>›</span>
+              </a>
             </div>
-            <div className="hc-quick-links-wrap">
-              <div className="hc-quick-link"><span>Troubleshoot</span> <TroubleshootIcon /></div>
-              <div className="hc-quick-link"><span>General Information</span> <InfoIcon /></div>
-              <div className="hc-quick-link"><span>Rental Cars</span> <CarIcon /></div>
+            {/* Quick Links */}
+            <div style={{marginTop: 10}}>
+              <div style={styles.quickLink}><span>Troubleshoot</span> <TroubleshootIcon /></div>
+              <div style={styles.quickLink}><span>General Information</span> <InfoIcon /></div>
+              <div style={styles.quickLink}><span>Rental Cars</span> <CarIcon /></div>
             </div>
-            <button className="hc-submit-btn" onClick={() => setShowForm(true)}>Submit a Request</button>
+            {/* Contact/Submit Button */}
+            <button style={styles.submitBtn} onClick={() => setShowForm(true)}>Submit a Request</button>
           </>
         ) : (
           // FORM VIEW (unchanged)
           <>
-            <h2 className="hc-header-title">Submit a request</h2>
-            <form onSubmit={handleSubmit} className="hc-form">
-              <label className="hc-label">Full Name</label>
+            <h2 style={styles.title}>Submit a request</h2>
+            <form onSubmit={handleSubmit} style={styles.form}>
+              <label style={styles.label}>Full Name</label>
               <input
-                className="hc-input"
+                style={styles.input}
                 name="fullName"
                 value={form.fullName}
                 onChange={handleChange}
                 placeholder="Enter your full name"
                 required
               />
-              <label className="hc-label">Email</label>
+              <label style={styles.label}>Email</label>
               <input
-                className="hc-input"
+                style={{ ...styles.input, borderColor: emailError ? "#d32f2f" : "#d1d5db" }}
                 name="email"
                 type="email"
                 value={form.email}
@@ -351,10 +468,10 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
                 placeholder="Enter your email"
                 required
               />
-              {emailError && <div className="hc-field-error">{emailError}</div>}
-              <label className="hc-label">Phone Number</label>
+              {emailError && <div style={styles.fieldError}>{emailError}</div>}
+              <label style={styles.label}>Phone Number</label>
               <input
-                className="hc-input"
+                style={{ ...styles.input, borderColor: phoneError ? "#d32f2f" : "#d1d5db" }}
                 name="phoneNumber"
                 value={form.phoneNumber}
                 onChange={handleChange}
@@ -363,13 +480,11 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
                 }}
                 placeholder="Enter your phone number (optional)"
               />
-              {phoneError && <div className="hc-field-error">{phoneError}</div>}
-              <label className="hc-label">Request Type</label>
+              {phoneError && <div style={styles.fieldError}>{phoneError}</div>}
+              <label style={styles.label}>Request Type</label>
               <select
-                className="hc-input"
+                style={styles.input}
                 name="requestType"
-                aria-label="Request Type"
-                title="Request Type"
                 value={form.requestType}
                 onChange={handleChange}
               >
@@ -378,18 +493,33 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
                 <option value="Technical">Technical</option>
                 <option value="Other">Other</option>
               </select>
-              <label className="hc-label">Description</label>
+              <label style={styles.label}>Description</label>
               <textarea
-                className="hc-input hc-textarea"
+                style={{ ...styles.input, minHeight: 80, resize: "vertical" }}
                 name="description"
                 value={form.description}
                 onChange={handleChange}
                 placeholder="Describe your issue or request"
                 required
               />
+<<<<<<< Updated upstream
               {error && <div className="hc-error">{error}</div>}
               <button type="submit" className="hc-form-submit" disabled={submitting}>{submitting ? "Submitting..." : "Submit"}</button>
               <button type="button" className="hc-back-btn" onClick={() => setShowForm(false)}>Back to Help Center</button>
+=======
+              {error && <div style={styles.error}>{error}</div>}
+              {/* removed inline success since toast handles it */}
+              <button type="submit" style={styles.submitBtn} disabled={loading}>
+                {loading ? (
+                  <span>
+                    <span className="spinner" /> Submitting...
+                  </span>
+                ) : (
+                  "Submit"
+                )}
+              </button>
+              <button type="button" style={styles.cancelBtn} onClick={() => setShowForm(false)}>Back to Help Center</button>
+>>>>>>> Stashed changes
             </form>
           </>
         )}
@@ -397,4 +527,221 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
     </div>
   );
 };
+
+const styles: { [key: string]: React.CSSProperties } = {
+  overlay: {
+    position: "fixed",
+    top: 0, left: 0, right: 0, bottom: 0,
+    background: "rgba(0,0,0,0.25)",
+    zIndex: 2000,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  modal: {
+    background: "#fff",
+    borderRadius: 12,
+    boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
+    padding: "36px 32px 32px 32px",
+    minWidth: 380,
+    maxWidth: "90vw",
+    position: "relative",
+    maxHeight: "90vh",
+    overflowY: "auto",
+  },
+  closeBtn: {
+    position: "absolute",
+    top: 16,
+    right: 16,
+    background: "none",
+    border: "none",
+    fontSize: 28,
+    color: "#888",
+    cursor: "pointer",
+  },
+  title: {
+    textAlign: "center",
+    fontSize: 32,
+    fontWeight: 700,
+    marginBottom: 24,
+    marginTop: 0,
+    letterSpacing: "-1px",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 16,
+  },
+  label: {
+    fontWeight: 500,
+    marginBottom: 4,
+    fontSize: 16,
+  },
+  input: {
+    padding: "10px 12px",
+    border: "1px solid #d1d5db",
+    borderRadius: 6,
+    fontSize: 16,
+    outline: "none",
+    marginBottom: 0,
+  },
+  submitBtn: {
+    marginTop: 18,
+    padding: "12px 0",
+    background: "#e15b87",
+    color: "#fff",
+    border: "none",
+    borderRadius: 6,
+    fontSize: 20,
+    fontWeight: 600,
+    cursor: "pointer",
+    transition: "background 0.2s",
+    width: "100%",
+  },
+  quickLink: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    background: "#f3f3f3",
+    border: "1px solid #d1d5db",
+    borderRadius: 8,
+    padding: "16px 18px",
+    fontSize: 18,
+    fontWeight: 500,
+    marginBottom: 12,
+    cursor: "pointer",
+  },
+  cancelBtn: {
+    marginTop: 8,
+    padding: "10px 0",
+    background: "#f5f5f5",
+    color: "#333",
+    border: "none",
+    borderRadius: 6,
+    fontSize: 16,
+    fontWeight: 500,
+    cursor: "pointer",
+  },
+  error: {
+    color: "#d32f2f",
+    background: "#fff0f0",
+    padding: "8px 12px",
+    borderRadius: 4,
+    marginBottom: 4,
+    fontSize: 15,
+    textAlign: "center",
+  },
+  success: {
+    color: "#388e3c",
+    background: "#e8f5e9",
+    padding: "8px 12px",
+    borderRadius: 4,
+    marginBottom: 4,
+    fontSize: 15,
+    textAlign: "center",
+  },
+  
+  toast: {
+    position: "fixed",
+    top: 20,
+    right: 20,
+    background: "#1f7a42",
+    color: "#fff",
+    padding: "12px 18px",
+    borderRadius: 8,
+    boxShadow: "0 4px 18px rgba(0,0,0,0.25)",
+    fontSize: 15,
+    fontWeight: 500,
+    zIndex: 3000,
+    display: "flex",
+    alignItems: "center",
+    gap: 12,
+    maxWidth: 320,
+  },
+  toastClose: {
+    background: "rgba(255,255,255,0.2)",
+    border: "none",
+    color: "#fff",
+    fontSize: 18,
+    lineHeight: 1,
+    cursor: "pointer",
+    width: 28,
+    height: 28,
+    borderRadius: 4,
+  },
+  fieldError: {
+    color: "#d32f2f",
+    fontSize: 13,
+    marginTop: 4,
+    marginBottom: -4
+  },
+  articleLayout: {
+    display: "flex",
+    gap: 28,
+    alignItems: "flex-start"
+  },
+  articleMain: {
+    flex: 1,
+    minWidth: 0
+  },
+  contactPanel: {
+    width: 265,
+    flexShrink: 0,
+    border: "1px solid #d9dde1",
+    borderRadius: 4,
+    padding: "28px 26px",
+    fontSize: 14,
+    background: "#fff",
+    boxShadow: "0 1px 2px rgba(0,0,0,0.04)"
+  },
+  contactHeading: {
+    fontSize: 20,
+    fontWeight: 500,
+    color: "#0d4f80",
+    margin: "0 0 20px 0"
+  },
+  contactSection: {
+    display: "flex",
+    gap: 12,
+    marginBottom: 28
+  },
+  contactIcon: {
+    fontSize: 26,
+    lineHeight: "26px",
+    marginTop: 2
+  },
+  contactLabel: {
+    fontWeight: 500,
+    marginBottom: 4,
+    color: "#182b37"
+  },
+  contactPhone: {
+    display: "inline-block",
+    color: "#0d62a5",
+    textDecoration: "none",
+    fontWeight: 500,
+    marginBottom: 4
+  },
+  contactSmall: {
+    fontSize: 12,
+    lineHeight: 1.4,
+    color: "#4c5d66"
+  },
+  printBar: {
+    marginTop: 36,
+    borderTop: "1px dashed #b9c3cc",
+    paddingTop: 18,
+    textAlign: "right"
+  },
+  printBtn: {
+    background: "#0c5394",
+    color: "#fff",
+    border: "none",
+    padding: "10px 18px",
+    borderRadius: 6,
+    cursor: "pointer",
+    fontSize: 14
+  }
+};
+
 export default HelpCenter;
