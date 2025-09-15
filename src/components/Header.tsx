@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import RoadReachLogo from "../assets/RoadReach_Logo_cropped.png";
 import { HelpCircle, PhoneCall } from 'lucide-react';
 import GeoDropdown from './GeoDropdown';
@@ -12,24 +12,6 @@ const Header: React.FC = () => {
   const firstName = localStorage.getItem("firstname");
   const [showDropdown, setShowDropdown] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
-  const userRef = useRef<HTMLSpanElement | null>(null);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    if (!showDropdown) return;
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        userRef.current &&
-        !userRef.current.contains(event.target as Node) &&
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setShowDropdown(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showDropdown]);
 
   const handleLogout = () => {
     localStorage.removeItem("firstname");
@@ -81,23 +63,9 @@ const Header: React.FC = () => {
           <span className="header__sep header__sep--tall">|</span>
           {firstName ? (
             <div className="header__user-wrapper">
-              <span className="header__user" ref={userRef} onClick={() => setShowDropdown(prev => !prev)}>👤 {firstName}</span>
+              <span className="header__user" onClick={() => setShowDropdown(prev => !prev)}>👤 {firstName}</span>
               {showDropdown && (
-                <div className="profile-dropdown profile-dropdown--full" ref={dropdownRef}>
-                  <div className="profile-dropdown__user">
-                    <div className="profile-dropdown__avatar">{firstName ? firstName[0].toUpperCase() : "U"}</div>
-                    <div className="profile-dropdown__info">
-                      <div className="profile-dropdown__name">{localStorage.getItem("firstname") && localStorage.getItem("lastname") ? `${localStorage.getItem("firstname").toUpperCase()} ${localStorage.getItem("lastname").toUpperCase()}` : firstName}</div>
-                      <div className="profile-dropdown__email">{localStorage.getItem("email")}</div>
-                    </div>
-                  </div>
-                    <Link
-                      to="/profile"
-                      className="profile-dropdown__item"
-                      onClick={() => setShowDropdown(false)}
-                    >
-                      Account
-                    </Link>
+                <div className="profile-dropdown">
                   <Link
                     to="/bookings"
                     className="profile-dropdown__item"
