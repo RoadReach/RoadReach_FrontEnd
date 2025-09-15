@@ -130,7 +130,6 @@ const Login: React.FC = () => {
         <ToastContainer position="top-right" autoClose={3000} />
         <form onSubmit={handleSubmit}>
           <div className="floating-group">
-            <label htmlFor="login-email" className={`floating-label${formData.email ? ' active' : ''}${fieldErrors.email || emailError ? ' error' : ''}`}>Email Address</label>
             <input
               type="email"
               name="email"
@@ -140,13 +139,14 @@ const Login: React.FC = () => {
               autoComplete="email"
               id="login-email"
               aria-label="Email Address"
+              placeholder=" "
             />
+            <label htmlFor="login-email" className="floating-label">Email Address</label>
           </div>
           {(fieldErrors.email || emailError) && (
             <div className="error-text">{emailError || 'Email address is required.'}</div>
           )}
           <div className="floating-group login__relative">
-            <label htmlFor="login-password" className={`floating-label${formData.password ? ' active' : ''}${(fieldErrors.password || passwordError) ? ' error' : ''}`}>Password</label>
             <input
               type={showPassword ? "text" : "password"}
               name="password"
@@ -156,7 +156,9 @@ const Login: React.FC = () => {
               id="login-password"
               autoComplete="current-password"
               aria-label="Password"
+              placeholder=" "
             />
+            <label htmlFor="login-password" className="floating-label">Password</label>
             <button
               type="button"
               className="show-toggle"

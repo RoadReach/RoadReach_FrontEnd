@@ -1,3 +1,29 @@
+/* Floating label improvements and accessibility */
+.floating-group .floating-input:focus + .floating-label,
+.floating-group .floating-input:not(:placeholder-shown) + .floating-label {
+  top: -10px;
+  left: 8px;
+  font-size: 12px;
+  color: #005ea6;
+  background: #fff;
+}
+
+/* Ensure :placeholder-shown works: give inputs a placeholder (can be a single space) */
+.floating-input::placeholder { color: transparent; }
+
+/* Make sure the label doesn't block clicks and reduce overlap risk */
+.floating-label { pointer-events: none; }
+
+/* Restore a visible focus style */
+.floating-input:focus {
+  border-color: #3374b6;
+  box-shadow: 0 0 0 3px rgba(51, 116, 182, 0.15);
+}
+
+/* Prevent overlap: input above label */
+.floating-group { position: relative; }
+.floating-input { position: relative; z-index: 2; }
+.floating-label { z-index: 1; }
 /* Ensure header-top background only on login page */
 .login-header .header__top {
   background: #f7c6b7 !important;
@@ -217,7 +243,9 @@
   outline: none;
   transition: border 0.2s;
   box-shadow: none;
-  caret-color: #222;
+  color: #222 !important;
+  caret-color: #1565c0 !important;
+  opacity: 1 !important;
 }
 .floating-input:focus {
   border-color: #ccc;
