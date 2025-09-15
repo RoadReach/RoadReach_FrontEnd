@@ -25,6 +25,7 @@ const Login: React.FC = () => {
   const [emailError, setEmailError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<{ email: boolean; password: boolean }>({ email: false, password: false });
   const [showTooltip, setShowTooltip] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
 
   // ...existing code...
@@ -47,6 +48,8 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
     const errors = {
       email: false,
       password: false,
@@ -104,9 +107,11 @@ const Login: React.FC = () => {
         setPasswordError("Invalid email or password.");
         setFieldErrors((prev) => ({ ...prev, password: true }));
       }
-  } catch {
+    } catch {
       toast.error("Server error. Please try again.");
       setPasswordError("Server error. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -199,7 +204,9 @@ const Login: React.FC = () => {
           <div className="login__checkbox-info">
             Check this box only when on a private device.
           </div>
-          <button type="submit" className="login__full-btn login__sign-btn">Sign In</button>
+          <button type="submit" className="login__full-btn login__sign-btn" disabled={submitting}>
+            {submitting ? "Signing In..." : "Sign In"}
+          </button>
           <div className="login__new-row">
             <span>New to RoadReach? <a href="#" className="login__learn-link">Learn more</a> about becoming a member.</span>
           </div>

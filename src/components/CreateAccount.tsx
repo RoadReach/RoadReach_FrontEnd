@@ -43,6 +43,7 @@ const CreateAccount: React.FC = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<{ firstName: boolean; lastName: boolean; email: boolean; password: boolean }>({ firstName: false, lastName: false, email: false, password: false });
   const [mainError, setMainError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -98,6 +99,8 @@ const CreateAccount: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
     const errors = {
       firstName: !form.firstName,
       lastName: !form.lastName,
@@ -161,8 +164,10 @@ const CreateAccount: React.FC = () => {
       } else {
         toast.error(result);
       }
-  } catch {
+    } catch {
       toast.error("Error connecting to server");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -256,7 +261,9 @@ const CreateAccount: React.FC = () => {
             </a>{" "}
             of use.
           </div>
-          <button type="submit" className="btn btn--primary create-account__submit mt-10">Create Account</button>
+          <button type="submit" className="btn btn--primary create-account__submit mt-10" disabled={submitting}>
+            {submitting ? "Creating..." : "Create Account"}
+          </button>
         </form>
         <div className="create-account__footer">
           Already have an account?{" "}

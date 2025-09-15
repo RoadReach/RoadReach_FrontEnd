@@ -96,7 +96,7 @@ const Header: React.FC = () => {
                       className="profile-dropdown__item"
                       onClick={() => setShowDropdown(false)}
                     >
-                      Profile
+                      Account
                     </Link>
                   <Link
                     to="/bookings"

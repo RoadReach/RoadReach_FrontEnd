@@ -4,6 +4,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Profile: React.FC = () => {
+  const [deleting, setDeleting] = useState(false);
   const firstName = localStorage.getItem("firstname") || "";
   const lastName = localStorage.getItem("lastname") || "";
   const email = localStorage.getItem("email") || "";
@@ -384,7 +385,7 @@ const Profile: React.FC = () => {
               )}
             </div>
             {!editingAddress && (
-              <button className="profile-edit-btn" onClick={() => setEditingAddress(true)}>Edit</button>
+              <button className="profile-inline-btn" onClick={() => setEditingAddress(true)}>Edit</button>
             )}
           </div>
         </div>
@@ -572,21 +573,27 @@ const Profile: React.FC = () => {
         </div>
       </div>
       <div className="profile-delete-row">
-        <button className="profile-delete-btn" onClick={async () => {
+        <button className="profile-delete-btn" disabled={deleting} onClick={async () => {
+            if (deleting) return;
             if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+              setDeleting(true);
               const userid = localStorage.getItem("userid") || "";
-              const response = await fetch(`http://localhost:8080/api/users/profile/${userid}`, {
-                method: "DELETE",
-              });
-              if (response.ok) {
-                toast.success("Your account has been deleted.");
-                localStorage.clear();
-                window.location.href = "/"; // Redirect to home page
-              } else {
-                toast.error("Failed to delete account. Please try again.");
+              try {
+                const response = await fetch(`http://localhost:8080/api/users/profile/${userid}`, {
+                  method: "DELETE",
+                });
+                if (response.ok) {
+                  toast.success("Your account has been deleted.");
+                  localStorage.clear();
+                  window.location.href = "/"; // Redirect to home page
+                } else {
+                  toast.error("Failed to delete account. Please try again.");
+                }
+              } finally {
+                setDeleting(false);
               }
             }
-          }}>Delete Account</button>
+          }}>{deleting ? "Deleting..." : "Delete Account"}</button>
       </div>
       <ToastContainer />
     </div>
