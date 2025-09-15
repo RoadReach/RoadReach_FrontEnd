@@ -142,6 +142,7 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
   });
   const [error, setError] = useState("");
   const [toast, setToast] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [selectedArticle, setSelectedArticle] = useState<string | null>(null); // NEW
@@ -176,18 +177,23 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  setError("");
+    if (submitting) return;
+    setSubmitting(true);
+    setError("");
 
     if (!form.fullName || !form.email || !form.requestType || !form.description) {
       setError("Please fill in all required fields.");
+      setSubmitting(false);
       return;
     }
     if (!emailRegex.test(form.email.trim())) {
       setEmailError("Enter a valid email");
+      setSubmitting(false);
       return;
     }
     if (form.phoneNumber && !isValidPhone(form.phoneNumber)) {
       setPhoneError("Phone number must be 10 digits");
+      setSubmitting(false);
       return;
     }
 
@@ -205,10 +211,10 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
       const text = await res.text();
       if (!res.ok) {
         setError(text || "Failed to submit request.");
+        setSubmitting(false);
         return;
       }
-  // success handled by toast
-      setToast("Request submitted successfully"); // <--- SHOW TOAST
+      setToast("Request submitted successfully");
       setForm({
         fullName: "",
         email: "",
@@ -216,10 +222,11 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
         requestType: "General",
         description: "",
       });
-      // auto-hide toast
       setTimeout(() => setToast(null), 4000);
-  } catch {
+    } catch {
       setError("Failed to submit request. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -381,7 +388,7 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
                 required
               />
               {error && <div className="hc-error">{error}</div>}
-              <button type="submit" className="hc-form-submit">Submit</button>
+              <button type="submit" className="hc-form-submit" disabled={submitting}>{submitting ? "Submitting..." : "Submit"}</button>
               <button type="button" className="hc-back-btn" onClick={() => setShowForm(false)}>Back to Help Center</button>
             </form>
           </>
