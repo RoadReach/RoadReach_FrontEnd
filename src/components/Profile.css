@@ -6,8 +6,10 @@
 .profile-card__title { font-weight:600; font-size:24px; margin-bottom:18px; text-align:left; }
 .profile-flex { display:flex; align-items:flex-start; gap:48px; position:relative; justify-content:center; flex-wrap:wrap; }
 .profile-field { flex:1 1 240px; text-align:left; min-width:220px; }
-.profile-field--center { text-align:center; }
+.profile-field--center { text-align:left; }
 .profile-field__label { font-weight:600; font-size:16px; margin-bottom:4px; letter-spacing:.3px; }
+.profile-field__label--small { font-size:13px; font-weight:500; color:#555; }
+.profile-field__value--small { font-size:13px; color:#444; }
 .profile-field__value { font-size:16px; line-height:1.35; }
 .profile-edit-btn { background:none; color:#337ab7; border:none; font-size:16px; font-weight:500; cursor:pointer; position:absolute; right:-16px; top:-8px; }
 .profile-subrow { width:74%; margin:10px auto; display:flex; gap:24px; flex-wrap:wrap; }
@@ -21,6 +23,35 @@
 .profile-delete-row { width:74%; margin:24px auto 0; display:flex; justify-content:center; }
 .profile-delete-btn { background:#d32f2f; color:#fff; border:none; border-radius:6px; font-size:16px; font-weight:500; cursor:pointer; padding:10px 32px; margin-top:8px; }
 .profile-input { width:100%; padding:8px 10px; font-size:14px; border-radius:6px; border:1px solid #337ab7; margin-bottom:6px; box-sizing:border-box; }
+.floating-label-group {
+	position: relative;
+	margin-bottom: 12px;
+}
+.floating-label {
+	position: absolute;
+	left: 12px;
+	top: 12px;
+	color: #888;
+	font-size: 15px;
+	background: #fff;
+	padding: 0 4px;
+	pointer-events: none;
+	transition: 0.18s cubic-bezier(.4,0,.2,1);
+}
+.floating-label.filled,
+.floating-label-group input:focus + .floating-label,
+.floating-label-group select:focus + .floating-label {
+	top: -10px;
+	left: 8px;
+	font-size: 12px;
+	color: #337ab7;
+	background: #fff;
+	z-index: 2;
+}
+.floating-label-group input,
+.floating-label-group select {
+	margin-bottom: 0;
+}
 .profile-flex-grow { flex:1; }
 .profile-inline-stretch { align-items:stretch; }
 .profile-success { color:green; margin-top:8px; font-size:13px; }
