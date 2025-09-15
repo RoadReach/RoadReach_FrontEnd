@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { validateEmail } from "./validateEmail";
 import './Login.css';
@@ -24,12 +25,10 @@ const Login: React.FC = () => {
   const [emailError, setEmailError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<{ email: boolean; password: boolean }>({ email: false, password: false });
   const [showTooltip, setShowTooltip] = useState(false);
-<<<<<<< Updated upstream
   const [submitting, setSubmitting] = useState(false);
-=======
-  const [loading, setLoading] = useState(false);
->>>>>>> Stashed changes
   const navigate = useNavigate();
+
+  // ...existing code...
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -49,13 +48,8 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-<<<<<<< Updated upstream
     if (submitting) return;
     setSubmitting(true);
-=======
-    setLoading(true); // Start loading
-
->>>>>>> Stashed changes
     const errors = {
       email: false,
       password: false,
@@ -80,10 +74,10 @@ const Login: React.FC = () => {
     setFieldErrors(errors);
     setEmailError(customEmailError);
     if (errors.email || errors.password) {
-      setLoading(false); // Stop loading if validation fails
       return;
     }
 
+    // Check credentials with backend
     try {
       const response = await fetch("http://localhost:8080/api/users/login", {
         method: "POST",
@@ -107,24 +101,18 @@ const Login: React.FC = () => {
         localStorage.setItem("userid", data.userid);
         toast.success("Login successful!");
         setTimeout(() => {
-          setLoading(false); // Stop loading before navigation
           navigate("/dashboard");
         }, 1500);
       } else {
         toast.error("Invalid email or password.");
         setPasswordError("Invalid email or password.");
         setFieldErrors((prev) => ({ ...prev, password: true }));
-        setLoading(false); // Stop loading
       }
     } catch {
       toast.error("Server error. Please try again.");
       setPasswordError("Server error. Please try again.");
-<<<<<<< Updated upstream
     } finally {
       setSubmitting(false);
-=======
-      setLoading(false); // Stop loading
->>>>>>> Stashed changes
     }
   };
 
@@ -142,12 +130,7 @@ const Login: React.FC = () => {
         <ToastContainer position="top-right" autoClose={3000} />
         <form onSubmit={handleSubmit}>
           <div className="floating-group">
-            <label
-              htmlFor="login-email"
-              className={`floating-label${formData.email ? ' active' : ''}${fieldErrors.email || emailError ? ' error' : ''}`}
-            >
-              Email Address
-            </label>
+            <label htmlFor="login-email" className={`floating-label${formData.email ? ' active' : ''}${fieldErrors.email || emailError ? ' error' : ''}`}>Email Address</label>
             <input
               type="email"
               name="email"
@@ -222,23 +205,8 @@ const Login: React.FC = () => {
           <div className="login__checkbox-info">
             Check this box only when on a private device.
           </div>
-<<<<<<< Updated upstream
           <button type="submit" className="login__full-btn login__sign-btn" disabled={submitting}>
             {submitting ? "Signing In..." : "Sign In"}
-=======
-          <button
-            type="submit"
-            className="login__full-btn login__sign-btn"
-            disabled={loading}
-          >
-            {loading ? (
-              <span>
-                <span className="spinner" /> Signing in...
-              </span>
-            ) : (
-              "Sign In"
-            )}
->>>>>>> Stashed changes
           </button>
           <div className="login__new-row">
             <span>New to RoadReach? <a href="#" className="login__learn-link">Learn more</a> about becoming a member.</span>

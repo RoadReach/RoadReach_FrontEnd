@@ -1,12 +1,6 @@
 body {
-<<<<<<< Updated upstream
   margin-bottom: 60px;
 }
-=======
-  margin-bottom: 60px; /* Match or exceed .site-footer height */
-}
-
->>>>>>> Stashed changes
 .site-footer {
   width: 100%;
   text-align: center;
@@ -20,5 +14,4 @@ body {
   bottom: 0;
   z-index: 1000;
   box-shadow: 0 -1px 6px rgba(0,0,0,0.04);
- 
 }

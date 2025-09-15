@@ -183,55 +183,49 @@
   position: relative;
   margin-bottom: 18px;
 }
-
 .floating-label {
   position: absolute;
-  left: 18px;
-  top: 8px;
-  color: #fff;
+  left: 12px;
+  top: 13px;
+  color: #888;
   font-size: 15px;
   pointer-events: none;
-  background: #e6f0ff;
+  background: #fff;
   padding: 0 4px;
   transition: 0.2s;
-  z-index: 1;
-}
-
-.floating-label.active {
-  top: -12px;
-  left: 12px;
-  font-size: 13px;
-  color: #005ea6;
-  background: #e6f0ff;
   z-index: 2;
 }
-
+.floating-label.active {
+  top: -10px;
+  left: 8px;
+  font-size: 12px;
+  color: #005ea6;
+  background: #fff;
+}
 .floating-label.error {
   color: #c00;
   font-weight: bold;
-  background: #ffeaea;
 }
 /* Remove blue border from input, keep neutral border */
 .floating-input {
   width: 100%;
-  padding: 13px 12px;
-  font-size: 17px;
-  border: 1.5px solid #b3d1f7;
-  border-radius: 4px;
-  background: #e6f0ff;
+  padding: 13px 12px 13px 12px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  background: #fff;
   outline: none;
-  transition: border 0.2s, background 0.2s;
+  transition: border 0.2s;
   box-shadow: none;
   caret-color: #222;
-  z-index: 2;
 }
 .floating-input:focus {
-  border-color: #005ea6;
-  background: #e6f0ff;
+  border-color: #ccc;
+  box-shadow: none;
 }
 .floating-input.error {
   border-color: #c00;
-  background: #ffeaea;
+  border-width: 3px;
 }
 .error-text {
   color: #c00;
@@ -331,18 +325,4 @@
   border-style: solid;
   border-color: #fff transparent transparent transparent;
   filter: drop-shadow(0 2px 2px rgba(0,0,0,0.08));
-}
-.spinner {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  border: 2px solid #005ea6;
-  border-top: 2px solid #fff;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin-right: 8px;
-  vertical-align: middle;
-}
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }
