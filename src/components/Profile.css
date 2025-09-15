@@ -11,7 +11,6 @@
 .profile-field__label--small { font-size:13px; font-weight:500; color:#555; }
 .profile-field__value--small { font-size:13px; color:#444; }
 .profile-field__value { font-size:16px; line-height:1.35; }
-.profile-edit-btn { background:none; color:#337ab7; border:none; font-size:16px; font-weight:500; cursor:pointer; position:absolute; right:-16px; top:-8px; }
 .profile-subrow { width:74%; margin:10px auto; display:flex; gap:24px; flex-wrap:wrap; }
 .profile-small-card { background:#fff; border-radius:6px; box-shadow:0 2px 8px rgba(0,0,0,0.08); padding:16px 28px; min-height:60px; flex:1 1 240px; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; }
 .profile-small-card__label { font-weight:600; font-size:14px; margin-bottom:8px; }

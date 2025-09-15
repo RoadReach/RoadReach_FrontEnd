@@ -43,7 +43,16 @@ const CreateAccount: React.FC = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<{ firstName: boolean; lastName: boolean; email: boolean; password: boolean }>({ firstName: false, lastName: false, email: false, password: false });
   const [mainError, setMainError] = useState("");
+<<<<<<< Updated upstream
   const [submitting, setSubmitting] = useState(false);
+=======
+  const [loading, setLoading] = useState(false); // Add loading state
+
+  // Email validation function for allowed endings
+  function isValidEmail(email: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.(com|in|net|org|edu|gov|co|us|uk)$/i.test(email);
+  }
+>>>>>>> Stashed changes
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -80,8 +89,7 @@ const CreateAccount: React.FC = () => {
 
     // Email validation
     if (name === "email") {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      setEmailError(!emailRegex.test(value) && value.length > 0);
+      setEmailError(!isValidEmail(value) && value.length > 0);
     }
 
     // Confirm password validation
@@ -138,6 +146,15 @@ const CreateAccount: React.FC = () => {
       return;
     }
 
+    // Email ending validation on submit
+    if (!isValidEmail(form.email)) {
+      setMainError("Please enter a valid email address ending with .com, .in, .net, etc.");
+      setFieldErrors((prev) => ({ ...prev, email: true }));
+      return;
+    }
+
+    setLoading(true); // Start loading
+
     try {
       const response = await fetch("http://localhost:8080/api/users/create", {
         method: "POST",
@@ -151,7 +168,6 @@ const CreateAccount: React.FC = () => {
       });
       const result = await response.text();
       if (result.includes("successfully")) {
-        // Store sign-in flag in localStorage or sessionStorage
         if (form.keepSignedIn) {
           localStorage.setItem("keepSignedIn", "true");
         } else {
@@ -159,15 +175,21 @@ const CreateAccount: React.FC = () => {
         }
         toast.success(result);
         setTimeout(() => {
+          setLoading(false); // Stop loading before navigation
           navigate("/login");
         }, 3000);
       } else {
         toast.error(result);
+        setLoading(false); // Stop loading
       }
     } catch {
       toast.error("Error connecting to server");
+<<<<<<< Updated upstream
     } finally {
       setSubmitting(false);
+=======
+      setLoading(false); // Stop loading
+>>>>>>> Stashed changes
     }
   };
 
@@ -224,6 +246,9 @@ const CreateAccount: React.FC = () => {
           />
           {/* Error Message */}
             {mainError && (<div className="error-text error-text--main">{mainError}</div>)}
+            {emailError && (
+              <div className="error-text">Please enter a valid email address ending with .com, .in, .net, etc.</div>
+            )}
             {form.password && (
               <div className={`strength-text ${form.password.length < 8 ? 'strength--weak' : form.password.length < 10 ? 'strength--strong' : 'strength--very-strong'}`}>{passwordStrength}</div>
             )}
@@ -261,8 +286,23 @@ const CreateAccount: React.FC = () => {
             </a>{" "}
             of use.
           </div>
+<<<<<<< Updated upstream
           <button type="submit" className="btn btn--primary create-account__submit mt-10" disabled={submitting}>
             {submitting ? "Creating..." : "Create Account"}
+=======
+          <button
+            type="submit"
+            className="btn btn--primary create-account__submit mt-10"
+            disabled={loading}
+          >
+            {loading ? (
+              <span>
+                <span className="spinner" /> Creating account...
+              </span>
+            ) : (
+              "Create Account"
+            )}
+>>>>>>> Stashed changes
           </button>
         </form>
         <div className="create-account__footer">

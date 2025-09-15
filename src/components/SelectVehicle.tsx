@@ -63,7 +63,7 @@ const SelectVehicle: React.FC = () => {
   const [capacityFilters, setCapacityFilters] = useState<string[]>([]);
   const bagOptions = ['1-2 bags','3-4 bags','5+ bags'];
   const [bagFilters, setBagFilters] = useState<string[]>([]);
-  const agencyOptions = ['Alamo','Avis','Budget','Enterprise','Hertz','National','Thrifty','Dollar','Sixt'];
+  const agencyOptions = ['Alamo','Avis','Budget','Enterprise Rent-A-Car','Hertz','National','Thrifty','Dollar','Sixt'];
   const [agencyFilters, setAgencyFilters] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -406,22 +406,46 @@ const SelectVehicle: React.FC = () => {
                 {Array.from({length: Math.min(8, filteredVehicles.length || 8)}).map((_,i) => <div key={i} className="vehicle-card skeleton" />)}
               </div>
             )}
-            <div className="select-vehicle__grid">
-              {filteredVehicles.map(v => (
-                <div key={v.id} className="vehicle-card" tabIndex={0}>
-                  <div className="vehicle-card__head">
-                    <h2 className="vehicle-card__title">{v.type}</h2>
-                    <span className="vehicle-card__price">${v.price}</span>
-                  </div>
-                  <ul className="vehicle-card__features">
-                    <li>{v.company}</li>
-                    <li>{v.transmission}</li>
-                    <li>{v.passengers} passengers / {v.bags} bags</li>
-                  </ul>
-                  <button className="vehicle-card__select btn btn--primary" onClick={() => proceed(v)}>Continue</button>
+            <div className="vehicle-matrix-wrapper">
+  {/* Fixed left sidebar for vehicle types */}
+  <div className="vehicle-matrix__sidebar">
+    {vehicleTypes.map(type => (
+      <div key={type} className="vehicle-matrix__type">{type}</div>
+    ))}
+  </div>
+  {/* Main grid area */}
+  <div className="vehicle-matrix__main">
+    {/* Fixed top row for companies */}
+    <div className="vehicle-matrix__companies">
+      {agencyOptions.map(company => (
+        <div key={company} className="vehicle-matrix__company">{company}</div>
+      ))}
+    </div>
+    {/* Grid cells */}
+    <div className="vehicle-matrix__grid">
+      {vehicleTypes.map(type =>
+        agencyOptions.map(company => {
+          const vehicle = filteredVehicles.find(v => v.type === type && v.company === company);
+          return (
+            <div key={type + company} className="vehicle-matrix__cell">
+              {vehicle ? (
+                <div>
+                  <div className="vehicle-matrix__price">${vehicle.price}</div>
+                  <div>{vehicle.passengers} psg/{vehicle.bags} bags</div>
+                  <button className="vehicle-card__select btn btn--primary" onClick={() => proceed(vehicle)}>
+                    Select
+                  </button>
                 </div>
-              ))}
+              ) : (
+                <div className="vehicle-matrix__empty">—</div>
+              )}
             </div>
+          );
+        })
+      )}
+    </div>
+  </div>
+</div>
           </div>
         )}
       </main>
@@ -434,7 +458,7 @@ const SelectVehicle: React.FC = () => {
             <p className="vehicle-modal__price">Total: ${activeVehicle.price}</p>
             <ul className="vehicle-modal__list">
               <li>{activeVehicle.transmission} transmission</li>
-              <li>{activeVehicle.passengers} passengers</li>
+              <li>{activeVehicle.passengers} psg</li>
               <li>{activeVehicle.bags} bags</li>
               {activeVehicle.eco && <li>Eco Friendly</li>}
               {activeVehicle.luxury && <li>Luxury Class</li>}
