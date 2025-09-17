@@ -111,7 +111,7 @@
 }
 
 .vehicle-matrix__type {
-  height: 140px;
+  height: 80px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -154,7 +154,7 @@
 .vehicle-matrix__grid {
   display: grid;
   grid-template-columns: repeat(9, 180px); /* Adjust width as needed */
-  grid-auto-rows: 140px;
+  grid-auto-rows: 80px;
   background: #fff;
 }
 
@@ -167,7 +167,7 @@
   align-items: center;
   justify-content: center;
   min-width: 180px;
-  min-height: 140px;
+  min-height: 40px;
   background: #fafbfc;
   transition: background 0.2s;
 }
@@ -210,6 +210,230 @@
   background: #00395d;
 }
 
+/* New table styles */
+.vehicle-table-wrapper {
+  overflow: auto;
+  max-height: 600px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  margin-top: 24px;
+}
+
+.vehicle-table-matrix {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 900px;
+  font-size: 1.15rem;
+}
+
+.vehicle-table-matrix th,
+.vehicle-table-matrix td {
+  border: none;
+  padding: 18px 24px;
+  text-align: center;
+  background: #fff;
+  min-width: 120px;
+  font-weight: 400;
+}
+
+.vehicle-table-matrix th.sticky-top {
+  position: sticky;
+  top: 0;
+  background: #f8f8f8;
+  z-index: 2;
+  font-weight: bold;
+  font-size: 1.1rem;
+  border-bottom: 1px solid #e1e5eb;
+}
+
+.vehicle-table-matrix td.sticky-left,
+.vehicle-table-matrix th.sticky-left {
+  position: sticky;
+  left: 0;
+  background: #f8f8f8;
+  z-index: 1;
+  text-align: left;
+  font-weight: bold;
+  font-size: 1.1rem;
+  border-right: 1px solid #e1e5eb;
+}
+
+.vehicle-table-row-alt td,
+.vehicle-table-row-alt th.sticky-left {
+  background: #f5f7fa !important;
+}
+
+.vehicle-table-price {
+  font-size: 1.2em;
+}
+
+.vehicle-table-price--clickable {
+  color: #005DA6;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.vehicle-table-price--clickable:hover {
+  color: #00395d;
+  text-decoration: underline;
+}
+
+.vehicle-table-price--selected {
+  background: #f8faff !important;
+  border: 2px solid #009dfe !important;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  z-index: 3;
+}
+
+.vehicle-table-cell-lowest .vehicle-table-price {
+  color: #c21c1c;
+  font-weight: bold;
+}
+
+.vehicle-table-lowest-label {
+  font-size: 0.95em;
+  color: #c21c1c;
+  margin-top: 2px;
+}
+
+.vehicle-table-empty {
+  color: #bbb;
+  font-size: 1.2em;
+}
+
+/* Modal detailed */
+.vehicle-modal__dialog--detailed {
+  max-width: 900px;
+  width: 100%;
+  padding: 32px 38px 40px;
+  border: 2px solid #337ab7;
+}
+
+.vehicle-modal__info-box {
+  background: #fffbe6;
+  border: 2px solid #ffe066;
+  color: #444;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 1.08em;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.vehicle-modal__info-icon {
+  color: #337ab7;
+  font-size: 1.3em;
+}
+
+.vehicle-modal__main-details {
+  margin-top: 10px;
+}
+
+.vehicle-modal__agency-logo {
+  height: 38px;
+  margin-bottom: 8px;
+}
+
+.vehicle-modal__title {
+  font-size: 1.5em;
+  margin: 0 0 8px 0;
+}
+
+.vehicle-modal__icons {
+  font-size: 1.1em;
+  margin-bottom: 8px;
+}
+
+.vehicle-modal__car-img {
+  width: 180px;
+  margin: 12px 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+.vehicle-modal__list {
+  list-style: disc;
+  padding-left: 22px;
+  margin: 0 0 18px 0;
+  font-size: 1em;
+  color: #333;
+}
+
+.vehicle-modal__price-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin: 18px 0 10px 0;
+  font-size: 1em;
+  color: #444;
+}
+
+.vehicle-modal__price-link {
+  color: #337ab7;
+  font-weight: bold;
+  text-decoration: underline;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.vehicle-modal__price-main {
+  font-size: 1.6em;
+  font-weight: bold;
+  color: #005DA6;
+  margin: 4px 0;
+}
+
+.vehicle-modal__price-sub {
+  font-size: 1em;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+.vehicle-modal__terms-link {
+  color: #337ab7;
+  font-size: 1em;
+  text-decoration: underline;
+  margin-top: 6px;
+  display: block;
+}
+
+.vehicle-modal__continue {
+  margin-top: 18px;
+  font-size: 1.1em;
+  padding: 10px 32px;
+}
+
+.vehicle-modal__rewards {
+  margin-top: 18px;
+  font-size: 1em;
+  color: #222;
+  justify-content: flex-end;
+}
+
+/* New blue info box styles */
+.vehicle-modal__blue-info {
+  background: #eaf4fb;
+  border: 2px solid #6cb6e6;
+  color: #005DA6;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 1.08em;
+  margin: 12px 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.vehicle-modal__blue-info-icon {
+  color: #005DA6;
+  font-size: 1.2em;
+}
+
 /* Responsive adjustments */
 @media (max-width: 1200px) {
   .vehicle-matrix__grid {
@@ -223,6 +447,15 @@
   .vehicle-matrix__grid {
     grid-template-columns: repeat(3, 1fr);
   }
+  .vehicle-table-matrix {
+    min-width: 600px;
+    font-size: 1rem;
+  }
+  .vehicle-table-matrix th,
+  .vehicle-table-matrix td {
+    padding: 10px 8px;
+    min-width: 80px;
+  }
 }
 @media (max-width:1100px) {
   .select-vehicle__layout { grid-template-columns:1fr; }
@@ -231,4 +464,72 @@
 @media (max-width:680px) {
   .select-vehicle__summary { flex-direction:column; gap:12px; }
   .select-vehicle__layout { padding:28px 18px; }
+}
+
+.vehicle-table-inline-card {
+  padding: 0;
+  background: #f8faff;
+  border-bottom: 1px solid #e1e5eb;
+}
+
+.vehicle-table-inline-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 32px 38px 24px 38px;
+  border-radius: 0 0 12px 12px;
+  border: #009dfe 2px solid;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+
+.vehicle-table-inline-card__price-details {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 8px;
+}
+
+.vehicle-table-inline-card__price-main {
+  font-size: 2em;
+  font-weight: bold;
+  color: #005DA6;
+}
+
+.vehicle-table-inline-card__main {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.vehicle-table-inline-card__main img {
+  width: 160px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+.vehicle-table-inline-card__main h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.3em;
+}
+
+.vehicle-table-inline-card__main ul {
+  margin-top: 8px;
+}
+
+.vehicle-modal__blue-info {
+  background: #eaf4fb;
+  border: 2px solid #6cb6e6;
+  color: #005DA6;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 1.08em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+}
+
+.vehicle-modal__blue-info-icon {
+  color: #005DA6;
+  font-size: 1.2em;
 }

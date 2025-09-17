@@ -72,6 +72,7 @@ const SelectVehicle: React.FC = () => {
   const [activeVehicle, setActiveVehicle] = useState<Vehicle | null>(null);
   const [error, setError] = useState<string | null>(null);
   const lastSearchRef = useRef<string>('');
+  const [selectedCell, setSelectedCell] = useState<{ type: string, company: string } | null>(null);
 
   // Persist query params so page is shareable/bookmarkable
   useEffect(() => {
@@ -235,6 +236,9 @@ const SelectVehicle: React.FC = () => {
     root.style.setProperty('--slider-fill-width', sliderFill.width + '%');
   }, [sliderFill]);
 
+  // Find unique companies from filteredVehicles (or use agencyOptions for all columns)
+  const companies = agencyOptions;
+
   return (
     <div className="select-vehicle__layout">
       {noCriteria ? (
@@ -380,94 +384,163 @@ const SelectVehicle: React.FC = () => {
           </div>
         )}
         {loading && <div className="select-vehicle__loading" role="status">Loading vehicles...</div>}
-        {!loading && !error && filteredVehicles.length === 0 && (
-          <div className="select-vehicle__empty">
-            No vehicles match filters.
-            {(vehiclesAll.length > 0) && (
-              <div className="empty-actions">
-                <button className="btn btn--secondary" onClick={() => {
-                  setSliderMin(priceRange[0]);
-                  setSliderMax(priceRange[1]);
-                  setPendingPriceChange(true);
-                }}>Expand Price Range</button>
-                {' '}or
-                <button className="btn btn--secondary ml-6" onClick={() => {
-                  setTypeFilters([]); setCapacityFilters([]); setBagFilters([]); setAgencyFilters([]);
-                  setSliderMin(priceRange[0]); setSliderMax(priceRange[1]); setPendingPriceChange(true);
-                }}>Clear All Filters</button>
-              </div>
-            )}
+        {!loading && !error && (
+          <div className="vehicle-table-wrapper">
+            <table className="vehicle-table-matrix">
+              <thead>
+                <tr>
+                  <th className="sticky-left sticky-top">Type</th>
+                  {companies.map(company => (
+                    <th key={company} className="sticky-top">{company}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {vehicleTypes.map((type, rowIdx) => {
+                  const isSelectedRow = selectedCell?.type === type;
+                  return (
+                    <React.Fragment key={type}>
+                      <tr className={rowIdx % 2 === 1 ? "vehicle-table-row-alt" : ""}>
+                        <td className="sticky-left">{type}</td>
+                        {companies.map(company => {
+                          const vehicle = filteredVehicles.find(v => v.type === type && v.company === company);
+                          return (
+                            <td
+                            key={company}
+                            className={
+                              vehicle && selectedCell?.type === type && selectedCell?.company === company
+                                ? "vehicle-table-price--selected"
+                                : ""
+                            }
+                          >
+                            {vehicle ? (
+                              <div
+                                className="vehicle-table-price vehicle-table-price--clickable"
+                                onClick={() => setSelectedCell({ type, company })}
+                                style={{ cursor: 'pointer' }}
+                                title="View details"
+                              >
+                                ${vehicle.price}
+                              </div>
+                            ) : (
+                              <span className="vehicle-table-empty">—</span>
+                            )}
+                          </td>
+                          );
+                        })}
+                      </tr>
+                      {/* Card row: only show if this row is selected */}
+                      {isSelectedRow && (
+                        <tr>
+                          <td colSpan={companies.length + 1} style={{ padding: 0, background: "#f8faff" }}>
+                            {/* Find the selected vehicle */}
+                            {(() => {
+                              const vehicle = filteredVehicles.find(
+                                v => v.type === selectedCell.company && v.company === selectedCell.company
+                              );
+                              // If not found, fallback to first vehicle for this type/company
+                              const cardVehicle = vehicle || filteredVehicles.find(
+                                v => v.type === type && v.company === selectedCell.company
+                              );
+                              if (!cardVehicle) return null;
+                              return (
+                                <div className="vehicle-table-inline-card">
+                                  <div className="vehicle-table-inline-card__content">
+                                    <div className="vehicle-table-inline-card__price-details">
+                                      <div className="vehicle-table-inline-card__price-main">${cardVehicle.price}</div>
+                                      <div className="vehicle-modal__blue-info">
+                                        <span className="vehicle-modal__blue-info-icon">✔️</span>
+                                        {cardVehicle.company === "Avis"
+                                          ? "The price includes savings of up to 25% off Avis base rates."
+                                          : "The price includes your Costco Member discount and an upgrade."}
+                                      </div>
+                                    </div>
+                                    <div className="vehicle-table-inline-card__main">
+                                      <img src="/assets/car-placeholder.png" alt="Car" className="vehicle-modal__car-img" />
+                                      <div>
+                                        <h3>{cardVehicle.type}</h3>
+                                        <div>
+                                          <span title="Passengers">👤 {cardVehicle.passengers}</span>
+                                          <span title="Bags" style={{ marginLeft: 12 }}>🧳 {cardVehicle.bags}</span>
+                                        </div>
+                                        <ul className="vehicle-modal__list">
+                                          <li>Unlimited mileage</li>
+                                          <li><a href="#">Geographic and Other Restrictions</a></li>
+                                          <li><a href="#">Additional Driver Included</a></li>
+                                          <li>{cardVehicle.transmission} transmission, Air conditioning</li>
+                                        </ul>
+                                      </div>
+                                      <div style={{ marginLeft: "auto" }}>
+                                        <button className="btn btn--primary vehicle-modal__continue" onClick={() => alert('Continue flow')}>Continue</button>
+                                      </div>
+                                    </div>
+                                    <div className="vehicle-modal__rewards">
+                                      Earn approximately <strong>$1.57</strong> towards your <a href="#">Executive Member 2% Reward</a><br />
+                                      Earn up to <strong>3% CASH BACK REWARDS</strong> on eligible travel with the <a href="#">Costco Anywhere Visa® Card by Citi</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })()}
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         )}
-        {!loading && (
-          <div className={`select-vehicle__grid-wrapper${refreshing ? ' is-refreshing' : ''}`}>
-            {refreshing && (
-              <div className="skeleton-layer" aria-hidden="true">
-                {Array.from({length: Math.min(8, filteredVehicles.length || 8)}).map((_,i) => <div key={i} className="vehicle-card skeleton" />)}
-              </div>
-            )}
-            <div className="vehicle-matrix-wrapper">
-  {/* Fixed left sidebar for vehicle types */}
-  <div className="vehicle-matrix__sidebar">
-    {vehicleTypes.map(type => (
-      <div key={type} className="vehicle-matrix__type">{type}</div>
-    ))}
-  </div>
-  {/* Main grid area */}
-  <div className="vehicle-matrix__main">
-    {/* Fixed top row for companies */}
-    <div className="vehicle-matrix__companies">
-      {agencyOptions.map(company => (
-        <div key={company} className="vehicle-matrix__company">{company}</div>
-      ))}
-    </div>
-    {/* Grid cells */}
-    <div className="vehicle-matrix__grid">
-      {vehicleTypes.map(type =>
-        agencyOptions.map(company => {
-          const vehicle = filteredVehicles.find(v => v.type === type && v.company === company);
-          return (
-            <div key={type + company} className="vehicle-matrix__cell">
-              {vehicle ? (
-                <div>
-                  <div className="vehicle-matrix__price">${vehicle.price}</div>
-                  <div>{vehicle.passengers} psg/{vehicle.bags} bags</div>
-                  <button className="vehicle-card__select btn btn--primary" onClick={() => proceed(vehicle)}>
-                    Select
-                  </button>
-                </div>
-              ) : (
-                <div className="vehicle-matrix__empty">—</div>
-              )}
+        {activeVehicle && (
+  <div className="vehicle-modal" role="dialog" aria-modal="true" aria-label="Vehicle details">
+    <div className="vehicle-modal__dialog vehicle-modal__dialog--detailed">
+      <button className="vehicle-modal__close" onClick={() => setActiveVehicle(null)} aria-label="Close">×</button>
+      <div className="vehicle-modal__main-details">
+        <div className="vehicle-modal__agency">
+          <img src={`/assets/${activeVehicle.company.toLowerCase().replace(/[^a-z]/g, '')}-logo.png`} alt={activeVehicle.company} className="vehicle-modal__agency-logo" />
+        </div>
+        <h2 className="vehicle-modal__title">{activeVehicle.type}</h2>
+        <div className="vehicle-modal__icons">
+          <span title="Passengers">👤 {activeVehicle.passengers}</span>
+          <span title="Bags" style={{ marginLeft: 12 }}>🧳 {activeVehicle.bags}</span>
+        </div>
+        <img src="/assets/car-placeholder.png" alt="Car" className="vehicle-modal__car-img" />
+        <div className="vehicle-modal__price-details">
+          <div>Reserve Now, Pay Later<br />No Cancellation Fees</div>
+          <div>
+            <a href="#" className="vehicle-modal__price-link">Price Details</a>
+            <div className="vehicle-modal__price-main">${activeVehicle.price}</div>
+            {/* Blue highlight box just under the price */}
+            <div className="vehicle-modal__blue-info">
+              <span className="vehicle-modal__blue-info-icon">✔️</span>
+              {activeVehicle.company === "Avis"
+                ? "The price includes savings of up to 25% off Avis base rates."
+                : "The price includes your Costco Member discount and an upgrade."}
             </div>
-          );
-        })
-      )}
-    </div>
-  </div>
-</div>
-          </div>
-        )}
-      </main>
-
-  {activeVehicle && (
-        <div className="vehicle-modal" role="dialog" aria-modal="true" aria-label="Vehicle details">
-          <div className="vehicle-modal__dialog">
-            <button className="vehicle-modal__close" onClick={() => setActiveVehicle(null)} aria-label="Close">×</button>
-            <h2 className="vehicle-modal__title">{activeVehicle.type} - {activeVehicle.company}</h2>
-            <p className="vehicle-modal__price">Total: ${activeVehicle.price}</p>
-            <ul className="vehicle-modal__list">
-              <li>{activeVehicle.transmission} transmission</li>
-              <li>{activeVehicle.passengers} psg</li>
-              <li>{activeVehicle.bags} bags</li>
-              {activeVehicle.eco && <li>Eco Friendly</li>}
-              {activeVehicle.luxury && <li>Luxury Class</li>}
-            </ul>
-            <button className="btn btn--primary" onClick={() => alert('Proceed flow placeholder')}>Reserve</button>
+            <div className="vehicle-modal__price-sub">Total Price</div>
+            <a href="#" className="vehicle-modal__terms-link">Terms & Conditions</a>
           </div>
         </div>
-      )}
-  </>)}
+        <ul className="vehicle-modal__list">
+          <li>Unlimited mileage</li>
+          <li><a href="#">Geographic and Other Restrictions</a></li>
+          <li><a href="#">Additional Driver Included</a></li>
+          <li>{activeVehicle.transmission} transmission, Air conditioning</li>
+          {activeVehicle.eco && <li>Eco Friendly</li>}
+          {activeVehicle.luxury && <li>Luxury Class</li>}
+        </ul>
+        <button className="btn btn--primary vehicle-modal__continue" onClick={() => alert('Proceed flow placeholder')}>Continue</button>
+        <div className="vehicle-modal__rewards">
+          Earn approximately <strong>$1.57</strong> towards your <a href="#">Executive Member 2% Reward</a><br />
+          Earn up to <strong>3% CASH BACK REWARDS</strong> on eligible travel with the <a href="#">Costco Anywhere Visa® Card by Citi</a>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+      </main>
+      </> )}
     </div>
   );
 };
