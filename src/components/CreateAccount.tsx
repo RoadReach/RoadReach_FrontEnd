@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import './CreateAccount.css';
+import './FloatingLabelUniversal.css';
 import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,9 +20,10 @@ const FloatingInput = ({ label, type = 'text', name, value, onChange, hasError =
         onChange={onChange}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
-        className={`floating-input ${hasError ? 'error' : ''}`}
+        className={`floating-input${value ? ' has-value' : ''}${hasError ? ' error' : ''}`}
+        placeholder=" "
       />
-      <label className={`floating-label ${active ? 'active' : ''} ${hasError ? 'error' : ''}`}>{label}</label>
+      <label className="floating-label">{label}</label>
     </div>
   );
 };

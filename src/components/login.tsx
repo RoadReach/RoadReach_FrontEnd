@@ -28,6 +28,17 @@ const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
 
+  // Forgot Password states
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotPasswordStep, setForgotPasswordStep] = useState<'email' | 'verification' | 'reset'>('email');
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [forgotPasswordError, setForgotPasswordError] = useState("");
+  const [forgotPasswordSubmitting, setForgotPasswordSubmitting] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   // ...existing code...
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -173,9 +184,150 @@ const Login: React.FC = () => {
             <div className="error-text">{passwordError || 'Password is required.'}</div>
           )}
           <div className="login__links-col">
-            <a href="#" className="login__link">Forgot Password?</a>
+            <Link to="/forgot-password" className="login__link">Forgot Password?</Link>
             <a href="#" className="login__link">Need help logging in?</a>
           </div>
+
+          {/* Forgot Password Modal */}
+          {showForgotPassword && (
+            <div className="modal-overlay modal-overlay--centered">
+              <div className="modal-card modal-card--centered">
+                <img src="/public/vite.svg" alt="Logo" style={{ width: 120, margin: '0 auto 16px', display: 'block' }} />
+                <h2 className="modal-title">Password Reset</h2>
+                {forgotPasswordStep === 'email' && (
+                  <>
+                    <div className="modal-instructions">Enter your account email address to receive a verification code to reset your password.</div>
+                    <label htmlFor="forgot-email" className="modal-label">Email Address</label>
+                    <input
+                      id="forgot-email"
+                      type="email"
+                      value={forgotEmail}
+                      onChange={e => setForgotEmail(e.target.value)}
+                      placeholder="Email Address"
+                      className="modal-input"
+                      autoFocus
+                    />
+                    {forgotPasswordError && <div className="error-text">{forgotPasswordError}</div>}
+                    <button
+                      className="modal-btn modal-btn--primary"
+                      disabled={forgotPasswordSubmitting}
+                      onClick={async () => {
+                        setForgotPasswordError("");
+                        if (!forgotEmail) {
+                          setForgotPasswordError("Email is required.");
+                          return;
+                        }
+                        setForgotPasswordSubmitting(true);
+                        try {
+                          const res = await fetch("http://localhost:8080/api/users/send-reset-code", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ email: forgotEmail })
+                          });
+                          const data = await res.json();
+                          if (res.ok && data.success) {
+                            setForgotPasswordStep('verification');
+                          } else {
+                            setForgotPasswordError(data.message || "Failed to send code. Try again.");
+                          }
+                        } catch {
+                          setForgotPasswordError("Server error. Try again.");
+                        } finally {
+                          setForgotPasswordSubmitting(false);
+                        }
+                      }}
+                    >Send Verification Code</button>
+                    <button className="modal-btn modal-btn--link" onClick={() => setShowForgotPassword(false)}>Cancel</button>
+                  </>
+                )}
+                {forgotPasswordStep === 'verification' && (
+                  <>
+                    <h3>Verify Code</h3>
+                    <p>Enter the code sent to your email.</p>
+                    <input
+                      type="text"
+                      value={verificationCode}
+                      onChange={e => setVerificationCode(e.target.value)}
+                      placeholder="Verification code"
+                      className="floating-input"
+                      autoFocus
+                      disabled={forgotPasswordSubmitting}
+                    />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      value={newPassword}
+                      onChange={e => setNewPassword(e.target.value)}
+                      placeholder="New password"
+                      className="floating-input"
+                      style={{ marginTop: 12 }}
+                      disabled={forgotPasswordSubmitting}
+                    />
+                    <div style={{ position: "relative", marginTop: 12 }}>
+                      <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        value={confirmPassword}
+                        onChange={e => setConfirmPassword(e.target.value)}
+                        placeholder="Confirm new password"
+                        className="floating-input"
+                        disabled={forgotPasswordSubmitting}
+                        style={{ width: "100%" }}
+                      />
+                      <button
+                        type="button"
+                        className="show-toggle"
+                        onClick={() => setShowConfirmPassword((prev) => !prev)}
+                        tabIndex={-1}
+                        aria-label="Show confirm password"
+                        style={{ position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)" }}
+                      >
+                        <span role="img" aria-label="Show confirm password">👁️</span>
+                      </button>
+                    </div>
+                    {forgotPasswordError && <div className="error-text">{forgotPasswordError}</div>}
+                    <div className="login__links-col">
+                      <Link to="/forgot-password" className="login__link">Forgot Password?</Link>
+                      <a href="#" className="login__link">Need help logging in?</a>
+                    </div>
+                    <button
+                      className="login__full-btn"
+                      disabled={forgotPasswordSubmitting}
+                      onClick={async () => {
+                        setForgotPasswordError("");
+                        if (!newPassword || !confirmPassword) {
+                          setForgotPasswordError("Please enter and confirm your new password.");
+                          return;
+                        }
+                        if (newPassword !== confirmPassword) {
+                          setForgotPasswordError("Passwords do not match.");
+                          return;
+                        }
+                        // TODO: Call backend to reset password
+                        setForgotPasswordSubmitting(true);
+                        try {
+                          const res = await fetch("http://localhost:8080/api/users/reset-password", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ email: forgotEmail, code: verificationCode, password: newPassword })
+                          });
+                          const data = await res.json();
+                          if (res.ok && data.success) {
+                            toast.success("Password reset successful! You can now log in.");
+                            setShowForgotPassword(false);
+                          } else {
+                            setForgotPasswordError(data.message || "Failed to reset password. Try again.");
+                          }
+                        } catch {
+                          setForgotPasswordError("Server error. Try again.");
+                        } finally {
+                          setForgotPasswordSubmitting(false);
+                        }
+                      }}
+                    >Reset Password</button>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
           <div className="login__checkbox-row">
             <input
               type="checkbox"

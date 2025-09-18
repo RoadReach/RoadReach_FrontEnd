@@ -1,3 +1,77 @@
+/* Modal styles for forgot password */
+.modal-overlay--centered {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.04);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-card--centered {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  padding: 36px 32px 32px;
+  min-width: 340px;
+  max-width: 98vw;
+  width: 400px;
+  margin: 0 auto;
+  text-align: center;
+}
+.modal-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+.modal-instructions {
+  font-size: 1.1rem;
+  margin-bottom: 18px;
+}
+.modal-label {
+  display: block;
+  text-align: left;
+  font-size: 1rem;
+  margin-bottom: 6px;
+  margin-top: 10px;
+  font-weight: 500;
+}
+.modal-input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 1rem;
+  border: 1px solid #b9c3cc;
+  border-radius: 6px;
+  margin-bottom: 18px;
+  box-sizing: border-box;
+}
+.modal-btn {
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.modal-btn--primary {
+  background: #1565c0;
+  color: #fff;
+}
+.modal-btn--primary:disabled {
+  background: #b9c3cc;
+  color: #fff;
+  cursor: not-allowed;
+}
+.modal-btn--link {
+  background: none;
+  color: #1565c0;
+  text-decoration: underline;
+  font-weight: 400;
+  margin-bottom: 0;
+}
 /* Floating label improvements and accessibility */
 .floating-group .floating-input:focus + .floating-label,
 .floating-group .floating-input:not(:placeholder-shown) + .floating-label {

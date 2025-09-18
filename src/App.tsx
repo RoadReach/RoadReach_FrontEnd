@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Login from "./components/login";
 import CreateAccount from "./components/CreateAccount";
+import ForgotPassword from "./components/ForgotPassword";
 import Home from "./components/home";
 import Dashboard from './components/Dashboard';
 import RentalCars from './components/rentalCars';
@@ -27,6 +28,7 @@ const AppContent: React.FC = () => {
           <Route path="/rental-cars" element={<RentalCars />} />
           <Route path="/select-vehicle" element={<SelectVehicle />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
       </main>
       <Footer />
