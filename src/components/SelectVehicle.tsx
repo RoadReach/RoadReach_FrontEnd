@@ -3,6 +3,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { fetchVehicles, fetchVehiclePriceRange } from './vehicleService';
 import type { Vehicle } from './vehicleService';
 import './SelectVehicle.css';
+import selectVehicleCar from '../assets/selectVehicleCar.png';
+import alamo from '../assets/alamo.png';
+import avis from '../assets/avis.png';
+import budget from '../assets/budget.png';
+import enterprise from '../assets/enterprise.png';
 
 interface SearchState {
   sameLocation: boolean;
@@ -63,7 +68,7 @@ const SelectVehicle: React.FC = () => {
   const [capacityFilters, setCapacityFilters] = useState<string[]>([]);
   const bagOptions = ['1-2 bags','3-4 bags','5+ bags'];
   const [bagFilters, setBagFilters] = useState<string[]>([]);
-  const agencyOptions = ['Alamo','Avis','Budget','Enterprise Rent-A-Car','Hertz','National','Thrifty','Dollar','Sixt'];
+  const agencyOptions = ['Alamo','Avis','Budget','Enterprise Rent-A-Car'];
   const [agencyFilters, setAgencyFilters] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -432,52 +437,71 @@ const SelectVehicle: React.FC = () => {
                       {/* Card row: only show if this row is selected */}
                       {isSelectedRow && (
                         <tr>
-                          <td colSpan={companies.length + 1} style={{ padding: 0, background: "#f8faff" }}>
-                            {/* Find the selected vehicle */}
+                          <td colSpan={companies.length + 1} style={{ padding: 0, background: "#fff" }}>
                             {(() => {
                               const vehicle = filteredVehicles.find(
-                                v => v.type === selectedCell.company && v.company === selectedCell.company
-                              );
-                              // If not found, fallback to first vehicle for this type/company
-                              const cardVehicle = vehicle || filteredVehicles.find(
                                 v => v.type === type && v.company === selectedCell.company
                               );
-                              if (!cardVehicle) return null;
+                              if (!vehicle) return null;
                               return (
-                                <div className="vehicle-table-inline-card">
-                                  <div className="vehicle-table-inline-card__content">
-                                    <div className="vehicle-table-inline-card__price-details">
-                                      <div className="vehicle-table-inline-card__price-main">${cardVehicle.price}</div>
-                                      <div className="vehicle-modal__blue-info">
-                                        <span className="vehicle-modal__blue-info-icon">✔️</span>
-                                        {cardVehicle.company === "Avis"
-                                          ? "The price includes savings of up to 25% off Avis base rates."
-                                          : "The price includes your Costco Member discount and an upgrade."}
-                                      </div>
+                                <div className="vehicle-detail-card">
+                                  <div className="vehicle-detail-card__info-row">
+                                    <div className="vehicle-detail-card__info-box">
+                                      <span className="vehicle-detail-card__info-icon">✔️</span>
+                                      The price includes your Costco Member discount.
                                     </div>
-                                    <div className="vehicle-table-inline-card__main">
-                                      <img src="/assets/car-placeholder.png" alt="Car" className="vehicle-modal__car-img" />
-                                      <div>
-                                        <h3>{cardVehicle.type}</h3>
-                                        <div>
-                                          <span title="Passengers">👤 {cardVehicle.passengers}</span>
-                                          <span title="Bags" style={{ marginLeft: 12 }}>🧳 {cardVehicle.bags}</span>
+                                    <div className="vehicle-detail-card__reserve">
+                                      Reserve Now, Pay Later<br />No Cancellation Fees
+                                    </div>
+                                  </div>
+                                  <div className="vehicle-detail-card__main">
+                                    <div className="vehicle-detail-card__left">
+                                      <h2 className="vehicle-detail-card__title">{vehicle.type}</h2>
+                                      <div className="vehicle-detail-card__agency-row">
+                                        <img
+                                          src={
+                                            vehicle.company === "Alamo" ? alamo :
+                                            vehicle.company === "Avis" ? avis :
+                                            vehicle.company === "Budget" ? budget :
+                                            vehicle.company === "Enterprise Rent-A-Car" ? enterprise :
+                                            ""
+                                          }
+                                          alt={vehicle.company}
+                                          className="vehicle-detail-card__agency-logo"
+                                        />
+                                        <span className="vehicle-detail-card__icon-group">
+                                          <span title="Passengers">👤 {vehicle.passengers}</span>
+                                          <span title="Bags" style={{ marginLeft: 12 }}>🧳 {vehicle.bags}</span>
+                                        </span>
+                                      </div>
+                                      <div className="vehicle-detail-card__car-features-row">
+                                        <div className="vehicle-detail-card__car-features-left">
+                                          <img src={selectVehicleCar} alt="Car" className="vehicle-detail-card__car-img" />
                                         </div>
-                                        <ul className="vehicle-modal__list">
-                                          <li>Unlimited mileage</li>
-                                          <li><a href="#">Geographic and Other Restrictions</a></li>
-                                          <li><a href="#">Additional Driver Included</a></li>
-                                          <li>{cardVehicle.transmission} transmission, Air conditioning</li>
-                                        </ul>
-                                      </div>
-                                      <div style={{ marginLeft: "auto" }}>
-                                        <button className="btn btn--primary vehicle-modal__continue" onClick={() => alert('Continue flow')}>Continue</button>
+                                        <div className="vehicle-detail-card__car-features-right">
+                                          <ul className="vehicle-detail-card__features">
+                                            <li>Unlimited mileage</li>
+                                            <li><a href="#">Geographic and Other Restrictions</a></li>
+                                            <li><a href="#">Additional Driver Included</a></li>
+                                            <li>{vehicle.transmission.toUpperCase()} transmission, Air conditioning</li>
+                                          </ul>
+                                        </div>
                                       </div>
                                     </div>
-                                    <div className="vehicle-modal__rewards">
-                                      Earn approximately <strong>$1.57</strong> towards your <a href="#">Executive Member 2% Reward</a><br />
-                                      Earn up to <strong>3% CASH BACK REWARDS</strong> on eligible travel with the <a href="#">Costco Anywhere Visa® Card by Citi</a>
+                                    <div className="vehicle-detail-card__right">
+                                      
+                                      <div className="vehicle-detail-card__price-details">
+                                        <a href="#" className="vehicle-detail-card__price-link">Price Details</a>
+                                        <div className="vehicle-detail-card__price-main">${vehicle.price.toFixed(2)}</div>
+                                        <div className="vehicle-detail-card__price-sub">Total Price</div>
+                                        <a href="#" className="vehicle-detail-card__terms-link">Terms & Conditions</a>
+                                      </div>
+                                      <button className="btn btn--primary vehicle-detail-card__continue" onClick={() => alert('Continue flow')}>Continue</button>
                                     </div>
+                                  </div>
+                                  <div className="vehicle-detail-card__rewards">
+                                    Earn approximately <strong>$1.57</strong> towards your <a href="#">Executive Member 2% Reward</a><br />
+                                    Earn up to <strong>3% CASH BACK REWARDS</strong> on eligible travel with the <a href="#">RoadReach Anywhere Visa® Card by Citi</a>
                                   </div>
                                 </div>
                               );
