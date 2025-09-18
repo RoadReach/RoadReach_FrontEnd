@@ -37,8 +37,8 @@ const Header: React.FC = () => {
     navigate("/login");
   };
 
-  // Only show logo on login page
-  if (location.pathname === '/login') {
+  // Only show logo on login and forgot-password page
+  if (location.pathname === '/login' || location.pathname === '/forgot-password') {
     return (
       <header className="site-header login-header">
         <div className="header__top">
