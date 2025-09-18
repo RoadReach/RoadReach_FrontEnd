@@ -447,8 +447,13 @@ const SelectVehicle: React.FC = () => {
                                 <div className="vehicle-detail-card">
                                   <div className="vehicle-detail-card__info-row">
                                     <div className="vehicle-detail-card__info-box">
-                                      <span className="vehicle-detail-card__info-icon">✔️</span>
-                                      The price includes your Costco Member discount.
+                                      <span className="vehicle-detail-card__info-icon" aria-label="Info">
+                                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                                          <circle cx="16" cy="16" r="10" fill="#2d7bb3"/>
+                                          <path d="M13.5 15.5l3.5 3.5 11.5-15" stroke="#fff" strokeWidth="3.5" strokeLinecap="square" strokeLinejoin="round"/>
+                                        </svg>
+                                      </span>
+                                      The price includes your Costco Member discount and an upgrade.
                                     </div>
                                     <div className="vehicle-detail-card__reserve">
                                       Reserve Now, Pay Later<br />No Cancellation Fees
@@ -471,7 +476,7 @@ const SelectVehicle: React.FC = () => {
                                         />
                                         <span className="vehicle-detail-card__icon-group">
                                           <span title="Passengers">👤 {vehicle.passengers}</span>
-                                          <span title="Bags" style={{ marginLeft: 12 }}>🧳 {vehicle.bags}</span>
+                                          <span title="Bags" style={{ marginLeft: 12 }}>💼 {vehicle.bags}</span>
                                         </span>
                                       </div>
                                       <div className="vehicle-detail-card__car-features-row">
@@ -538,9 +543,7 @@ const SelectVehicle: React.FC = () => {
             {/* Blue highlight box just under the price */}
             <div className="vehicle-modal__blue-info">
               <span className="vehicle-modal__blue-info-icon">✔️</span>
-              {activeVehicle.company === "Avis"
-                ? "The price includes savings of up to 25% off Avis base rates."
-                : "The price includes your Costco Member discount and an upgrade."}
+              "The price includes your Costco Member discount and an upgrade."
             </div>
             <div className="vehicle-modal__price-sub">Total Price</div>
             <a href="#" className="vehicle-modal__terms-link">Terms & Conditions</a>

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { validateEmail } from "./validateEmail";
 import './Login.css';
@@ -38,8 +37,6 @@ const Login: React.FC = () => {
   const [forgotPasswordError, setForgotPasswordError] = useState("");
   const [forgotPasswordSubmitting, setForgotPasswordSubmitting] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  // ...existing code...
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -110,6 +107,16 @@ const Login: React.FC = () => {
         localStorage.setItem("lastname", data.lastname);
         localStorage.setItem("email", data.email);
         localStorage.setItem("userid", data.userid);
+        localStorage.setItem("loginTime", Date.now().toString());
+
+        // Start 2-minute session timer
+        setTimeout(() => {
+          localStorage.clear();
+          sessionStorage.clear();
+          toast.info("Session expired. Please log in again.");
+          navigate("/login");
+        }, 2 * 60 * 1000); // 2 minutes
+
         toast.success("Login successful!");
         setTimeout(() => {
           navigate("/dashboard");
@@ -177,7 +184,7 @@ const Login: React.FC = () => {
               tabIndex={-1}
               aria-label="Show password"
             >
-              <span role="img" aria-label="Show password">👁️</span>
+              <span role="img" aria-label="Show password">👁️‍🗨️</span>
             </button>
           </div>
           {(fieldErrors.password || passwordError) && (
