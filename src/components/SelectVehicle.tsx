@@ -78,6 +78,10 @@ const SelectVehicle: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const lastSearchRef = useRef<string>('');
   const [selectedCell, setSelectedCell] = useState<{ type: string, company: string } | null>(null);
+  const [showPriceDetails, setShowPriceDetails] = useState<{ vehicle: Vehicle } | null>(null);
+  const [showTerms, setShowTerms] = useState(false);
+  const [showGeoRestrictions, setShowGeoRestrictions] = useState(false);
+  const [showAdditionalDrivers, setShowAdditionalDrivers] = useState(false);
 
   // Persist query params so page is shareable/bookmarkable
   useEffect(() => {
@@ -352,11 +356,11 @@ const SelectVehicle: React.FC = () => {
               setCapacityFilters([]);
               setBagFilters([]);
               setAgencyFilters([]);
-      setMinPrice(priceRange[0]);
-      setMaxPrice(priceRange[1]);
-      setSliderMin(priceRange[0]);
-      setSliderMax(priceRange[1]);
-      setPendingPriceChange(false);
+              setMinPrice(priceRange[0]);
+              setMaxPrice(priceRange[1]);
+              setSliderMin(priceRange[0]);
+              setSliderMax(priceRange[1]);
+              setPendingPriceChange(false);
             }}
           >Reset Filters</button>
         )}
@@ -486,8 +490,22 @@ const SelectVehicle: React.FC = () => {
                                         <div className="vehicle-detail-card__car-features-right">
                                           <ul className="vehicle-detail-card__features">
                                             <li>Unlimited mileage</li>
-                                            <li><a href="#">Geographic and Other Restrictions</a></li>
-                                            <li><a href="#">Additional Driver Included</a></li>
+                                            <li><a
+                                                  href="#"
+                                                  className="vehicle-detail-card__geo-restrictions-link"
+                                                  onClick={e => {
+                                                    e.preventDefault();
+                                                    setShowGeoRestrictions(true);
+                                                  }}
+                                                >Geographic and Other Restrictions</a></li>
+                                            <li><a
+                                                href="#"
+                                                className="vehicle-detail-card__terms-link"
+                                                onClick={e => {
+                                                  e.preventDefault();
+                                                  setShowAdditionalDrivers(true);
+                                                }}
+                                              >Additional Driver Included</a></li>
                                             <li>{vehicle.transmission.toUpperCase()} transmission, Air conditioning</li>
                                           </ul>
                                         </div>
@@ -496,10 +514,28 @@ const SelectVehicle: React.FC = () => {
                                     <div className="vehicle-detail-card__right">
                                       
                                       <div className="vehicle-detail-card__price-details">
-                                        <a href="#" className="vehicle-detail-card__price-link">Price Details</a>
+                                        <a
+                                          href="#"
+                                          className="vehicle-detail-card__price-link"
+                                          onClick={e => {
+                                            e.preventDefault();
+                                            setShowPriceDetails({ vehicle });
+                                          }}
+                                        >
+                                          Price Details
+                                        </a>
                                         <div className="vehicle-detail-card__price-main">${vehicle.price.toFixed(2)}</div>
                                         <div className="vehicle-detail-card__price-sub">Total Price</div>
-                                        <a href="#" className="vehicle-detail-card__terms-link">Terms & Conditions</a>
+                                        <a
+                                          href="#"
+                                          className="vehicle-detail-card__terms-link"
+                                          onClick={e => {
+                                            e.preventDefault();
+                                            setShowTerms(true);
+                                          }}
+                                        >
+                                          Terms & Conditions
+                                        </a>
                                       </div>
                                       <button className="btn btn--primary vehicle-detail-card__continue" onClick={() => alert('Continue flow')}>Continue</button>
                                     </div>
@@ -538,7 +574,16 @@ const SelectVehicle: React.FC = () => {
         <div className="vehicle-modal__price-details">
           <div>Reserve Now, Pay Later<br />No Cancellation Fees</div>
           <div>
-            <a href="#" className="vehicle-modal__price-link">Price Details</a>
+            <a
+              href="#"
+              className="vehicle-modal__price-link"
+              onClick={e => {
+                e.preventDefault();
+                setShowPriceDetails({ vehicle: activeVehicle });
+              }}
+            >
+              Price Details
+            </a>
             <div className="vehicle-modal__price-main">${activeVehicle.price}</div>
             {/* Blue highlight box just under the price */}
             <div className="vehicle-modal__blue-info">
@@ -546,13 +591,36 @@ const SelectVehicle: React.FC = () => {
               "The price includes your Costco Member discount and an upgrade."
             </div>
             <div className="vehicle-modal__price-sub">Total Price</div>
-            <a href="#" className="vehicle-modal__terms-link">Terms & Conditions</a>
+            <a
+              href="#"
+              className="vehicle-detail-card__terms-link"
+              onClick={e => {
+                e.preventDefault();
+                setShowTerms(true);
+              }}
+            >
+              Terms & Conditions
+            </a>
           </div>
         </div>
         <ul className="vehicle-modal__list">
           <li>Unlimited mileage</li>
-          <li><a href="#">Geographic and Other Restrictions</a></li>
-          <li><a href="#">Additional Driver Included</a></li>
+           <li><a
+                href="#"
+                className="vehicle-detail-card__geo-restrictions-link"
+                onClick={e => {
+                e.preventDefault();
+                setShowGeoRestrictions(true);
+                }}
+                >Geographic and Other Restrictions</a></li>
+          <li><a
+              href="#"
+              className="vehicle-detail-card__terms-link"
+              onClick={e => {
+              e.preventDefault();
+              setShowTerms(true);
+            }}
+            >Additional Driver Included</a></li>
           <li>{activeVehicle.transmission} transmission, Air conditioning</li>
           {activeVehicle.eco && <li>Eco Friendly</li>}
           {activeVehicle.luxury && <li>Luxury Class</li>}
@@ -565,6 +633,122 @@ const SelectVehicle: React.FC = () => {
       </div>
     </div>
   </div>
+)}
+{showPriceDetails && (
+  <div className="vehicle-modal" role="dialog" aria-modal="true" aria-label="Price details">
+    <div className="price-details-modal__dialog">
+      <div className="price-details-modal__header">
+        Price Details
+        <button className="price-details-modal__close" onClick={() => setShowPriceDetails(null)} aria-label="Close">×</button>
+      </div>
+      <div className="price-details-modal__body">
+        <div className="price-details-modal__row price-details-modal__row--total">
+          <span>Total Price</span>
+          <span style={{ fontSize: '36px' }}>${showPriceDetails.vehicle.price.toFixed(2)}</span>
+        </div>
+        <div className="price-details-modal__row">
+          <span className="price-details-modal__row--label">Car Rental</span>
+          <span className="price-details-modal__row--value">${(showPriceDetails.vehicle.price * 0.9).toFixed(2)}</span>
+        </div>
+        <div className="price-details-modal__row price-details-modal__row--tax">
+          <span className="price-details-modal__row--label">Taxes and Fees</span>
+          <span className="price-details-modal__row--value">${(showPriceDetails.vehicle.price * 0.1).toFixed(2)}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+{showTerms && (
+  <div className="vehicle-modal" role="dialog" aria-modal="true" aria-label="Terms and Conditions">
+    <div className="terms-details-modal__dialog">
+      <div className="price-details-modal__header">
+        Terms & Conditions
+        <button className="price-details-modal__close" onClick={() => setShowTerms(false)} aria-label="Close">×</button>
+      </div>
+      <div className="terms-details-modal__body">
+        <div style={{ fontSize: '1.1rem', color: '#003a5c', lineHeight: '1.7' }}>
+          {/* Replace below with your actual terms */}
+          <p style={{ fontSize: '30px',marginTop:0}}>Terms & Conditions</p>
+          <p className="terms-details-text">Debit cards may not be an accepted form of payment; 
+            see your rental itinerary for details. Should you wish to make a change to your rental,
+            book a new reservation with the updated information and then cancel your original 
+            reservation. Payment information is not required to confirm this reservation. 
+            The reservation may be cancelled at any time, without penalty, prior to pickup 
+            of the vehicle. One additional driver fee will be waived for Costco members at
+            participating locations. Additional drivers will need a valid driver's license 
+            and a major credit card. All additional drivers must meet the renter requirements; 
+            including age, car class, and location requirements. For full requirements regarding 
+            additional drivers, please contact your pick-up location. An additional daily fee will 
+            apply to all additional drivers not described above. Please note: For changes made to 
+            the reservation, the original rental rate is subject to change. Early or late pickups 
+            as well as early or late drop offs and any returns to an alternate location are subject 
+            to charges or penalties paid by the renter directly through the rental car company. 
+            Please check your insurance policy and/or credit card agreement for rental vehicle 
+            coverage. Prices are available only to Costco members residing in the United States.
+          </p><br />
+          <p className="terms-details-text">
+            The savings of up to 30% applies to Budget base rates and is applicable only to the time 
+            and mileage charges of the rental. Offer does not apply to car group X. All taxes, fees 
+            (including but not limited to Air Conditioning Excise Recovery Fee, Concession Recovery 
+            Fee, Vehicle License Recovery Fee, Energy Recovery Fee, Tire Management Fee, and Frequent 
+            Traveler Fee) and surcharges (including but not limited to Customer Facility Charge and 
+            Environmental Fee Recovery Charge) are extra. Offer is available for U.S. residents only 
+            for rentals at participating locations in the U.S., Puerto Rico, U.S. Virgin Islands, and 
+            Canada. Offer may not be used in conjunction with any other BCD number, promotion or offer. 
+            Weekly rates require a minimum five day rental period. Weekend rate available Thursday noon; 
+            car must be returned by Monday 11:59 p.m., or higher rate will apply. A Saturday night keep 
+            and an advance reservation may be required. Offer is subject to vehicle availability at the 
+            time of rental and may not be available on some rates at some times, including some online 
+            rates at Budget.com. Car rental return restrictions may apply. Offer subject to change 
+            without notice. Holiday and other blackout periods may apply. Renter must meet Budget age, 
+            driver and credit requirements. Minimum age may vary by location. An additional daily 
+            surcharge may apply for renters under 25 years old. Fuel charges are extra. (CM)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+{showGeoRestrictions && (
+          <div className="vehicle-modal" role="dialog" aria-modal="true" aria-label="Geographic Restrictions">
+            <div className="geo-details-modal__dialog">
+              <div className="price-details-modal__header">
+                Geographic Restrictions
+                <button className="price-details-modal__close" onClick={() => setShowGeoRestrictions(false)} aria-label="Close">×</button>
+              </div>  
+              <div>
+              <div style={{ fontSize: '1.1rem', color: '#003a5c', lineHeight: '1.7' }}>
+                {/* Replace below with your actual terms */}
+                
+                <p className="geo-details-text">
+                  Rentals originating in the United States: Most vehicles rented in the US can be 
+                  driven throughout the US and Canada. Some vehicle classes like Exotics, Large 
+                  Passenger or Cargo Vans, and other specialty vehicles may not be allowed to 
+                  travel outside of the US. Vehicles rented in the US cannot be driven into Mexico.
+                </p>
+               </div>
+              </div>
+            </div>
+          </div>
+)}
+{showAdditionalDrivers && (
+          <div className="vehicle-modal" role="dialog" aria-modal="true" aria-label="Additional Driver">
+            <div className="geo-details-modal__dialog">
+              <div className="price-details-modal__header">
+                Additional Driver Included
+                <button className="price-details-modal__close" onClick={() => setShowAdditionalDrivers(false)} aria-label="Close">×</button>
+              </div>  
+              <div>
+              <div style={{ fontSize: '1.1rem', color: '#003a5c', lineHeight: '1.7' }}>
+                {/* Replace below with your actual terms */}
+                
+                <p className="geo-details-text">
+                  One additional driver fee will be waived for Costco members at participating 
+                  locations. Age restrictions and renter requirements may apply.
+                </p>
+               </div>
+              </div>
+            </div>
+          </div>
 )}
       </main>
       </> )}
