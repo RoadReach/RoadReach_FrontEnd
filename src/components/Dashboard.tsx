@@ -1,8 +1,11 @@
 import React from "react";
 import Header from "./Header";
 import './Dashboard.css';
+import { useSessionTimeout } from "../hooks/useSessionTimeout";
 
 const Dashboard: React.FC = () => {
+  useSessionTimeout();
+
   const firstName = localStorage.getItem("firstname") || "User";
 
   return (
