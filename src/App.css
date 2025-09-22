@@ -1,3 +1,18 @@
+.session-modal__btn-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 28px 0 32px 0;
+}
+.session-modal__message {
+  font-size: 1.1rem;
+  color: #003a5c;
+  line-height: 1.7;
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 18px 0 0 0;
+}
 /* Global base & utilities extracted refactor */
 :root { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height:1.5; font-weight:400; color:#222; background:#fff; --header-height:140px; }
 body, #root { margin:0; min-width:320px; min-height:100vh; }
@@ -88,16 +103,16 @@ a:hover { text-decoration:underline; }
   background: #376a93;
   color: #fff;
   border: none;
-  width: 40%;              /* Wider button for better centering */
+  min-width: 280px;
+  max-width: 340px;
   border-radius: 2px;
-  padding: 16px 0;         /* More vertical padding */
+  padding: 16px 0;
   font-size: 1.25rem;
   font-weight: 600;
   box-shadow: 2px 4px 12px rgba(0,0,0,0.18);
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
   letter-spacing: 0.03em;
-  margin: 28px auto 32px auto; /* Center horizontally and add space below */
   text-align: center;
-  display: block;          /* Ensures centering with margin auto */
+  display: inline-block;
 }

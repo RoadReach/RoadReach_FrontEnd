@@ -20,8 +20,9 @@ const AppContent: React.FC = () => {
   const navigate = useNavigate();
   // Only enable session timeout if user is logged in
   const isLoggedIn = Boolean(localStorage.getItem("email") || sessionStorage.getItem("email"));
-  const { showSessionTimeout, handleStaySignedIn, countdown } = useSessionTimeout({
-    timeout: 1* 60 * 1000,
+
+  const { showSessionTimeout, handleStaySignedIn } = useSessionTimeout({
+    timeout: 1 * 60 * 1000,
     autoLogout: 1 * 60 * 1000,
     onLogout: () => {
       localStorage.clear();
@@ -30,16 +31,26 @@ const AppContent: React.FC = () => {
     },
   });
 
-   const [secondsLeft, setSecondsLeft] = React.useState(60);
+  const [secondsLeft, setSecondsLeft] = React.useState(60);
 
   React.useEffect(() => {
     if (!showSessionTimeout) return;
     setSecondsLeft(60);
     const interval = setInterval(() => {
-      setSecondsLeft(prev => (prev > 0 ? prev - 1 : 0));
+      setSecondsLeft(prev => {
+        if (prev <= 1) {
+          localStorage.clear();
+          sessionStorage.clear();
+          navigate("/login");
+          return 0;
+        }
+        return prev - 1;
+      });
     }, 1000);
     return () => clearInterval(interval);
-  }, [showSessionTimeout]);
+  }, [showSessionTimeout, navigate]);
+
+
 
   return (
     <div>
@@ -50,12 +61,14 @@ const AppContent: React.FC = () => {
             <div className="session-modal__header">
                 Session About to Expire
             </div>
-            <div style={{ fontSize: '1.1rem', color: '#003a5c', lineHeight: '1.7',alignContent:'center', textAlign:'center', marginBottom: '20px' }}>
+            <div className="session-modal__message">
               Due to inactivity, your session will end in {secondsLeft} seconds
             </div>
-            <button className="modal-btn" onClick={handleStaySignedIn}>
-              CONTINUE SESSION
-            </button>
+            <div className="session-modal__btn-row">
+              <button className="modal-btn" onClick={handleStaySignedIn}>
+                CONTINUE SESSION
+              </button>
+            </div>
           </div>
         </div>
       )}

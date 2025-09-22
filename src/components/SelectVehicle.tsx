@@ -591,7 +591,7 @@ const SelectVehicle: React.FC = () => {
                                       </div>
                                     </div>
                                     <div className="vehicle-detail-card__right">
-                                      
+
                                       <div className="vehicle-detail-card__price-details">
                                         <a
                                           href="#"
@@ -748,39 +748,39 @@ const SelectVehicle: React.FC = () => {
         <div style={{ fontSize: '1.1rem', color: '#003a5c', lineHeight: '1.7' }}>
           {/* Replace below with your actual terms */}
           <p style={{ fontSize: '30px',marginTop:0}}>Terms & Conditions</p>
-          <p className="terms-details-text">Debit cards may not be an accepted form of payment; 
+          <p className="terms-details-text">Debit cards may not be an accepted form of payment;
             see your rental itinerary for details. Should you wish to make a change to your rental,
-            book a new reservation with the updated information and then cancel your original 
-            reservation. Payment information is not required to confirm this reservation. 
-            The reservation may be cancelled at any time, without penalty, prior to pickup 
+            book a new reservation with the updated information and then cancel your original
+            reservation. Payment information is not required to confirm this reservation.
+            The reservation may be cancelled at any time, without penalty, prior to pickup
             of the vehicle. One additional driver fee will be waived for Costco members at
-            participating locations. Additional drivers will need a valid driver's license 
-            and a major credit card. All additional drivers must meet the renter requirements; 
-            including age, car class, and location requirements. For full requirements regarding 
-            additional drivers, please contact your pick-up location. An additional daily fee will 
-            apply to all additional drivers not described above. Please note: For changes made to 
-            the reservation, the original rental rate is subject to change. Early or late pickups 
-            as well as early or late drop offs and any returns to an alternate location are subject 
-            to charges or penalties paid by the renter directly through the rental car company. 
-            Please check your insurance policy and/or credit card agreement for rental vehicle 
+            participating locations. Additional drivers will need a valid driver's license
+            and a major credit card. All additional drivers must meet the renter requirements;
+            including age, car class, and location requirements. For full requirements regarding
+            additional drivers, please contact your pick-up location. An additional daily fee will
+            apply to all additional drivers not described above. Please note: For changes made to
+            the reservation, the original rental rate is subject to change. Early or late pickups
+            as well as early or late drop offs and any returns to an alternate location are subject
+            to charges or penalties paid by the renter directly through the rental car company.
+            Please check your insurance policy and/or credit card agreement for rental vehicle
             coverage. Prices are available only to Costco members residing in the United States.
           </p><br />
           <p className="terms-details-text">
-            The savings of up to 30% applies to Budget base rates and is applicable only to the time 
-            and mileage charges of the rental. Offer does not apply to car group X. All taxes, fees 
-            (including but not limited to Air Conditioning Excise Recovery Fee, Concession Recovery 
-            Fee, Vehicle License Recovery Fee, Energy Recovery Fee, Tire Management Fee, and Frequent 
-            Traveler Fee) and surcharges (including but not limited to Customer Facility Charge and 
-            Environmental Fee Recovery Charge) are extra. Offer is available for U.S. residents only 
-            for rentals at participating locations in the U.S., Puerto Rico, U.S. Virgin Islands, and 
-            Canada. Offer may not be used in conjunction with any other BCD number, promotion or offer. 
-            Weekly rates require a minimum five day rental period. Weekend rate available Thursday noon; 
-            car must be returned by Monday 11:59 p.m., or higher rate will apply. A Saturday night keep 
-            and an advance reservation may be required. Offer is subject to vehicle availability at the 
-            time of rental and may not be available on some rates at some times, including some online 
-            rates at Budget.com. Car rental return restrictions may apply. Offer subject to change 
-            without notice. Holiday and other blackout periods may apply. Renter must meet Budget age, 
-            driver and credit requirements. Minimum age may vary by location. An additional daily 
+            The savings of up to 30% applies to Budget base rates and is applicable only to the time
+            and mileage charges of the rental. Offer does not apply to car group X. All taxes, fees
+            (including but not limited to Air Conditioning Excise Recovery Fee, Concession Recovery
+            Fee, Vehicle License Recovery Fee, Energy Recovery Fee, Tire Management Fee, and Frequent
+            Traveler Fee) and surcharges (including but not limited to Customer Facility Charge and
+            Environmental Fee Recovery Charge) are extra. Offer is available for U.S. residents only
+            for rentals at participating locations in the U.S., Puerto Rico, U.S. Virgin Islands, and
+            Canada. Offer may not be used in conjunction with any other BCD number, promotion or offer.
+            Weekly rates require a minimum five day rental period. Weekend rate available Thursday noon;
+            car must be returned by Monday 11:59 p.m., or higher rate will apply. A Saturday night keep
+            and an advance reservation may be required. Offer is subject to vehicle availability at the
+            time of rental and may not be available on some rates at some times, including some online
+            rates at Budget.com. Car rental return restrictions may apply. Offer subject to change
+            without notice. Holiday and other blackout periods may apply. Renter must meet Budget age,
+            driver and credit requirements. Minimum age may vary by location. An additional daily
             surcharge may apply for renters under 25 years old. Fuel charges are extra. (CM)</p>
         </div>
       </div>
@@ -793,15 +793,15 @@ const SelectVehicle: React.FC = () => {
               <div className="price-details-modal__header">
                 Geographic Restrictions
                 <button className="price-details-modal__close" onClick={() => setShowGeoRestrictions(false)} aria-label="Close">×</button>
-              </div>  
+              </div>
               <div>
               <div style={{ fontSize: '1.1rem', color: '#003a5c', lineHeight: '1.7' }}>
                 {/* Replace below with your actual terms */}
-                
+
                 <p className="geo-details-text">
-                  Rentals originating in the United States: Most vehicles rented in the US can be 
-                  driven throughout the US and Canada. Some vehicle classes like Exotics, Large 
-                  Passenger or Cargo Vans, and other specialty vehicles may not be allowed to 
+                  Rentals originating in the United States: Most vehicles rented in the US can be
+                  driven throughout the US and Canada. Some vehicle classes like Exotics, Large
+                  Passenger or Cargo Vans, and other specialty vehicles may not be allowed to
                   travel outside of the US. Vehicles rented in the US cannot be driven into Mexico.
                 </p>
                </div>
@@ -815,13 +815,13 @@ const SelectVehicle: React.FC = () => {
               <div className="price-details-modal__header">
                 Additional Driver Included
                 <button className="price-details-modal__close" onClick={() => setShowAdditionalDrivers(false)} aria-label="Close">×</button>
-              </div>  
+              </div>
               <div>
               <div style={{ fontSize: '1.1rem', color: '#003a5c', lineHeight: '1.7' }}>
                 {/* Replace below with your actual terms */}
-                
+
                 <p className="geo-details-text">
-                  One additional driver fee will be waived for Costco members at participating 
+                  One additional driver fee will be waived for Costco members at participating
                   locations. Age restrictions and renter requirements may apply.
                 </p>
                </div>
