@@ -12,20 +12,21 @@ interface LoginFormData {
 }
 
 
+
+
 const Login: React.FC = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
     keepSignedIn: false,
   });
-
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<{ email: boolean; password: boolean }>({ email: false, password: false });
   const [showTooltip, setShowTooltip] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const navigate = useNavigate();
 
   // Forgot Password states
   const [showForgotPassword, setShowForgotPassword] = useState(false);
@@ -199,7 +200,7 @@ const Login: React.FC = () => {
           {showForgotPassword && (
             <div className="modal-overlay modal-overlay--centered">
               <div className="modal-card modal-card--centered">
-                <img src="/public/vite.svg" alt="Logo" style={{ width: 120, margin: '0 auto 16px', display: 'block' }} />
+                <img src="/public/vite.svg" alt="Logo" className="modal-logo" />
                 <h2 className="modal-title">Password Reset</h2>
                 {forgotPasswordStep === 'email' && (
                   <>
@@ -265,27 +266,24 @@ const Login: React.FC = () => {
                       value={newPassword}
                       onChange={e => setNewPassword(e.target.value)}
                       placeholder="New password"
-                      className="floating-input"
-                      style={{ marginTop: 12 }}
+                      className="floating-input floating-input--mt12"
                       disabled={forgotPasswordSubmitting}
                     />
-                    <div style={{ position: "relative", marginTop: 12 }}>
+                    <div className="confirm-password-row">
                       <input
                         type={showConfirmPassword ? "text" : "password"}
                         value={confirmPassword}
                         onChange={e => setConfirmPassword(e.target.value)}
                         placeholder="Confirm new password"
-                        className="floating-input"
+                        className="floating-input floating-input--fullwidth"
                         disabled={forgotPasswordSubmitting}
-                        style={{ width: "100%" }}
                       />
                       <button
                         type="button"
-                        className="show-toggle"
+                        className="show-toggle show-toggle--confirm"
                         onClick={() => setShowConfirmPassword((prev) => !prev)}
                         tabIndex={-1}
                         aria-label="Show confirm password"
-                        style={{ position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)" }}
                       >
                         <span role="img" aria-label="Show confirm password">👁️</span>
                       </button>

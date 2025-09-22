@@ -1,3 +1,8 @@
+/* Auto-logout warning style */
+.auto-logout-warning {
+  color: red;
+  font-weight: 500;
+}
 /* Modal styles for forgot password */
 .modal-overlay--centered {
   position: fixed;

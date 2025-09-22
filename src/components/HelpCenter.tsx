@@ -1,5 +1,12 @@
 import React, { useState } from "react";
+import ScrollToSection from "./ScrollToSection";
+import RentalCarOnlyBookingsArticle from "./RentalCarOnlyBookingsArticle";
+import RoadReachTravelAccountArticle from "./RoadReachTravelAccountArticle";
 import RoadReachLogo from "../assets/RoadReach_Logo_cropped.png";
+import RentalCarOnlyChangesArticle from "./RentalCarOnlyChangesArticle";
+import RentalCarsArticle from "./RentalCarsArticle";
+import GeneralInformationArticle from "./GeneralInformationArticle";
+import TroubleshootArticle from "./TroubleshootArticle";
 import './HelpCenter.css';
 
 // Validation helpers
@@ -14,14 +21,15 @@ const formatPhone = (v: string) => {
 };
 
 // Dummy icons (replace with SVG or icon components as needed)
-const TroubleshootIcon = () => <span className="hc-icon">🛠️</span>;
 const InfoIcon = () => <span className="hc-icon">ℹ️</span>;
 const CarIcon = () => <span className="hc-icon">🚗</span>;
+const TroubleshootIcon = () => <span className="hc-icon">🛠️</span>;
 
 // Removed voteBtnStyle in favor of .hc-vote-btn class
 
 // REPLACE old popularAnswers (string array) with objects (id,title)
 const popularAnswers = [
+  { id: "troubleshoot", title: "Website Issue/Error Message" },
   { id: "rental-car-only-bookings", title: "Rental Car Only Bookings" },
   { id: "account", title: "RoadReach Travel Account" },
   { id: "rental-car-changes", title: "Rental Car Only Changes & Cancellations" },
@@ -29,104 +37,32 @@ const popularAnswers = [
 
 // NEW article content map
 const articleContent: Record<string, { title: string; body: React.ReactElement }> = {
+  "troubleshoot": {
+    title: "Troubleshoot",
+    body: <TroubleshootArticle />
+  },
   "rental-car-only-bookings": {
     title: "Rental Car Only Bookings",
-    body: (
-  <div className="printable hc-article-body">
-        <p>
-          RoadReach offers members exclusive rental car rates and one free additional driver with our
-          rental partners. Executive Members earn a 2% reward per rental.
-        </p>
-
-        <h4>In this article:</h4>
-  <ul className="hc-article-toc">
-          <li><a href="#additional-driver">Additional driver</a></li>
-          <li><a href="#booking">Booking</a></li>
-          <li><a href="#email-confirmations">Email confirmations</a></li>
-          <li><a href="#insurance-options">Insurance options</a></li>
-          <li><a href="#loyalty-numbers">Loyalty numbers</a></li>
-          <li><a href="#optional-equipment">Optional equipment</a></li>
-          <li><a href="#restrictions">Restrictions</a></li>
-        </ul>
-
-  <h3 id="additional-driver" className="hc-article-sub">Additional driver</h3>
-        <p>
-          When booking a Rental Car with RoadReach, one additional driver fee is waived for qualifying members:
-        </p>
-        <ul>
-          <li><strong>Alamo &amp; Enterprise:</strong> U.S., Canada, UK, Puerto Rico, France, Germany, Ireland, Spain</li>
-          <li><strong>Avis &amp; Budget:</strong> U.S. and Canada</li>
-        </ul>
-        <p>
-          Additional drivers are added at pick‑up and must meet the rental agency’s requirements (license & major credit card). Charges may apply for drivers under 25.
-        </p>
-
-  <h3 id="booking" className="hc-article-sub">Booking a rental car</h3>
-        <p>To book:</p>
-        <ol>
-          <li>Sign in to your account</li>
-          <li>Select Rental Cars</li>
-          <li>Enter pickup & drop off: location, dates, times</li>
-          <li>Select if you are at least 25 years old</li>
-          <li>Click Search</li>
-          <li>Use filters to narrow</li>
-        </ol>
-        <p><em>Or</em></p>
-        <ol start={7}>
-          <li>Call RoadReach Travel (rental cars option)</li>
-          <li>Select a rental partner to connect to a representative</li>
-          <li>Follow prompts for account assistance if needed</li>
-        </ol>
-
-  <h3 id="email-confirmations" className="hc-article-sub">Email confirmations</h3>
-        <p>
-          You’ll receive a confirmation email with RoadReach and agency confirmation numbers. Check spam/junk if missing or resend from your account.
-        </p>
-
-  <h3 id="insurance-options" className="hc-article-sub">Insurance options</h3>
-        <p>Insurance isn’t included; you may add coverage via:</p>
-        <ul>
-          <li>Third‑party travel insurance</li>
-          <li>Rental agency insurance (pre‑book or at pick‑up)</li>
-          <li>Credit card benefits</li>
-          <li>Personal auto insurance</li>
-        </ul>
-
-  <h3 id="loyalty-numbers" className="hc-article-sub">Loyalty numbers</h3>
-        <p>Enter supported loyalty numbers under Driver Details. Contact the rewards program for point eligibility.</p>
-
-  <h3 id="optional-equipment" className="hc-article-sub">Optional equipment / add‑ons</h3>
-        <p>
-          Add navigation, child seats, satellite radio during booking (availability varies). To add later you may need to cancel/rebook or request at pick‑up (pricing may change).
-        </p>
-
-  <h3 id="restrictions" className="hc-article-sub">Restrictions</h3>
-        <p>
-          Review geographic & cross‑border restrictions. Confirm terms for international or one‑way trips.
-        </p>
-
-  <hr className="hc-article-sep" />
-
-        <div className="hc-answer-help">
-          <span className="hc-answer-help-label">Is this answer helpful?</span>
-          <div className="hc-inline-flex">
-            <button className="hc-vote-btn" aria-label="Helpful">👍</button>
-            <button className="hc-vote-btn" aria-label="Not helpful">👎</button>
-          </div>
-        </div>
-
-        <div className="hc-related">
-          <h4>Related Answers</h4>
-          <ul>
-            <li>Rental Car Only General Information</li>
-            <li>Rental Car Only Changes &amp; Cancellations</li>
-            <li>RoadReach Rewards Program</li>
-          </ul>
-        </div>
-      </div>
-    )
-  }
+    body: <RentalCarOnlyBookingsArticle />
+  },
+  "account": {
+    title: "RoadReach Travel Account",
+    body: <RoadReachTravelAccountArticle />
+  },
+  "rental-car-changes": {
+    title: "Rental Car Only Changes & Cancellations",
+    body: <RentalCarOnlyChangesArticle />
+  },
+  "general-information": {
+    title: "General Information",
+    body: <GeneralInformationArticle />
+  },
+  "rental-cars": {
+    title: "Rental Cars",
+    body: <RentalCarsArticle />
+  },
 };
+
 
 
 
@@ -145,7 +81,99 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
   const [submitting, setSubmitting] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [phoneError, setPhoneError] = useState("");
-  const [selectedArticle, setSelectedArticle] = useState<string | null>(null); // NEW
+  const [selectedArticle, setSelectedArticle] = useState<string | null>(null);
+  const [highlightSectionId, setHighlightSectionId] = useState<string | null>(null);
+  const [searchActive, setSearchActive] = useState(false);
+
+  // Prepare a flat list of all articles for search
+  // For richer search, also check for section subtitles if available
+  const allArticles = Object.entries(articleContent).map(([id, { title, body }]) => ({ id, title, body }));
+
+
+  // Helper to extract all text content from article body (recursively)
+  // @ts-expect-error: Accepts any React node for recursive text extraction
+  function extractBodyText(node: unknown): string {
+    if (!node) return "";
+    if (typeof node === "string" || typeof node === "number") return String(node);
+    if (Array.isArray(node)) return node.map(extractBodyText).join(" ");
+    // Cast to any for property access
+    const n: any = node;
+    if (n.type === React.Fragment && n.props && n.props.children) {
+      return extractBodyText(n.props.children);
+    }
+    if (n.props) {
+      let text = "";
+      for (const key of Object.keys(n.props)) {
+        text += " " + extractBodyText(n.props[key]);
+      }
+      return text.trim();
+    }
+    return "";
+  }
+
+  // Helper to extract all sections and their text from an article body
+  // @ts-expect-error: Accepts any React node for recursive section extraction
+  function extractSections(node: unknown, parentId: string | null = null): Array<{id: string|null, title: string|null, text: string}> {
+    let sections: Array<{id: string|null, title: string|null, text: string}> = [];
+    if (!node) return sections;
+    if (Array.isArray(node)) {
+      node.forEach(child => {
+        sections = sections.concat(extractSections(child, parentId));
+      });
+      return sections;
+    }
+    if (typeof node === 'string' || typeof node === 'number') {
+      if (parentId) {
+        sections.push({id: parentId, title: null, text: String(node)});
+      }
+      return sections;
+    }
+    const n: any = node;
+    if (n.props && (n.type === 'h3' || n.type === 'h4' || (n.props.className && n.props.className.includes('hc-article-sub')))) {
+      const id = n.props.id || null;
+      const title = extractBodyText(n);
+      sections.push({id, title, text: ''});
+      if (n.props.children) {
+        sections = sections.concat(extractSections(n.props.children, id));
+      }
+      return sections;
+    }
+    if (n.props && n.props.className && n.props.className.includes('hc-article-body')) {
+      const text = extractBodyText(n);
+      sections.push({id: parentId, title: null, text});
+      if (n.props.children) {
+        sections = sections.concat(extractSections(n.props.children, parentId));
+      }
+      return sections;
+    }
+    if (n.props && n.props.children) {
+      sections = sections.concat(extractSections(n.props.children, parentId));
+    }
+    return sections;
+  }
+
+  const searchResults = search.trim()
+    ? allArticles.map(a => {
+        const keyword = search.trim().toLowerCase();
+        let bodyElement = a.body;
+        if (typeof a.body === 'function') {
+          bodyElement = a.body();
+        }
+        // Find all matching sections
+        const sections = extractSections(bodyElement);
+        const matches = sections.filter(sec =>
+          (sec.title && sec.title.toLowerCase().includes(keyword)) ||
+          (sec.text && sec.text.toLowerCase().includes(keyword))
+        );
+        if (a.title.toLowerCase().includes(keyword) || matches.length > 0) {
+          return {
+            ...a,
+            matches
+          };
+        }
+        return null;
+      }).filter(Boolean)
+    : [];
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -246,6 +274,8 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
         {/* ARTICLE VIEW */}
         {selectedArticle && articleContent[selectedArticle] ? (
           <div>
+            {/* Scroll/highlight logic for matching section */}
+            <ScrollToSection sectionId={highlightSectionId} />
             <div className="hc-back-header">
               <button onClick={() => setSelectedArticle(null)} className="hc-back-btn-icon" aria-label="Back">←</button>
               <div className="hc-header hc-header--inline">
@@ -302,24 +332,66 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
               <span className="hc-header-title">Help Center</span>
             </div>
             <div className="hc-search-bar">
-              <form onSubmit={e => e.preventDefault()}>
-                <input className="hc-search-input" placeholder="How can we help?" value={search} onChange={e => setSearch(e.target.value)} />
+              <form onSubmit={e => { e.preventDefault(); setSearchActive(true); }}>
+                <input
+                  className="hc-search-input"
+                  placeholder="How can we help?"
+                  value={search}
+                  onChange={e => {
+                    setSearch(e.target.value);
+                    setSearchActive(false);
+                  }}
+                  onFocus={() => search && setSearchActive(true)}
+                />
                 <button type="submit" className="hc-search-submit"><span role="img" aria-label="search">🔍</span></button>
               </form>
+              {searchActive && searchResults.length > 0 && (
+                <ul className="hc-search-results">
+                  {searchResults.map(result => (
+                    <li
+                      key={result.id}
+                      className="hc-search-result-item"
+                      onClick={() => {
+                        setSelectedArticle(result.id);
+                        setSearchActive(false);
+                        // If there is a matching section id, highlight it
+                        const firstMatchWithId = result.matches && result.matches.find(m => m.id);
+                        setHighlightSectionId(firstMatchWithId ? firstMatchWithId.id : null);
+                      }}
+                    >
+                      <div className="hc-search-result-title">{result.title}</div>
+                      {result.matches && result.matches.length > 0 && (
+                        <ul className="hc-search-snippets">
+                          {result.matches.slice(0,2).map((m, i) => (
+                            <li key={i} className="hc-search-snippet">
+                              {m.title && <div className="hc-search-snippet-title">{m.title}</div>}
+                              <div className="hc-search-snippet-text">{m.text.length > 120 ? m.text.slice(0,120) + '...' : m.text}</div>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {searchActive && search && searchResults.length === 0 && (
+                <div className="hc-search-no-results">No results found.</div>
+              )}
             </div>
             <div>
               <div className="hc-popular-title">Popular Answers</div>
               <ul className="hc-popular-list">
                 {popularAnswers.map(ans => (
-                  <li key={ans.id} className="hc-popular-item" onClick={() => setSelectedArticle(ans.id)}>{ans.title}</li>
+                  <li key={ans.id} className="hc-popular-item" onClick={() => { setSelectedArticle(ans.id); setHighlightSectionId(null); }}>{ans.title}</li>
                 ))}
               </ul>
               <a href="#" className="hc-show-more">Show more Published Answers <span className="hc-more-arrow">›</span></a>
             </div>
             <div className="hc-quick-links-wrap">
-              <div className="hc-quick-link"><span>Troubleshoot</span> <TroubleshootIcon /></div>
-              <div className="hc-quick-link"><span>General Information</span> <InfoIcon /></div>
-              <div className="hc-quick-link"><span>Rental Cars</span> <CarIcon /></div>
+              <div className="hc-quick-link hc-quick-link--pointer" onClick={() => { setSelectedArticle("troubleshoot"); setHighlightSectionId(null); }}><span>Troubleshoot</span> <TroubleshootIcon /></div>
+              <div className="hc-quick-link hc-quick-link--pointer" onClick={() => { setSelectedArticle("general-information"); setHighlightSectionId(null); }}><span>General Information</span> <InfoIcon /></div>
+              <div className="hc-quick-link hc-quick-link--pointer" onClick={() => { setSelectedArticle("rental-cars"); setHighlightSectionId(null); }}><span>Rental Cars</span> <CarIcon /></div>
+
             </div>
             <button className="hc-submit-btn" onClick={() => setShowForm(true)}>Submit a Request</button>
           </>
