@@ -12,13 +12,117 @@
 .filters__price-row { display:flex; align-items:center; gap:10px; font-size:13px; }
 .filters__price-row input[type=range] { flex:1; }
 /* Dual range slider */
-.dual-range { position:relative; height:34px; margin-bottom:2px; }
-.dual-range input[type=range] { position:absolute; inset:0; pointer-events:none; -webkit-appearance:none; appearance:none; background:transparent; }
-.dual-range input[type=range]::-webkit-slider-thumb { pointer-events:auto; -webkit-appearance:none; appearance:none; height:18px; width:18px; background:#005DA6; border:2px solid #fff; border-radius:50%; box-shadow:0 0 0 2px #005DA6; cursor:pointer; }
-.dual-range input[type=range]::-webkit-slider-runnable-track { height:6px; background:transparent; }
-.dual-range__track { position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); height:6px; background:#d9e2ec; border-radius:4px; }
-.dual-range__fill { position:absolute; top:0; height:100%; background:#005DA6; border-radius:4px; }
-.dual-range__fill { left:var(--slider-fill-left,0%); width:var(--slider-fill-width,0%); }
+.dual-range { position:relative; height:34px; margin-bottom:2px; background:transparent; }
+.dual-range__track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 45%;
+  transform: translateY(-50%);
+  height: 4px;
+  border-radius: 3px;
+  background: #e6e9ed;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.dual-range__fill {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: #376a93;
+  border-radius: 3px;
+  left: var(--slider-fill-left, 0%);
+  width: var(--slider-fill-width, 0%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Hide native track for input */
+.dual-range input[type=range]::-webkit-slider-runnable-track {
+  background: transparent;
+}
+.dual-range input[type=range]::-moz-range-track {
+  background: transparent;
+}
+.dual-range input[type=range]::-ms-fill-lower,
+.dual-range input[type=range]::-ms-fill-upper {
+  background: transparent;
+}
+
+/* Thumb styles */
+.dual-range input[type=range] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 34px;
+  background: transparent;
+  pointer-events: auto;
+  -webkit-appearance: none;
+  appearance: none;
+  z-index: 2;
+}
+
+.dual-range input[type=range]::-webkit-slider-thumb {
+  pointer-events: auto;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 15px;
+  width: 15px;
+  background: #376a93;
+  border: none;
+  border-radius: 50%;
+  box-shadow: none;
+  cursor: pointer;
+  margin-top: -7px;
+  outline: none;
+}
+
+.dual-range input[type=range]:focus::-webkit-slider-thumb {
+  outline: none;
+  border: none;
+}
+
+/* Firefox */
+.dual-range input[type=range]::-moz-range-thumb {
+  height: 15px;
+  width: 15px;
+  background: #376a93;
+  border: none;
+  border-radius: 50%;
+  box-shadow: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.dual-range input[type=range]:focus::-moz-range-thumb {
+  outline: none;
+  border: none;
+}
+
+.dual-range input[type=range]::-moz-range-track {
+  background: transparent;
+}
+
+/* IE/Edge */
+.dual-range input[type=range]::-ms-thumb {
+  height: 18px;
+  width: 18px;
+  background: #376a93;
+  border: none;
+  border-radius: 50%;
+  box-shadow: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.dual-range input[type=range]::-ms-fill-lower,
+.dual-range input[type=range]::-ms-fill-upper {
+  background: #376a93;
+  border-radius: 2px;
+  box-shadow: none;
+  border: none;
+}
 .empty-actions { margin-top:8px; }
 .ml-6 { margin-left:6px; }
 .select-vehicle__error { background:#ffe9e9; border:1px solid #e7b4b4; color:#7d1212; padding:10px 14px; border-radius:8px; font-size:13px; margin-top:10px; }
@@ -238,30 +342,34 @@
 }
 
 .vehicle-table-matrix th.sticky-top {
-  position: sticky;
   top: 0;
-  background: #f8f8f8;
+  background: #fff;
   z-index: 2;
-  font-weight: bold;
   font-size: 1.1rem;
-  border-bottom: 1px solid #e1e5eb;
 }
 
-.vehicle-table-matrix td.sticky-left,
-.vehicle-table-matrix th.sticky-left {
+.vehicle-table-matrix td.sticky-left{
   position: sticky;
   left: 0;
-  background: #f8f8f8;
+  background: #fff;
   z-index: 1;
   text-align: left;
   font-weight: bold;
   font-size: 1.1rem;
   border-right: 1px solid #e1e5eb;
 }
+.vehicle-table-matrix th.sticky-left {
+  position: sticky;
+  left: 0;
+  background: #f8f8f8;
+  z-index: 1;
+  text-align: left;
+  font-size:17px;
+}
 
 .vehicle-table-row-alt td,
 .vehicle-table-row-alt th.sticky-left {
-  background: #f5f7fa !important;
+  background: #f0f3f8 !important;
 }
 
 .vehicle-table-price {

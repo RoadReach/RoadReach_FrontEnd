@@ -398,13 +398,92 @@ const SelectVehicle: React.FC = () => {
             <table className="vehicle-table-matrix">
               <thead>
                 <tr>
-                  <th className="sticky-left sticky-top">Type</th>
+                  <th className="sticky-left sticky-top">Taxes and fees are<br />included in the price</th>
                   {companies.map(company => (
-                    <th key={company} className="sticky-top">{company}</th>
+                    <th key={company} className="sticky-top">
+                      <img
+                        src={
+                          company === "Alamo" ? alamo :
+                          company === "Avis" ? avis :
+                          company === "Budget" ? budget :
+                          company === "Enterprise Rent-A-Car" ? enterprise :
+                          ""
+                        }
+                        alt={company}
+                        className="vehicle-detail-card__agency-logo"
+                      />
+                    </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
+                {/* Custom info rows */}
+                <tr>
+                  <td className="sticky-left vehicle-table-info-cell" style={{ background: "#003a5c", color: "#fff", fontWeight: "bold" }}>Location:</td>
+                  {companies.map((company, idx) => (
+                    <td
+                      key={company}
+                      className="vehicle-table-info-cell"
+                      style={{
+                        background:
+                          company === "Alamo"
+                            ? "#476a83" // Example: yellow for Alamo
+                            : company === "Budget"
+                            ? "#476a83" // Example: light blue for Budget
+                            : "#5a7990",
+                        color: "#fff",
+                        textAlign: "center",
+                        fontSize: "1.2em"
+                      }}
+                    >
+                      {criteria.pickupLocation}
+                    </td>
+                  ))}
+                </tr>
+                <tr>
+                  <td className="sticky-left vehicle-table-info-cell" style={{ background: "#003a5c", color: "#fff", fontWeight: "bold" }}>Address:</td>
+                  {companies.map((company, idx) => (
+                    <td
+                      key={company}
+                      className="vehicle-table-info-cell"
+                      style={{
+                        background:
+                          company === "Alamo"
+                            ? "#476a83"
+                            : company === "Budget"
+                            ? "#476a83"
+                            : "#5a7990",
+                        color: "#fff",
+                        textAlign: "center"
+                      }}
+                    >
+                      {criteria.pickupLocation}
+                    </td>
+                  ))}
+                </tr>
+                <tr>
+                  <td className="sticky-left vehicle-table-info-cell" style={{ background: "#003a5c", color: "#fff", fontWeight: "bold" }}>Pick-Up Hours:</td>
+                  {companies.map((company, idx) => (
+                    <td
+                      key={company}
+                      className="vehicle-table-info-cell"
+                      style={{
+                        background:
+                          company === "Alamo"
+                            ? "#476a83"
+                            : company === "Budget"
+                            ? "#476a83"
+                            : "#5a7990",
+                        color: "#fff",
+                        textAlign: "center",
+                        fontSize: "14px"
+                      }}
+                    >
+                      12:00 AM - 01:00 AM<br />06:30 AM - 12:00 AM
+                    </td>
+                  ))}
+                </tr>
+                {/* Existing vehicle rows below */}
                 {vehicleTypes.map((type, rowIdx) => {
                   const isSelectedRow = selectedCell?.type === type;
                   return (
