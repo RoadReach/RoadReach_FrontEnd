@@ -108,30 +108,21 @@ const Login: React.FC = () => {
         localStorage.setItem("lastname", data.lastname);
         localStorage.setItem("email", data.email);
         localStorage.setItem("userid", data.userid);
-        localStorage.setItem("loginTime", Date.now().toString());
-
-        // Start 2-minute session timer
-        setTimeout(() => {
-          localStorage.clear();
-          sessionStorage.clear();
-          toast.info("Session expired. Please log in again.");
-          navigate("/login");
-        }, 2 * 60 * 1000); // 2 minutes
-
         toast.success("Login successful!");
         setTimeout(() => {
+          setSubmitting(false); // <-- Only set to false after navigation
           navigate("/dashboard");
         }, 1500);
       } else {
         toast.error("Invalid email or password.");
         setPasswordError("Invalid email or password.");
         setFieldErrors((prev) => ({ ...prev, password: true }));
+        setSubmitting(false); // <-- Set to false on error
       }
     } catch {
       toast.error("Server error. Please try again.");
       setPasswordError("Server error. Please try again.");
-    } finally {
-      setSubmitting(false);
+      setSubmitting(false); // <-- Set to false on error
     }
   };
 
@@ -185,7 +176,7 @@ const Login: React.FC = () => {
               tabIndex={-1}
               aria-label="Show password"
             >
-              <span role="img" aria-label="Show password">👁️‍🗨️</span>
+              <span role="img" aria-label="Show password">👁️</span>
             </button>
           </div>
           {(fieldErrors.password || passwordError) && (

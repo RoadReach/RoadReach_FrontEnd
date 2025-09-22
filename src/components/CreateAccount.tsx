@@ -161,14 +161,15 @@ const CreateAccount: React.FC = () => {
         }
         toast.success(result);
         setTimeout(() => {
+          setSubmitting(false);
           navigate("/login");
         }, 3000);
       } else {
         toast.error(result);
+        setSubmitting(false);
       }
     } catch {
       toast.error("Error connecting to server");
-    } finally {
       setSubmitting(false);
     }
   };

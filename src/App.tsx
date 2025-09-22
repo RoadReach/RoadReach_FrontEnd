@@ -1,4 +1,3 @@
-
 import './App.css'
 import React from "react";
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
@@ -13,6 +12,7 @@ import Profile from "./components/profile";
 import SelectVehicle from './components/SelectVehicle';
 import Footer from './components/Footer';
 import { useSessionTimeout } from "./hooks/useSessionTimeout";
+import './components/SelectVehicle.css';
 
 
 
@@ -20,9 +20,9 @@ const AppContent: React.FC = () => {
   const navigate = useNavigate();
   // Only enable session timeout if user is logged in
   const isLoggedIn = Boolean(localStorage.getItem("email") || sessionStorage.getItem("email"));
-  const { showSessionTimeout, handleStaySignedIn } = useSessionTimeout({
-    timeout: 3 * 60 * 1000,
-    autoLogout: 3 * 60 * 1000,
+  const { showSessionTimeout, handleStaySignedIn, countdown } = useSessionTimeout({
+    timeout: 1* 60 * 1000,
+    autoLogout: 1 * 60 * 1000,
     onLogout: () => {
       localStorage.clear();
       sessionStorage.clear();
@@ -30,25 +30,32 @@ const AppContent: React.FC = () => {
     },
   });
 
+   const [secondsLeft, setSecondsLeft] = React.useState(60);
+
+  React.useEffect(() => {
+    if (!showSessionTimeout) return;
+    setSecondsLeft(60);
+    const interval = setInterval(() => {
+      setSecondsLeft(prev => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [showSessionTimeout]);
+
   return (
     <div>
       <Header />
       {isLoggedIn && showSessionTimeout && (
-        <div className="modal-overlay modal-overlay--centered">
-          <div className="modal-card modal-card--centered">
-            <h2 className="modal-title">Session Timeout</h2>
-            <div className="modal-instructions">
-              Your session is about to close due to inactivity. Would you like to stay signed in?<br />
-              <span className="auto-logout-warning">You will be logged out automatically in 3 minutes.</span>
+       <div className="session-modal" role="dialog" aria-modal="true" aria-label="Countdown to session expiration">
+           <div className="session-modal__dialog">
+            <div className="session-modal__header">
+                Session About to Expire
             </div>
-            <div className="session-modal-btn-row">
-              <button className="modal-btn modal-btn--primary" onClick={handleStaySignedIn}>Stay Signed In</button>
-              <button className="modal-btn modal-btn--link" onClick={() => {
-                localStorage.clear();
-                sessionStorage.clear();
-                navigate("/login");
-              }}>Logout</button>
+            <div style={{ fontSize: '1.1rem', color: '#003a5c', lineHeight: '1.7',alignContent:'center', textAlign:'center', marginBottom: '20px' }}>
+              Due to inactivity, your session will end in {secondsLeft} seconds
             </div>
+            <button className="modal-btn" onClick={handleStaySignedIn}>
+              CONTINUE SESSION
+            </button>
           </div>
         </div>
       )}

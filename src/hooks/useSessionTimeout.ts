@@ -1,148 +1,78 @@
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useCallback, useState } from "react";
 
-const SESSION_DURATION = 2 * 60 * 1000; // 2 minutes
-const INACTIVITY_DURATION = 1 * 60 * 1000; // 1 minute
-const WARNING_DURATION = 30 * 1000; // 30 seconds
+export function useSessionTimeout({
+  timeout = 3 * 60 * 1000, // 3 minutes
+  autoLogout = 3 * 60 * 1000, // 3 minutes after modal
+  onLogout,
+}: {
+  timeout?: number;
+  autoLogout?: number;
+  onLogout: () => void;
+}) {
+  const [showSessionTimeout, setShowSessionTimeout] = useState(false);
+  const [countdown, setCountdown] = useState(Math.floor(autoLogout / 1000));
+  const sessionTimeoutRef = useRef<number | null>(null);
+  const autoLogoutTimeoutRef = useRef<number | null>(null);
 
-export function useSessionTimeout() {
-    console.log("useSessionTimeout hook initialized");
-  const navigate = useNavigate();
-  const [showWarning, setShowWarning] = useState(false);
-  const [timer, setTimer] = useState(WARNING_DURATION / 1000);
-  const warningTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const inactivityTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Reset inactivity timer on user activity
-  const resetInactivityTimer = () => {
-    if (inactivityTimeoutRef.current) clearTimeout(inactivityTimeoutRef.current);
-    if (showWarning) return; // Don't reset if warning is showing
-    inactivityTimeoutRef.current = setTimeout(() => {
-      setShowWarning(true);
-      setTimer(WARNING_DURATION / 1000);
-    }, INACTIVITY_DURATION);
-  };
-
+  // Reset session timer on user activity
   useEffect(() => {
-    // Listen for user activity
-    const events = ["mousemove", "keydown", "mousedown", "touchstart"];
-    events.forEach(event =>
-      window.addEventListener(event, resetInactivityTimer)
-    );
-    resetInactivityTimer();
-
-    return () => {
-      events.forEach(event =>
-        window.removeEventListener(event, resetInactivityTimer)
-      );
-      if (inactivityTimeoutRef.current) clearTimeout(inactivityTimeoutRef.current);
-      if (warningTimeoutRef.current) clearInterval(warningTimeoutRef.current);
+    const resetTimer = () => {
+      if (sessionTimeoutRef.current) clearTimeout(sessionTimeoutRef.current);
+      sessionTimeoutRef.current = window.setTimeout(() => {
+        setShowSessionTimeout(true);
+      }, timeout);
     };
-    // eslint-disable-next-line
-  }, [showWarning]);
+    window.addEventListener("mousemove", resetTimer);
+    window.addEventListener("keydown", resetTimer);
+    resetTimer();
+    return () => {
+      window.removeEventListener("mousemove", resetTimer);
+      window.removeEventListener("keydown", resetTimer);
+      if (sessionTimeoutRef.current) clearTimeout(sessionTimeoutRef.current);
+      if (autoLogoutTimeoutRef.current) clearTimeout(autoLogoutTimeoutRef.current);
+    };
+  }, [timeout]);
 
-  // Handle warning timer
+  // Auto-logout effect and countdown when modal is shown
   useEffect(() => {
-    if (showWarning) {
-      warningTimeoutRef.current = setInterval(() => {
-        setTimer(prev => {
+    let interval: number | undefined;
+    if (showSessionTimeout) {
+      setCountdown(Math.floor(autoLogout / 1000));
+      interval = window.setInterval(() => {
+        setCountdown(prev => {
           if (prev <= 1) {
-            clearInterval(warningTimeoutRef.current!);
-            localStorage.clear();
-            sessionStorage.clear();
-            navigate("/login");
+            clearInterval(interval);
+            onLogout();
             return 0;
           }
           return prev - 1;
         });
       }, 1000);
+      autoLogoutTimeoutRef.current = window.setTimeout(() => {
+        onLogout();
+      }, autoLogout);
     } else {
-      if (warningTimeoutRef.current) clearInterval(warningTimeoutRef.current);
+      if (autoLogoutTimeoutRef.current) clearTimeout(autoLogoutTimeoutRef.current);
     }
-    // eslint-disable-next-line
-  }, [showWarning, navigate]);
+    return () => {
+      if (autoLogoutTimeoutRef.current) clearTimeout(autoLogoutTimeoutRef.current);
+      if (interval) clearInterval(interval);
+    };
+  }, [showSessionTimeout, autoLogout, onLogout]);
 
-  // Session duration check (still log out after 2 min)
-  useEffect(() => {
-    const loginTime = parseInt(localStorage.getItem("loginTime") || "0", 10);
-    if (!loginTime || Date.now() - loginTime > SESSION_DURATION) {
-      localStorage.clear();
-      sessionStorage.clear();
-      navigate("/login");
-    } else {
-      const timeout = setTimeout(() => {
-        localStorage.clear();
-        sessionStorage.clear();
-        navigate("/login");
-      }, SESSION_DURATION - (Date.now() - loginTime));
-      return () => clearTimeout(timeout);
-    }
-  }, [navigate]);
+  const handleStaySignedIn = useCallback(() => {
+    setShowSessionTimeout(false);
+    if (sessionTimeoutRef.current) clearTimeout(sessionTimeoutRef.current);
+    if (autoLogoutTimeoutRef.current) clearTimeout(autoLogoutTimeoutRef.current);
+    sessionTimeoutRef.current = window.setTimeout(() => {
+      setShowSessionTimeout(true);
+    }, timeout);
+  }, [timeout]);
 
-  // Render warning popup
-  useEffect(() => {
-    if (showWarning) {
-      const popup = document.createElement("div");
-      popup.id = "session-warning-popup";
-      popup.style.position = "fixed";
-      popup.style.top = "0";
-      popup.style.left = "0";
-      popup.style.width = "100vw";
-      popup.style.height = "100vh";
-      popup.style.background = "rgba(0,0,0,0.25)";
-      popup.style.display = "flex";
-      popup.style.alignItems = "center";
-      popup.style.justifyContent = "center";
-      popup.style.zIndex = "9999";
-
-      popup.innerHTML = `
-        <div style="
-          background: #fff;
-          padding: 32px 40px;
-          border-radius: 12px;
-          box-shadow: 0 2px 16px rgba(0,0,0,0.18);
-          text-align: center;
-          font-size: 1.2em;
-        ">
-          <div style="margin-bottom: 18px;">
-            <strong>Session is inactive.</strong><br>
-            Ending in <span id="session-warning-timer" style="color:#c21c1c;font-weight:bold;">${timer}</span> seconds.
-          </div>
-          <button id="session-warning-continue" style="
-            background: #0074d9;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            padding: 10px 28px;
-            font-size: 1em;
-            cursor: pointer;
-          ">Continue Session</button>
-        </div>
-      `;
-      document.body.appendChild(popup);
-
-      // Update timer every second
-      const interval = setInterval(() => {
-        const timerSpan = document.getElementById("session-warning-timer");
-        if (timerSpan) timerSpan.textContent = timer.toString();
-      }, 500);
-
-      // Button handler
-      const btn = document.getElementById("session-warning-continue");
-      if (btn) {
-        btn.onclick = () => {
-          setShowWarning(false);
-          setTimer(WARNING_DURATION / 1000);
-          resetInactivityTimer();
-          if (popup) document.body.removeChild(popup);
-          clearInterval(interval);
-        };
-      }
-
-      return () => {
-        if (popup && document.body.contains(popup)) document.body.removeChild(popup);
-        clearInterval(interval);
-      };
-    }
-  }, [showWarning, timer]);
+  return {
+    showSessionTimeout,
+    setShowSessionTimeout,
+    handleStaySignedIn,
+    countdown,
+  };
 }

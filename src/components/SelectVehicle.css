@@ -26,6 +26,27 @@
   overflow: hidden;
 }
 
+.modal-btn {
+  background: #376a93;
+  color: #fff;
+  border: none;
+  width:70%;
+  border-radius: 2px;
+  padding: 12px 32px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.03em;
+  margin-top: 18px;
+  margin-right: 0;
+  text-align: center;
+  display: block;
+}
+
+
+
 .dual-range__fill {
   position: absolute;
   top: 0;

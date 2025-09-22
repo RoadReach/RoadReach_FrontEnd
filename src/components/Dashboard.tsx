@@ -4,7 +4,12 @@ import './Dashboard.css';
 import { useSessionTimeout } from "../hooks/useSessionTimeout";
 
 const Dashboard: React.FC = () => {
-  useSessionTimeout();
+  useSessionTimeout({onLogout: () => {
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = "/login";
+    }
+  });
 
   const firstName = localStorage.getItem("firstname") || "User";
 

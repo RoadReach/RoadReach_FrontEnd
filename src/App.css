@@ -61,3 +61,43 @@ a:hover { text-decoration:underline; }
 /* Alternate car hero background (cool teal gradient + outline silhouette) */
 .page-hero--car-alt { position:relative; background:linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.55)), url('./assets/hero-car-alt.svg') center/cover no-repeat; min-height:calc(50vh - var(--header-height)); display:flex; justify-content:center; align-items:center; padding:48px 20px; color:#fff; text-shadow:2px 2px 6px rgba(0,0,0,0.6); }
 .page-hero--car-alt .page-hero__title { margin:0; font-size:clamp(2.2rem,5.2vw,3.2rem); font-weight:600; letter-spacing:.5px; }
+.session-modal { position:fixed; inset:0; background:rgba(58, 127, 180, 0.95); display:flex; justify-content:center; align-items:flex-start; padding:60px 20px; overflow:auto; z-index:1000; }
+.session-modal__dialog {
+  background: #fff;
+  max-width: 500px;
+  max-height: 300px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  animation: modalIn .35s ease;
+}
+.session-modal__header {
+  background: #003a5c;
+  color: #fff;
+  padding: 20px 0 12px 0;
+  text-align: center;
+  font-size: 2.1rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  position: relative;
+}
+
+.modal-btn {
+  background: #376a93;
+  color: #fff;
+  border: none;
+  width: 40%;              /* Wider button for better centering */
+  border-radius: 2px;
+  padding: 16px 0;         /* More vertical padding */
+  font-size: 1.25rem;
+  font-weight: 600;
+  box-shadow: 2px 4px 12px rgba(0,0,0,0.18);
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.03em;
+  margin: 28px auto 32px auto; /* Center horizontally and add space below */
+  text-align: center;
+  display: block;          /* Ensures centering with margin auto */
+}
