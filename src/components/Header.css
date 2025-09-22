@@ -296,10 +296,11 @@ header.main-header {
 	top: 100%;
 	margin-right: 12px;
 }
+
 .profile-dropdown__user {
 	display: flex;
 	align-items: center;
-	padding: 18px 24px 12px 24px;
+	padding: 10px 20px 8px 8px;
 	border-bottom: 1px solid #e0e0e0;
 }
 .profile-dropdown__avatar {
@@ -314,7 +315,7 @@ header.main-header {
 	align-items: center;
 	justify-content: center;
 	margin-right: 16px;
-	box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+	box-shadow: 0 2px 4px rgba(0,0,0,0.08);
 }
 .profile-dropdown__info {
 	display: flex;
@@ -337,8 +338,8 @@ header.main-header {
 }
 .profile-dropdown__item {
 	display: block;
-	padding: 16px 24px;
-	font-size: 17px;
+	padding: 10px 15px;
+	font-size: 15px;
 	color: #3374b6;
 	text-decoration: none;
 	background: none;
