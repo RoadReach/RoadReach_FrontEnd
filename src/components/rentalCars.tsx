@@ -244,7 +244,7 @@ const RentalCars: React.FC = () => {
                 onChange={() => setSameLocation(true)}
                 className="rental-form-radio-input"
               />
-              Pick-up and Drop-off at Same Location
+              Drop-off at Same Location
             </label>
             <label className="rental-form-radio-label rental-form-radio-label-margin">
               <input

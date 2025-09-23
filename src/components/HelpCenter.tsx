@@ -210,7 +210,7 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
     setError("");
 
     if (!form.fullName || !form.email || !form.requestType || !form.description) {
-      setError("Please fill in all required fields.");
+      setError("required"); // just a flag, not user-facing text
       setSubmitting(false);
       return;
     }
@@ -402,31 +402,29 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
             <form onSubmit={handleSubmit} className="hc-form">
               <label className="hc-label">Full Name</label>
               <input
-                className="hc-input"
+                className={`hc-input${error === 'required' && !form.fullName ? ' hc-input--error' : ''}`}
                 name="fullName"
                 value={form.fullName}
-                onChange={handleChange}
+                onChange={e => { handleChange(e); if (error === "required") setError(""); }}
                 placeholder="Enter your full name"
-                required
               />
               <label className="hc-label">Email</label>
               <input
-                className="hc-input"
+                className={`hc-input${error === 'required' && !form.email ? ' hc-input--error' : ''}`}
                 name="email"
                 type="email"
                 value={form.email}
-                onChange={handleChange}
+                onChange={e => { handleChange(e); if (error === "required") setError(""); }}
                 onBlur={(e) => {
                   if (!e.target.value) setEmailError("Email is required");
                   else if (!emailRegex.test(e.target.value.trim())) setEmailError("Enter a valid email");
                 }}
                 placeholder="Enter your email"
-                required
               />
               {emailError && <div className="hc-field-error">{emailError}</div>}
               <label className="hc-label">Phone Number</label>
               <input
-                className="hc-input"
+                className={`hc-input${error === 'required' && !form.phoneNumber ? ' hc-input--error' : ''}`}
                 name="phoneNumber"
                 value={form.phoneNumber}
                 onChange={handleChange}
@@ -438,7 +436,7 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
               {phoneError && <div className="hc-field-error">{phoneError}</div>}
               <label className="hc-label">Request Type</label>
               <select
-                className="hc-input"
+                className={`hc-input${error === 'required' && (!form.requestType || form.requestType === 'General') ? ' hc-input--error' : ''}`}
                 name="requestType"
                 aria-label="Request Type"
                 title="Request Type"
@@ -452,14 +450,14 @@ const HelpCenter = ({ open, onClose }: { open: boolean; onClose: () => void }) =
               </select>
               <label className="hc-label">Description</label>
               <textarea
-                className="hc-input hc-textarea"
+                className={`hc-input hc-textarea${error === 'required' && !form.description ? ' hc-input--error' : ''}`}
                 name="description"
                 value={form.description}
-                onChange={handleChange}
+                onChange={e => { handleChange(e); if (error === "required") setError(""); }}
                 placeholder="Describe your issue or request"
-                required
               />
-              {error && <div className="hc-error">{error}</div>}
+              {/* No red alert box, just highlight empty fields */}
+              {error && error !== "required" && <div className="hc-error">{error}</div>}
               <button type="submit" className="hc-form-submit" disabled={submitting}>{submitting ? "Submitting..." : "Submit"}</button>
               <button type="button" className="hc-back-btn" onClick={() => setShowForm(false)}>Back to Help Center</button>
             </form>
