@@ -1,3 +1,7 @@
+/* Make RoadReach logo show pointer cursor when clickable */
+.header__logo-link {
+	cursor: pointer;
+}
 .header__left--center {
 	margin: 0 auto;
 }

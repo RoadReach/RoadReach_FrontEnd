@@ -27,7 +27,7 @@ const AppContent: React.FC = () => {
     onLogout: () => {
       localStorage.clear();
       sessionStorage.clear();
-      navigate("/login");
+      window.location.href = "/";
     },
   });
 
@@ -41,7 +41,7 @@ const AppContent: React.FC = () => {
         if (prev <= 1) {
           localStorage.clear();
           sessionStorage.clear();
-          navigate("/login");
+          window.location.href = "/";
           return 0;
         }
         return prev - 1;

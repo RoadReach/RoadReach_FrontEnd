@@ -34,7 +34,7 @@ const Header: React.FC = () => {
   const handleLogout = () => {
     localStorage.removeItem("firstname");
     localStorage.removeItem("token");
-    navigate("/login");
+  window.location.href = "/";
   };
 
   // Only show logo on login and forgot-password page
@@ -43,7 +43,9 @@ const Header: React.FC = () => {
       <header className="site-header login-header">
         <div className="header__top">
           <div className="header__left header__left--center">
-            <img src={RoadReachLogo} width={150} height={75} alt="RoadReach Logo" />
+            <Link to="/">
+              <img src={RoadReachLogo} width={150} height={75} alt="RoadReach Logo" className="header__logo-link" />
+            </Link>
           </div>
         </div>
       </header>
@@ -56,7 +58,9 @@ const Header: React.FC = () => {
       {/* Top bar */}
       <div className="header__top">
         <div className="header__left">
-          <img src={RoadReachLogo} width={150} height={75} alt="RoadReach Logo" />
+          <Link to="/">
+            <img src={RoadReachLogo} width={150} height={75} alt="RoadReach Logo" className="header__logo-link" />
+          </Link>
         </div>
         <div className="header__right">
           <Link to="/" className="header__link header__link--light">RoadReach.com</Link>

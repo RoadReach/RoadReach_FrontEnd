@@ -7,7 +7,7 @@ const Dashboard: React.FC = () => {
   useSessionTimeout({onLogout: () => {
       localStorage.clear();
       sessionStorage.clear();
-      window.location.href = "/login";
+  window.location.href = "/";
     }
   });
 
