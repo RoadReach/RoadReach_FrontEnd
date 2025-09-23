@@ -37,9 +37,13 @@ header.site-header {
 	align-items: center;
 	font-size: 16px;
 }
-.header__help-link .lucide-help-circle { color: #D32F2F !important; }
+.header__help-link .lucide-help-circle {
+	color: #D32F2F !important;
+	width: 28px !important;
+	height: 28px !important;
+}
 .header__help-text {
-	margin-left: 2px;
+	margin-left: 10px;
 	font-size: 16px;
 }
 .header__help-text--bold {
@@ -50,9 +54,16 @@ header.site-header {
 	font-weight: bold;
 	font-size: 17px;
 	color: #133a5e;
+	margin-left: 10px;
 }
 .header__sep { margin:0 4px; color:#ccc; display:inline-block; vertical-align:middle; }
-.header__sep--tall { height:22px; line-height:22px; font-size:18px; }
+.header__sep--tall {
+	height: 100px;
+	line-height: 100px;
+	font-size: 45px;
+	min-width: 1px;
+	padding: 0 4px;
+}
 .header__login { display:flex; align-items:center; gap:4px; color:#004B8D; font-weight:500; }
 .header__main { display:flex; justify-content:flex-end; align-items:center; padding:10px 40px; background:none; }
 .header__main > .header__nav { flex-wrap:wrap; }
