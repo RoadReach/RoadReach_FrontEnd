@@ -81,8 +81,8 @@ const RentalCars: React.FC = () => {
 
   interface DateFieldProps {
     label: string;
-    value: string; // ISO yyyy-mm-dd
-    onChange: (iso: string) => void;
+    value: string;
+    onChange: (value: string) => void;
     min: string;
     required?: boolean;
     invalid?: boolean;
@@ -235,7 +235,7 @@ const RentalCars: React.FC = () => {
     <div className="rental-form-container">
       <div className="rental-form-card">
         <form onSubmit={handleSubmit}>
-          {/** Staged validation: age checkbox error waits until location(s) valid */}
+          {/* Staged validation: age checkbox error waits until location(s) valid */}
           <div className="rental-form-radio-row">
             <label className="rental-form-radio-label">
               <input
@@ -257,266 +257,265 @@ const RentalCars: React.FC = () => {
             </label>
             <span className="rental-form-required">* Indicates required fields</span>
           </div>
-          <div className={`rental-form-fields-row${sameLocation ? " rental-form-fields-row--span" : ""}`}>
-            {sameLocation ? (
-              <>
-                <div className="rental-form-field">
-                  <label className="rental-form-label" htmlFor="pickupLocationSame">Pick-Up and Drop-Off Location*</label>
-                  <input
-                    id="pickupLocationSame"
-                    type="text"
-                    value={pickupLocation}
-                    onChange={(e) => {
-                      setPickupLocation(e.target.value);
-                      setShowPickupSuggest(true);
-                    }}
-                    onFocus={() => setShowPickupSuggest(true)}
-                    onBlur={() => setTimeout(() => setShowPickupSuggest(false), 150)}
-                    placeholder="Airport, City, Zip Code or Address"
-                    ref={pickupRef}
-                    className={`rental-form-input${submitAttempted && !pickupLocation ? ' rental-form-input--invalid' : ''}`}
-                    {...(submitAttempted && !pickupLocation ? { 'aria-invalid': 'true' } : {})}
-                  />
-                  {/** No inline text error; red border only */}
-                  {(showPickupSuggest && pickupLocation.length >= 2) && (
-                    <ul className="rental-form-suggest-list">
-                      {pickupLoading && (
-                        <li className="rental-form-suggest-loading">Loading...</li>
-                      )}
-                      {!pickupLoading && Array.isArray(pickupSuggestions) && pickupSuggestions.length === 0 && (
-                        <li className="rental-form-suggest-none">No locations found</li>
-                      )}
-                      {!pickupLoading && Array.isArray(pickupSuggestions) && pickupSuggestions.length > 0 && pickupSuggestions.map((loc, idx) => (
-                        <li key={loc.id || idx} className="rental-form-suggest-item"
-                          onMouseDown={() => {
-                            setPickupLocation(loc.name);
-                            setShowPickupSuggest(false);
-                          }}
-                        >
-                          <LocationSuggestion
-                            type={loc.type}
-                            name={loc.name}
-                            country={loc.countryCode}
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-                <DateField
-                  label="Pick-Up Date*"
-                  value={pickupDate}
-                  onChange={setPickupDate}
-                  min={formatLocalDate(new Date())}
-                  invalid={submitAttempted && !pickupDate}
-                  ariaLabel="Pick-Up Date"
-                  title="Pick-Up Date"
+          {/* Separate field groups for each scenario */}
+          {sameLocation ? (
+            <div className="rental-form-fields-row rental-form-fields-row--span">
+              {/* ...existing code for sameLocation fields... */}
+              <div className="rental-form-field">
+                <label className="rental-form-label" htmlFor="pickupLocationSame">Pick-Up and Drop-Off Location*</label>
+                <input
+                  id="pickupLocationSame"
+                  type="text"
+                  value={pickupLocation}
+                  onChange={(e) => {
+                    setPickupLocation(e.target.value);
+                    setShowPickupSuggest(true);
+                  }}
+                  onFocus={() => setShowPickupSuggest(true)}
+                  onBlur={() => setTimeout(() => setShowPickupSuggest(false), 150)}
+                  placeholder="Airport, City, Zip Code or Address"
+                  ref={pickupRef}
+                  className={`rental-form-input${submitAttempted && !pickupLocation ? ' rental-form-input--invalid' : ''}`}
+                  {...(submitAttempted && !pickupLocation ? { 'aria-invalid': 'true' } : {})}
                 />
-                {submitAttempted && !pickupDate && (
-                  <div className="rental-form-field-error">Pick-Up date is required</div>
+                {(showPickupSuggest && pickupLocation.length >= 2) && (
+                  <ul className="rental-form-suggest-list">
+                    {pickupLoading && (
+                      <li className="rental-form-suggest-loading">Loading...</li>
+                    )}
+                    {!pickupLoading && Array.isArray(pickupSuggestions) && pickupSuggestions.length === 0 && (
+                      <li className="rental-form-suggest-none">No locations found</li>
+                    )}
+                    {!pickupLoading && Array.isArray(pickupSuggestions) && pickupSuggestions.length > 0 && pickupSuggestions.map((loc, idx) => (
+                      <li key={loc.id || idx} className="rental-form-suggest-item"
+                        onMouseDown={() => {
+                          setPickupLocation(loc.name);
+                          setShowPickupSuggest(false);
+                        }}
+                      >
+                        <LocationSuggestion
+                          type={loc.type}
+                          name={loc.name}
+                          country={loc.countryCode}
+                        />
+                      </li>
+                    ))}
+                  </ul>
                 )}
-                <div className="rental-form-field">
-                  <label className="rental-form-label">Pick-Up Time*</label>
-                  <select
-                    value={pickupTime}
-                    onChange={(e) => setPickupTime(e.target.value)}
-                    required
-                    className="rental-form-input rental-form-time-select"
-                    aria-label="Pick-Up Time"
-                    title="Pick-Up Time"
-                  >
-                    {Array.from({ length: 48 }, (_, i) => {
-                      const hour = Math.floor(i / 2);
-                      const minute = i % 2 === 0 ? '00' : '30';
-                      const value = `${hour.toString().padStart(2, '0')}:${minute}`;
-                      const label = value === '12:00' ? 'Noon' : value;
-                      return <option key={value} value={value}>{label}</option>;
-                    })}
-                  </select>
-                </div>
-                <DateField
-                  label="Drop-Off Date*"
-                  value={dropoffDate}
-                  onChange={setDropoffDate}
-                  min={pickupDate || formatLocalDate(new Date())}
-                  invalid={submitAttempted && !dropoffDate}
-                  ariaLabel="Drop-Off Date"
-                  title="Drop-Off Date"
-                />
-                {submitAttempted && !dropoffDate && (
-                  <div className="rental-form-field-error">Drop-Off date is required</div>
-                )}
-                <div className="rental-form-field">
-                  <label className="rental-form-label">Drop-Off Time*</label>
-                  <select
-                    value={dropoffTime}
-                    onChange={(e) => setDropoffTime(e.target.value)}
-                    required
-                    className="rental-form-input rental-form-time-select"
-                    aria-label="Drop-Off Time"
-                    title="Drop-Off Time"
-                  >
-                    {Array.from({ length: 48 }, (_, i) => {
-                      const hour = Math.floor(i / 2);
-                      const minute = i % 2 === 0 ? '00' : '30';
-                      const value = `${hour.toString().padStart(2, '0')}:${minute}`;
-                      const label = value === '12:00' ? 'Noon' : value;
-                      return <option key={value} value={value}>{label}</option>;
-                    })}
-                  </select>
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="rental-form-field">
-                  <label className="rental-form-label" htmlFor="pickupLocation">Pick-Up Location*</label>
-                  <input
-                    id="pickupLocation"
-                    type="text"
-                    value={pickupLocation}
-                    onChange={(e) => {
-                      setPickupLocation(e.target.value);
-                      setShowPickupSuggest(true);
-                    }}
-                    onFocus={() => setShowPickupSuggest(true)}
-                    onBlur={() => setTimeout(() => setShowPickupSuggest(false), 150)}
-                    placeholder="Airport, City, Zip Code or Address"
-                    ref={pickupRef}
-                    className={`rental-form-input${submitAttempted && !pickupLocation ? ' rental-form-input--invalid' : ''}`}
-                    {...(submitAttempted && !pickupLocation ? { 'aria-invalid': 'true' } : {})}
-                  />
-                  {/** No inline text error; red border only */}
-                  {(showPickupSuggest && pickupLocation.length >= 2) && (
-                    <ul className="rental-form-suggest-list">
-                      {pickupLoading && (
-                        <li className="rental-form-suggest-loading">Loading...</li>
-                      )}
-                      {!pickupLoading && Array.isArray(pickupSuggestions) && pickupSuggestions.length === 0 && (
-                        <li className="rental-form-suggest-none">No locations found</li>
-                      )}
-                      {!pickupLoading && Array.isArray(pickupSuggestions) && pickupSuggestions.length > 0 && pickupSuggestions.map((loc, idx) => (
-                        <li key={loc.id || idx} className="rental-form-suggest-item"
-                          onMouseDown={() => {
-                            setPickupLocation(loc.name);
-                            setShowPickupSuggest(false);
-                          }}
-                        >
-                          <LocationSuggestion
-                            type={loc.type}
-                            name={loc.name}
-                            country={loc.countryCode}
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-                <DateField
-                  label="Pick-Up Date*"
-                  value={pickupDate}
-                  onChange={setPickupDate}
-                  min={formatLocalDate(new Date())}
+              </div>
+              <DateField
+                label="Pick-Up Date*"
+                value={pickupDate}
+                onChange={setPickupDate}
+                min={formatLocalDate(new Date())}
+                invalid={submitAttempted && !pickupDate}
+                ariaLabel="Pick-Up Date"
+                title="Pick-Up Date"
+              />
+              {submitAttempted && !pickupDate && (
+                <div className="rental-form-field-error">Pick-Up date is required</div>
+              )}
+              <div className="rental-form-field">
+                <label className="rental-form-label">Pick-Up Time*</label>
+                <select
+                  value={pickupTime}
+                  onChange={(e) => setPickupTime(e.target.value)}
                   required
-                  invalid={submitAttempted && !pickupDate}
-                  ariaLabel="Pick-Up Date"
-                  title="Pick-Up Date"
+                  className="rental-form-input rental-form-time-select"
+                  aria-label="Pick-Up Time"
+                  title="Pick-Up Time"
+                >
+                  {Array.from({ length: 48 }, (_, i) => {
+                    const hour = Math.floor(i / 2);
+                    const minute = i % 2 === 0 ? '00' : '30';
+                    const value = `${hour.toString().padStart(2, '0')}:${minute}`;
+                    const label = value === '12:00' ? 'Noon' : value;
+                    return <option key={value} value={value}>{label}</option>;
+                  })}
+                </select>
+              </div>
+              <DateField
+                label="Drop-Off Date*"
+                value={dropoffDate}
+                onChange={setDropoffDate}
+                min={pickupDate || formatLocalDate(new Date())}
+                invalid={submitAttempted && !dropoffDate}
+                ariaLabel="Drop-Off Date"
+                title="Drop-Off Date"
+              />
+              {submitAttempted && !dropoffDate && (
+                <div className="rental-form-field-error">Drop-Off date is required</div>
+              )}
+              <div className="rental-form-field">
+                <label className="rental-form-label">Drop-Off Time*</label>
+                <select
+                  value={dropoffTime}
+                  onChange={(e) => setDropoffTime(e.target.value)}
+                  required
+                  className="rental-form-input rental-form-time-select"
+                  aria-label="Drop-Off Time"
+                  title="Drop-Off Time"
+                >
+                  {Array.from({ length: 48 }, (_, i) => {
+                    const hour = Math.floor(i / 2);
+                    const minute = i % 2 === 0 ? '00' : '30';
+                    const value = `${hour.toString().padStart(2, '0')}:${minute}`;
+                    const label = value === '12:00' ? 'Noon' : value;
+                    return <option key={value} value={value}>{label}</option>;
+                  })}
+                </select>
+              </div>
+            </div>
+          ) : (
+            <div className="rental-form-fields-row different-location">
+              {/* ...existing code for different location fields... */}
+              <div className="rental-form-field">
+                <label className="rental-form-label" htmlFor="pickupLocation">Pick-Up Location*</label>
+                <input
+                  id="pickupLocation"
+                  type="text"
+                  value={pickupLocation}
+                  onChange={(e) => {
+                    setPickupLocation(e.target.value);
+                    setShowPickupSuggest(true);
+                  }}
+                  onFocus={() => setShowPickupSuggest(true)}
+                  onBlur={() => setTimeout(() => setShowPickupSuggest(false), 150)}
+                  placeholder="Airport, City, Zip Code or Address"
+                  ref={pickupRef}
+                  className={`rental-form-input${submitAttempted && !pickupLocation ? ' rental-form-input--invalid' : ''}`}
+                  {...(submitAttempted && !pickupLocation ? { 'aria-invalid': 'true' } : {})}
                 />
-                <div className="rental-form-field">
-                  <label className="rental-form-label">Pick-Up Time*</label>
-                  <select
-                    value={pickupTime}
-                    onChange={(e) => setPickupTime(e.target.value)}
-                    required
-                    className="rental-form-input"
-                    aria-label="Pick-Up Time"
-                    title="Pick-Up Time"
-                  >
-                    {Array.from({ length: 48 }, (_, i) => {
-                      const hour = Math.floor(i / 2);
-                      const minute = i % 2 === 0 ? '00' : '30';
-                      const value = `${hour.toString().padStart(2, '0')}:${minute}`;
-                      const label = value === '12:00' ? 'Noon' : value;
-                      return <option key={value} value={value}>{label}</option>;
-                    })}
-                  </select>
-                </div>
-                <div className="rental-form-field">
-                  <label className="rental-form-label" htmlFor="dropoffLocation">Drop-Off Location*</label>
-                  <input
-                    id="dropoffLocation"
-                    type="text"
-                    value={dropoffLocation}
-                    onChange={(e) => {
-                      setDropoffLocation(e.target.value);
-                      setShowDropoffSuggest(true);
-                    }}
-                    onFocus={() => setShowDropoffSuggest(true)}
-                    onBlur={() => setTimeout(() => setShowDropoffSuggest(false), 150)}
-                    placeholder="Airport, City, Zip Code or Address"
-                    className={`rental-form-input${submitAttempted && !dropoffLocation ? ' rental-form-input--invalid' : ''}`}
-                    {...(submitAttempted && !dropoffLocation ? { 'aria-invalid': 'true' } : {})}
-                  />
-                  {/** No inline text error; red border only */}
-                  {(showDropoffSuggest && dropoffLocation.length >= 2) && (
-                    <ul className="rental-form-suggest-list">
-                      {dropoffLoading && (
-                        <li className="rental-form-suggest-loading">Loading...</li>
-                      )}
-                      {!dropoffLoading && Array.isArray(dropoffSuggestions) && dropoffSuggestions.length === 0 && (
-                        <li className="rental-form-suggest-none">No locations found</li>
-                      )}
-                      {!dropoffLoading && Array.isArray(dropoffSuggestions) && dropoffSuggestions.length > 0 && dropoffSuggestions.map((loc, idx) => (
-                        <li key={loc.id || idx} className="rental-form-suggest-item"
-                          onMouseDown={() => {
-                            setDropoffLocation(loc.name);
-                            setShowDropoffSuggest(false);
-                          }}
-                        >
-                          <LocationSuggestion
-                            type={loc.type}
-                            name={loc.name}
-                            country={loc.countryCode}
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-                <DateField
-                  label="Drop-Off Date*"
-                  value={dropoffDate}
-                  onChange={setDropoffDate}
-                  min={pickupDate || formatLocalDate(new Date())}
-                  invalid={submitAttempted && !dropoffDate}
-                  ariaLabel="Drop-Off Date"
-                  title="Drop-Off Date"
-                />
-                {submitAttempted && !dropoffDate && (
-                  <div className="rental-form-field-error">Drop-Off date is required</div>
+                {(showPickupSuggest && pickupLocation.length >= 2) && (
+                  <ul className="rental-form-suggest-list">
+                    {pickupLoading && (
+                      <li className="rental-form-suggest-loading">Loading...</li>
+                    )}
+                    {!pickupLoading && Array.isArray(pickupSuggestions) && pickupSuggestions.length === 0 && (
+                      <li className="rental-form-suggest-none">No locations found</li>
+                    )}
+                    {!pickupLoading && Array.isArray(pickupSuggestions) && pickupSuggestions.length > 0 && pickupSuggestions.map((loc, idx) => (
+                      <li key={loc.id || idx} className="rental-form-suggest-item"
+                        onMouseDown={() => {
+                          setPickupLocation(loc.name);
+                          setShowPickupSuggest(false);
+                        }}
+                      >
+                        <LocationSuggestion
+                          type={loc.type}
+                          name={loc.name}
+                          country={loc.countryCode}
+                        />
+                      </li>
+                    ))}
+                  </ul>
                 )}
-                <div className="rental-form-field">
-                  <label className="rental-form-label">Drop-Off Time*</label>
-                  <select
-                    value={dropoffTime}
-                    onChange={(e) => setDropoffTime(e.target.value)}
-                    required
-                    className="rental-form-input rental-form-time-select"
-                    aria-label="Drop-Off Time"
-                    title="Drop-Off Time"
-                  >
-                    {Array.from({ length: 48 }, (_, i) => {
-                      const hour = Math.floor(i / 2);
-                      const minute = i % 2 === 0 ? '00' : '30';
-                      const value = `${hour.toString().padStart(2, '0')}:${minute}`;
-                      const label = value === '12:00' ? 'Noon' : value;
-                      return <option key={value} value={value}>{label}</option>;
-                    })}
-                  </select>
-                </div>
-              </>
-            )}
-          </div>
-          <div className="rental-form-check-row">
+              </div>
+              <DateField
+                label="Pick-Up Date*"
+                value={pickupDate}
+                onChange={setPickupDate}
+                min={formatLocalDate(new Date())}
+                required
+                invalid={submitAttempted && !pickupDate}
+                ariaLabel="Pick-Up Date"
+                title="Pick-Up Date"
+              />
+              <div className="rental-form-field">
+                <label className="rental-form-label">Pick-Up Time*</label>
+                <select
+                  value={pickupTime}
+                  onChange={(e) => setPickupTime(e.target.value)}
+                  required
+                  className="rental-form-input"
+                  aria-label="Pick-Up Time"
+                  title="Pick-Up Time"
+                >
+                  {Array.from({ length: 48 }, (_, i) => {
+                    const hour = Math.floor(i / 2);
+                    const minute = i % 2 === 0 ? '00' : '30';
+                    const value = `${hour.toString().padStart(2, '0')}:${minute}`;
+                    const label = value === '12:00' ? 'Noon' : value;
+                    return <option key={value} value={value}>{label}</option>;
+                  })}
+                </select>
+              </div>
+              <div className="rental-form-field">
+                <label className="rental-form-label" htmlFor="dropoffLocation">Drop-Off Location*</label>
+                <input
+                  id="dropoffLocation"
+                  type="text"
+                  value={dropoffLocation}
+                  onChange={(e) => {
+                    setDropoffLocation(e.target.value);
+                    setShowDropoffSuggest(true);
+                  }}
+                  onFocus={() => setShowDropoffSuggest(true)}
+                  onBlur={() => setTimeout(() => setShowDropoffSuggest(false), 150)}
+                  placeholder="Airport, City, Zip Code or Address"
+                  className={`rental-form-input${submitAttempted && !dropoffLocation ? ' rental-form-input--invalid' : ''}`}
+                  {...(submitAttempted && !dropoffLocation ? { 'aria-invalid': 'true' } : {})}
+                />
+                {(showDropoffSuggest && dropoffLocation.length >= 2) && (
+                  <ul className="rental-form-suggest-list">
+                    {dropoffLoading && (
+                      <li className="rental-form-suggest-loading">Loading...</li>
+                    )}
+                    {!dropoffLoading && Array.isArray(dropoffSuggestions) && dropoffSuggestions.length === 0 && (
+                      <li className="rental-form-suggest-none">No locations found</li>
+                    )}
+                    {!dropoffLoading && Array.isArray(dropoffSuggestions) && dropoffSuggestions.length > 0 && dropoffSuggestions.map((loc, idx) => (
+                      <li key={loc.id || idx} className="rental-form-suggest-item"
+                        onMouseDown={() => {
+                          setDropoffLocation(loc.name);
+                          setShowDropoffSuggest(false);
+                        }}
+                      >
+                        <LocationSuggestion
+                          type={loc.type}
+                          name={loc.name}
+                          country={loc.countryCode}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <DateField
+                label="Drop-Off Date*"
+                value={dropoffDate}
+                onChange={setDropoffDate}
+                min={pickupDate || formatLocalDate(new Date())}
+                invalid={submitAttempted && !dropoffDate}
+                ariaLabel="Drop-Off Date"
+                title="Drop-Off Date"
+              />
+              {submitAttempted && !dropoffDate && (
+                <div className="rental-form-field-error">Drop-Off date is required</div>
+              )}
+              <div className="rental-form-field">
+                <label className="rental-form-label">Drop-Off Time*</label>
+                <select
+                  value={dropoffTime}
+                  onChange={(e) => setDropoffTime(e.target.value)}
+                  required
+                  className="rental-form-input rental-form-time-select"
+                  aria-label="Drop-Off Time"
+                  title="Drop-Off Time"
+                >
+                  {Array.from({ length: 48 }, (_, i) => {
+                    const hour = Math.floor(i / 2);
+                    const minute = i % 2 === 0 ? '00' : '30';
+                    const value = `${hour.toString().padStart(2, '0')}:${minute}`;
+                    const label = value === '12:00' ? 'Noon' : value;
+                    return <option key={value} value={value}>{label}</option>;
+                  })}
+                </select>
+              </div>
+            </div>
+          )}
+          {/* Flex row for checkbox, label, and Search button */}
+          <div className="rental-form-check-row rental-form-check-row--inline">
             <input
               type="checkbox"
               checked={is25}
@@ -535,12 +534,9 @@ const RentalCars: React.FC = () => {
               ) : null;
             })()}
             <span className="rental-form-powered-inline">Driven by <strong>Low Price Finder&trade;</strong></span>
-
-          </div>
-          <div className="rental-form-submit-row">
             <button
               type="submit"
-              className="rental-form-submit-btn"
+              className="rental-form-submit-btn rental-form-submit-btn--ml-auto"
             >
               Search
             </button>
