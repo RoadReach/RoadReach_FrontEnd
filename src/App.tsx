@@ -54,24 +54,27 @@ const AppContent: React.FC = () => {
 
   return (
     <div>
-      <Header />
       {isLoggedIn && showSessionTimeout && (
-       <div className="session-modal" role="dialog" aria-modal="true" aria-label="Countdown to session expiration">
-           <div className="session-modal__dialog">
-            <div className="session-modal__header">
+        <div className="session-modal-overlay">
+          <Header />
+          <div className="session-modal" role="dialog" aria-modal="true" aria-label="Countdown to session expiration">
+            <div className="session-modal__dialog">
+              <div className="session-modal__header">
                 Session About to Expire
-            </div>
-            <div className="session-modal__message">
-              Due to inactivity, your session will end in {secondsLeft} seconds
-            </div>
-            <div className="session-modal__btn-row">
-              <button className="modal-btn" onClick={handleStaySignedIn}>
-                CONTINUE SESSION
-              </button>
+              </div>
+              <div className="session-modal__message">
+                Due to inactivity, your session will end in {secondsLeft} seconds
+              </div>
+              <div className="session-modal__btn-row">
+                <button className="modal-btn" onClick={handleStaySignedIn}>
+                  CONTINUE SESSION
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
+      {!showSessionTimeout && <Header />}
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />

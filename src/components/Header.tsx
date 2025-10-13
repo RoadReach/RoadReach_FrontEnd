@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import RoadReachLogo from "../assets/RoadReach_Logo_cropped.png";
-import { HelpCircle, PhoneCall, Tag, Briefcase, Hammer, Hotel, Ship, Car, Truck, FlagTriangleRight, User, Mail, ExternalLink } from 'lucide-react';
+import { HelpCircle, PhoneCall, Menu } from 'lucide-react';
 import GeoDropdown from './GeoDropdown';
 import HelpCenter from './HelpCenter';
 import './Header.css';
@@ -13,8 +13,15 @@ const Header: React.FC = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 900);
   const userRef = useRef<HTMLSpanElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 900);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (!showDropdown) return;
@@ -53,7 +60,18 @@ const Header: React.FC = () => {
     );
   }
 
-  // ...existing code for full header...
+  const headerLinks = [
+    { type: "link", label: "RoadReach.com", to: "/", className: "header__link header__link--light" },
+    { type: "sep" },
+    { type: "link", label: "Membership", to: "#", className: "header__link header__link--light" },
+    { type: "sep" },
+    { type: "help" },
+    { type: "sep" },
+    { type: "phone" },
+    { type: "sep" },
+    { type: "geo" }
+  ];
+
   return (
     <header className="site-header">
       {/* Top bar */}
@@ -64,115 +82,186 @@ const Header: React.FC = () => {
           </Link>
         </div>
         <div className="header__right">
-          <div className="header__right-content">
-            <span className="header__right-link header__right-domain">RoadReach.com</span>
-            <span className="header__sep header__sep--tall">|</span>
-            <a href="#" className="header__right-link">Membership</a>
-            <span className="header__sep header__sep--tall">|</span>
-            <a href="#" className="header__right-link header__help-link" onClick={() => setHelpOpen(true)}>
-              <HelpCircle size={20} color="#D32F2F" style={{verticalAlign:'middle',marginRight:2}} />
-              <span className="header__help-text">Help Center</span>
-            </a>
-            <span className="header__sep header__sep--tall">|</span>
-            <a href="tel:+18669217925" className="header__right-link header__phone">
-              <span style={{color:'#D32F2F',verticalAlign:'middle',marginRight:4}}><PhoneCall size={20} /></span>
-              <span className="header__phone-number header__phone-number--solid">1-866-921-7925</span>
-            </a>
-            <span className="header__sep header__sep--tall">|</span>
-            <GeoDropdown showOnlyCountry={true} onCountryChange={() => window.location.reload()} />
-          </div>
-          {firstName ? (
-            <div className="header__user-wrapper">
-              <span className="header__user" ref={userRef} onClick={() => setShowDropdown(prev => !prev)}>👤 {firstName}</span>
-              {showDropdown && (
-                <div className="profile-dropdown profile-dropdown--full" ref={dropdownRef}>
-                  <div className="profile-dropdown__user">
-                    <div className="profile-dropdown__avatar">{firstName ? firstName[0].toUpperCase() : "U"}</div>
-                    <div className="profile-dropdown__info">
-                      <div className="profile-dropdown__name">
-                        {localStorage.getItem("firstname") && localStorage.getItem("lastname")
-                          ? `${(localStorage.getItem("firstname") || "").toUpperCase()} ${(localStorage.getItem("lastname") || "").toUpperCase()}`
-                          : firstName}
+        {!isMobile && (
+          <>
+            {headerLinks.map((item, idx) => {
+              if (item.type === "sep") {
+                return <span key={idx} className="header__sep header__sep--tall">|</span>;
+              }
+              if (item.type === "link") {
+                return (
+                  <Link key={idx} to={item.to} className={item.className}>{item.label}</Link>
+                );
+              }
+              if (item.type === "help") {
+                return (
+                  <a
+                    key={idx}
+                    href="#"
+                    className="header__link header__help-link"
+                    onClick={() => setHelpOpen(true)}
+                  >
+                    <HelpCircle size={16} color="#D32F2F" style={{verticalAlign:'middle',marginRight:2}} />
+                    <span className="header__help-text">Help Center</span>
+                  </a>
+                );
+              }
+              if (item.type === "phone") {
+                return (
+                  <a
+                    key={idx}
+                    href="tel:+18669217925"
+                    className="header__phone header__phone--bold"
+                    aria-label="Call 1 866 921 7925"
+                  >
+                    <span className="header__phone-number header__phone-number--solid">📞 1-866-921-7925</span>
+                  </a>
+                );
+              }
+              if (item.type === "geo") {
+                return (
+                  <GeoDropdown
+                    key={idx}
+                    showOnlyCountry={true}
+                    onCountryChange={() => window.location.reload()}
+                  />
+                );
+              }
+              return null;
+            })}
+            {firstName ? (
+              <div className="header__user-wrapper">
+                <span className="header__user" ref={userRef} onClick={() => setShowDropdown(prev => !prev)}>👤 {firstName}</span>
+                {showDropdown && (
+                  <div className="profile-dropdown profile-dropdown--full" ref={dropdownRef}>
+                    <div className="profile-dropdown__user">
+                      <div className="profile-dropdown__avatar">{firstName ? firstName[0].toUpperCase() : "U"}</div>
+                      <div className="profile-dropdown__info">
+                        <div className="profile-dropdown__name">
+                          {localStorage.getItem("firstname") && localStorage.getItem("lastname")
+                            ? `${(localStorage.getItem("firstname") || "").toUpperCase()} ${(localStorage.getItem("lastname") || "").toUpperCase()}`
+                            : firstName}
+                        </div>
+                        <div className="profile-dropdown__email">{localStorage.getItem("email")}</div>
                       </div>
-                      <div className="profile-dropdown__email">{localStorage.getItem("email")}</div>
                     </div>
-                  </div>
+                      <Link
+                        to="/profile"
+                        className="profile-dropdown__item"
+                        onClick={() => setShowDropdown(false)}
+                      >
+                        Account
+                      </Link>
                     <Link
-                      to="/profile"
+                      to="/bookings"
                       className="profile-dropdown__item"
                       onClick={() => setShowDropdown(false)}
                     >
-                      Account
+                      Bookings
                     </Link>
-                  <Link
-                    to="/bookings"
-                    className="profile-dropdown__item"
-                    onClick={() => setShowDropdown(false)}
-                  >
-                    Bookings
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="profile-dropdown__item profile-dropdown__logout"
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <Link to="/login" className="header__login header__login--mobile">
-              <span className="header__user-initial">👤</span> Login
-            </Link>
-          )}
-          <button
-            className="nav-menu-toggle"
-            aria-label="Open navigation menu"
-            onClick={() => setMobileMenuOpen(true)}
-          >
-            <span />
-            <span />
-            <span />
-          </button>
-        </div>
-      </div>
-      {/* Mobile menu overlay */}
-      {mobileMenuOpen && (
-        <div className="main-menu-overlay" onClick={() => setMobileMenuOpen(false)}>
-          <div className="main-menu" onClick={e => e.stopPropagation()}>
-            <button className="main-menu__close" onClick={() => setMobileMenuOpen(false)} aria-label="Close menu">&times;</button>
-            <div className="main-menu__section main-menu__vertical">
-              <a className="main-menu__item" onClick={() => { navigate('/'); setMobileMenuOpen(false); }} style={{cursor:'pointer'}}><span className="header__right-domain">RoadReach.com</span></a>
-              <a className="main-menu__item" href="#">Membership</a>
-              <a className="main-menu__item" href="#" onClick={() => { setHelpOpen(true); setMobileMenuOpen(false); }}>
-                <HelpCircle size={20} color="#D32F2F" style={{verticalAlign:'middle',marginRight:2}} />
-                <span className="header__help-text">Help Center</span>
-              </a>
-
-              <div className="main-menu__item" style={{padding:0}}>
-                <GeoDropdown showOnlyCountry={true} onCountryChange={() => { window.location.reload(); setMobileMenuOpen(false); }} />
+                    <button
+                      onClick={handleLogout}
+                      className="profile-dropdown__item profile-dropdown__logout"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
               </div>
+            ) : (
+              <Link to="/login" className="header__login">
+                <span className="header__user-initial">👤</span> Login
+              </Link>
+            )}
+          </>
+        )}
 
-              <a href="#" className="main-menu__item"><Tag size={24} /> Deals</a>
-              <a href="#" className="main-menu__item"><Briefcase size={24} /> Vacation Packages</a>
-              <a href="#" className="main-menu__item"><Hammer size={24} /> Build Your Own</a>
-              <a href="#" className="main-menu__item"><Hotel size={24} /> Hotels</a>
-              <a href="#" className="main-menu__item"><Ship size={24} /> Cruises</a>
-              <a href="#" className="main-menu__item"><Ship size={24} /> Shore Excursions</a>
-              <a className="main-menu__item" onClick={() => { navigate('/rental-cars'); setMobileMenuOpen(false); }}><Car size={24} /> Rental Cars</a>
-              <a href="#" className="main-menu__item"><Truck size={24} /> Budget Truck Rental</a>
-              <a href="#" className="main-menu__item"><FlagTriangleRight size={24} /> Theme Parks & Specialty</a>
-              <a href="#" className="main-menu__item"><User size={24} /> Account</a>
-            </div>
-            <div className="main-menu__footer">
-              <a href="#" className="main-menu__footer-link"><HelpCircle size={20} /> Help Center</a>
-              <a href="#" className="main-menu__footer-link"><Mail size={20} /> Contact Us</a>
-              <a href="https://www.costco.com" target="_blank" rel="noopener noreferrer" className="main-menu__footer-link"><ExternalLink size={20} /> Visit Costco.com</a>
-            </div>
-          </div>
+        {isMobile && (
+          <>
+            <button
+              className="header__hamburger"
+              aria-label="Open menu"
+              onClick={() => setMobileMenuOpen(true)}
+            >
+              <Menu size={32} />
+            </button>
+          </>
+        )}
+      </div>
+      </div>
+
+      {isMobile && mobileMenuOpen && (
+        <div className="header__mobile-menu">
+          {/* User section */}
+          {firstName && (
+            <div className="header__mobile-user">{firstName}</div>
+          )}
+
+          {/* Main links */}
+          {headerLinks.map((item, idx) => {
+            if (item.type === "sep") return null;
+            if (item.type === "link") {
+              return (
+                <Link
+                  key={idx}
+                  to={item.to}
+                  className={item.className}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              );
+            }
+            if (item.type === "help") {
+              return (
+                <a
+                  key={idx}
+                  href="#"
+                  className="header__link header__help-link"
+                  onClick={() => { setHelpOpen(true); setMobileMenuOpen(false); }}
+                >
+                  <HelpCircle size={16} color="#D32F2F" style={{ verticalAlign: 'middle', marginRight: 2 }} />
+                  <span className="header__help-text">Help Center</span>
+                </a>
+              );
+            }
+            if (item.type === "phone") {
+              return (
+                <a
+                  key={idx}
+                  href="tel:+18669217925"
+                  className="header__phone header__phone--bold"
+                  aria-label="Call 1 866 921 7925"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <span className="header__phone-number header__phone-number--solid">📞 1-866-921-7925</span>
+                </a>
+              );
+            }
+            if (item.type === "geo") {
+              return (
+                <GeoDropdown
+                  key={idx}
+                  showOnlyCountry={true}
+                  onCountryChange={() => { window.location.reload(); setMobileMenuOpen(false); }}
+                />
+              );
+            }
+            return null;
+          })}
+
+          {/* Account links */}
+          {firstName ? (
+            <>
+              <Link to="/profile" onClick={() => setMobileMenuOpen(false)} className="header__link">Account</Link>
+              <Link to="/bookings" onClick={() => setMobileMenuOpen(false)} className="header__link">Bookings</Link>
+              <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="header__link">Logout</button>
+            </>
+          ) : (
+            <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="header__link">Login</Link>
+          )}
         </div>
       )}
-
 
       {/* Main nav bar */}
       <div className="header__main">

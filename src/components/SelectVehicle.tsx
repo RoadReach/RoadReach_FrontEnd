@@ -191,8 +191,8 @@ const SelectVehicle: React.FC = () => {
   const matchesBags = useCallback((v: Vehicle) => {
     if (bagFilters.length === 0) return true;
     return bagFilters.some(range => {
-      if (range.startsWith('1-2')) return v.bags >= 1 && v.bags <= 2;
-      if (range.startsWith('3-4')) return v.bags >= 3 && v.bags <= 4;
+      if (range.startsWith('1-2')) return v.bags >= 1;
+      if (range.startsWith('3-4')) return v.bags >= 3;
       if (range.startsWith('5+')) return v.bags >= 5;
       return true;
     });
@@ -536,7 +536,7 @@ const SelectVehicle: React.FC = () => {
                                           <path d="M13.5 15.5l3.5 3.5 11.5-15" stroke="#fff" strokeWidth="3.5" strokeLinecap="square" strokeLinejoin="round"/>
                                         </svg>
                                       </span>
-                                      The price includes your Costco Member discount and an upgrade.
+                                      The price includes your RoadReach Member discount and an upgrade.
                                     </div>
                                     <div className="vehicle-detail-card__reserve">
                                       Reserve Now, Pay Later<br />No Cancellation Fees
@@ -667,7 +667,7 @@ const SelectVehicle: React.FC = () => {
             {/* Blue highlight box just under the price */}
             <div className="vehicle-modal__blue-info">
               <span className="vehicle-modal__blue-info-icon">✔️</span>
-              "The price includes your Costco Member discount and an upgrade."
+              "The price includes your Road Reach Member discount and an upgrade."
             </div>
             <div className="vehicle-modal__price-sub">Total Price</div>
             <a

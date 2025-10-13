@@ -26,24 +26,6 @@
   overflow: hidden;
 }
 
-.modal-btn {
-  background: #376a93;
-  color: #fff;
-  border: none;
-  width:70%;
-  border-radius: 2px;
-  padding: 12px 32px;
-  font-size: 1.1rem;
-  font-weight: 500;
-  box-shadow: 2px 2px 6px rgba(0,0,0,0.15);
-  cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s;
-  letter-spacing: 0.03em;
-  margin-top: 18px;
-  margin-right: 0;
-  text-align: center;
-  display: block;
-}
 
 
 
@@ -88,26 +70,26 @@
   pointer-events: auto;
   -webkit-appearance: none;
   appearance: none;
-  height: 15px;
-  width: 15px;
+  height: 18px;
+  width: 18px;
   background: #376a93;
-  border: none;
+  border: none;                /* Remove border */
   border-radius: 50%;
-  box-shadow: none;
+  box-shadow: none;            /* Remove shadow */
   cursor: pointer;
-  margin-top: -7px;
-  outline: none;
+  margin-top: -7px;            /* Center thumb on track */
+  outline: none;               /* Remove outline */
 }
 
 .dual-range input[type=range]:focus::-webkit-slider-thumb {
-  outline: none;
+  outline: none;               /* Remove focus outline */
   border: none;
 }
 
 /* Firefox */
 .dual-range input[type=range]::-moz-range-thumb {
-  height: 15px;
-  width: 15px;
+  height: 18px;
+  width: 18px;
   background: #376a93;
   border: none;
   border-radius: 50%;
@@ -122,7 +104,11 @@
 }
 
 .dual-range input[type=range]::-moz-range-track {
-  background: transparent;
+  height: 4px;
+  background: #376a93;
+  border-radius: 2px;
+  box-shadow: none;
+  border: none;
 }
 
 /* IE/Edge */
@@ -358,8 +344,12 @@
   padding: 18px 24px;
   text-align: center;
   background: #fff;
-  min-width: 120px;
+  min-width: 160px;   /* Set a fixed minimum width */
+  max-width: 160px;   /* Set a fixed maximum width */
+  width: 160px;       /* Set a fixed width */
   font-weight: 400;
+  cursor: default;
+  box-sizing: border-box;
 }
 
 .vehicle-table-matrix th.sticky-top {
@@ -370,7 +360,6 @@
 }
 
 .vehicle-table-matrix td.sticky-left{
-  position: sticky;
   left: 0;
   background: #fff;
   z-index: 1;
@@ -380,7 +369,6 @@
   border-right: 1px solid #e1e5eb;
 }
 .vehicle-table-matrix th.sticky-left {
-  position: sticky;
   left: 0;
   background: #f8f8f8;
   z-index: 1;
@@ -580,7 +568,7 @@
 
 /* Info box */
 .vehicle-detail-card__info-box {
-  max-width: 522px;      /* Set a maximum width for the yellow box */
+  max-width: 562px;      /* Set a maximum width for the yellow box */
   width: 100%;           /* Responsive: use full width up to max-width */
   box-sizing: border-box;
   padding: 16px 24px;

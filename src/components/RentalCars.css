@@ -1,128 +1,20 @@
-/* Equal gap between all fields in both scenarios */
-.rental-form-fields-row,
-.rental-form-fields-row.different-location,
-.rental-form-fields-row--span {
-  column-gap: 18px;
-}
-/* Increase width of Pick-Up Time* and Drop-Off Time* in 'Drop-off at Different Location' */
-.rental-form-fields-row.different-location .rental-form-field:nth-child(3),
-.rental-form-fields-row.different-location .rental-form-field:nth-child(6) {
-  min-width: 140px;
-}
-/* Ensure Pick-Up Location* and Drop-Off Location* are the same size in 'Drop-off at Different Location' */
-.rental-form-fields-row.different-location .rental-form-field:nth-child(1),
-.rental-form-fields-row.different-location .rental-form-field:nth-child(4) {
-  min-width: 220px;
-}
-/* Increase width of Pick-Up Time* in 'Drop-off at Same Location' (3rd field in span row) */
-.rental-form-fields-row--span .rental-form-field:nth-child(3) {
-  max-width: 180px;
-}
-
-/* Increase width of Drop-Off Time* in 'Drop-off at Same Location' (5th field in span row) */
-.rental-form-fields-row--span .rental-form-field:nth-child(5) {
-  max-width: 140px;
-}
-/* Reduce width of Drop-Off Date* and Drop-Off Time* in 'Drop-off at Different Location' */
-.rental-form-fields-row.different-location .rental-form-field:nth-child(5) {
-  max-width: 140px;
-}
-.rental-form-fields-row.different-location .rental-form-field:nth-child(6) {
-  max-width: 110px;
-}
-/* 6-column grid for Drop-off at Different Location fields, equal width, same line */
-.rental-form-fields-row.different-location {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  column-gap: 18px;
-  row-gap: 0;
-  align-items: end;
-  margin-bottom: 22px;
-}
-/* Make Drop-Off Location* slightly wider for balance */
-.rental-form-fields-row.different-location .rental-form-field:nth-child(4) {
-  min-width: 220px;
-}
-.rental-form-submit-btn--ml-auto {
-  margin-left: auto;
-}
-/* Reduce width of Drop-Off Date* field in 'Drop-off at Different Location' scenario (4th field in row) */
-.rental-form-fields-row:not(.rental-form-fields-row--span) .rental-form-field:nth-child(4) {
-  max-width: 140px;
-}
-/* Reduce width of Drop-Off Date* field only */
-.rental-form-fields-row .rental-form-field:nth-child(4) {
-  max-width: 140px;
-}
-/* Reduce width of Pick-Up Time* field only */
-.rental-form-fields-row .rental-form-field:nth-child(3) {
-  max-width: 110px;
-}
-/* Increase width of Pick-Up Date* in 'Drop-off at Same Location' (2nd field in span row) */
-.rental-form-fields-row--span .rental-form-field:nth-child(2) {
-  max-width: 180px;
-}
-
-/* Increase width of Drop-Off Date* in 'Drop-off at Same Location' (4th field in span row) */
-.rental-form-fields-row--span .rental-form-field:nth-child(4) {
-  max-width: 180px;
-}
-/* Inline flex row for checkbox, label, powered by, and Search button */
-
-.rental-form-check-row--inline {
-  display: flex;
-  align-items: center;
-}
-
-/* Reduce width of Drop-Off Date* field in 'Drop-off at Different Location' scenario */
-.rental-form-fields-row.different-location > :nth-child(4) {
-  max-width: 140px;
-}
-.rental-form-check-row--inline .rental-form-submit-btn {
-  margin-left: auto;
-}
-
-
 /* Rental Cars Form Styles */
-.rental-form-container { display:flex; justify-content:center; padding:150px 50px;background:linear-gradient(135deg, rgba(255,184,128,0.72), rgba(255,118,92,0.72)), url('../assets/hero-car.svg') center/cover no-repeat; }
-.rental-form-card { background:#fff; border:1px solid #d9dde1; border-radius:12px; padding:32px 34px 36px; max-width:1180px; width:70%; box-shadow:0 4px 18px rgba(0,0,0,0.06); }
+.rental-form-container { display:flex; justify-content:center; padding:40px 20px;background:linear-gradient(135deg, rgba(255,184,128,0.72), rgba(255,118,92,0.72)), url('../assets/hero-car.svg') center/cover no-repeat; }
+.rental-form-card { background:#fff; border:1px solid #d9dde1; border-radius:12px; padding:32px 34px 36px; max-width:1180px; width:100%; box-shadow:0 4px 18px rgba(0,0,0,0.06); }
 .rental-form-card form { margin:0; }
 .rental-form-radio-row { display:flex; flex-wrap:wrap; align-items:center; gap:18px; margin-bottom:26px; }
 .rental-form-radio-label { display:flex; align-items:center; gap:8px; font-size:14px; font-weight:500; }
 .rental-form-radio-label-margin { margin-right:12px; }
 .rental-form-radio-input { width:16px; height:16px; cursor:pointer; }
 .rental-form-required { margin-left:auto; font-size:12px; color:#5a6a74; font-weight:500; }
-.rental-form-fields-row {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  column-gap: 18px;
-  row-gap: 8px;
-  align-items: end;
-  margin-bottom: 22px;
-}
-
-.rental-form-fields-row .rental-form-input,
-.rental-form-fields-row .rental-form-date-wrapper,
-.rental-form-fields-row .rental-form-time-select {
-  width: 100% !important;
-  box-sizing: border-box;
-}
+.rental-form-fields-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); column-gap:20px; row-gap:12px; align-items:end; margin-bottom:28px; }
 .rental-form-field { position:relative; min-width:0; }
-/* Only span first field when sameLocation is true (increase to span 3 columns) */
-.rental-form-fields-row--span .rental-form-field:first-child {grid-column: span 3;}
+/* Only span first field when sameLocation is true */
+.rental-form-fields-row--span .rental-form-field:first-child {grid-column: span 2;}
 /* Remove always-on span for first field */
 .rental-form-fields-row .rental-form-field:first-child {grid-column: span 1;}
-.rental-form-label { display:block; font-size:13px; font-weight:600; margin:0 0 5px; color:#0d2f45; }
-.rental-form-input {
-  width: 75%;
-  padding: 7px 4px;
-  border: 1px solid #cfd6dc;
-  border-radius: 6px;
-  font-size: 14px;
-  outline: none;
-  transition: border-color .18s, box-shadow .18s;
-  background: #fff;
-}
+.rental-form-label { display:block; font-size:14px; font-weight:600; margin:0 0 6px; color:#0d2f45; }
+.rental-form-input { width:100%; padding:10px 5px; border:1px solid #cfd6dc; border-radius:6px; font-size:15px; outline:none; transition:border-color .18s, box-shadow .18s; background:#fff; }
 .rental-form-input:focus { border-color:#1565c0; box-shadow:0 0 0 2px rgba(21,101,192,0.15); }
 .rental-form-input--invalid { border-color:#c62828 !important; box-shadow:0 0 0 1px rgba(198,40,40,0.3); background:#fff8f8; }
 .rental-form-input--invalid:focus { border-color:#b71c1c; box-shadow:0 0 0 2px rgba(183,28,28,0.25); }
@@ -149,15 +41,8 @@
 .rental-form-date-btn { position:absolute; right:6px; padding:4px 6px; background:#f0f4f7; border:1px solid #c1c9d1; border-radius:4px; cursor:pointer; font-size:14px; line-height:1; }
 .rental-form-date-btn:hover { background:#e2e8ef; }
 .rental-form-date-hidden { position:absolute; left:0; top:0; width:0; height:0; opacity:0; pointer-events:none; }
-.rental-form-time-select {
-  background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 fill=%22none%22 stroke=%22%23607080%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%228%22 cy=%228%22 r=%226.25%22/%3E%3Cpath d=%22M8 4.5v3.25l2.25 1.25%22/%3E%3C/svg%3E');
-  background-repeat: no-repeat;
-  background-position: 8px center;
-  padding-left: 22px;
-  font-size: 13px;
-  height: 30px;
-}
-.rental-form-powered-inline { margin-left:200px; font-size:12px; color:#1d557a; font-weight:500; }
+.rental-form-time-select { background-image:url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 fill=%22none%22 stroke=%22%23607080%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%228%22 cy=%228%22 r=%226.25%22/%3E%3Cpath d=%22M8 4.5v3.25l2.25 1.25%22/%3E%3C/svg%3E'); background-repeat:no-repeat; background-position:8px center; padding-left:30px; }
+.rental-form-powered-inline { margin-left:auto; font-size:12px; color:#1d557a; font-weight:500; }
 
 /* Responsive tweaks */
 @media (max-width: 900px) {
