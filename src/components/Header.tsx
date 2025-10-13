@@ -85,6 +85,7 @@ const Header: React.FC = () => {
             </a>
             <span className="header__sep header__sep--tall">|</span>
             <GeoDropdown showOnlyCountry={true} onCountryChange={() => window.location.reload()} />
+            <span className="header__sep header__sep--tall">|</span>
           </div>
           {firstName ? (
             <div className="header__user-wrapper">
