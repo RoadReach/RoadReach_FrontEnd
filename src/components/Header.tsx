@@ -65,7 +65,12 @@ const Header: React.FC = () => {
         </div>
         <div className="header__right">
           <div className="header__right-content">
-            <span className="header__right-link header__right-domain">RoadReach.com</span>
+            <a
+              href="/home_hero"
+              className="header__right-domain-link"
+            >
+              RoadReach.com
+            </a>
             <span className="header__sep header__sep--tall">|</span>
             <a href="#" className="header__right-link">Membership</a>
             <span className="header__sep header__sep--tall">|</span>
@@ -75,7 +80,7 @@ const Header: React.FC = () => {
             </a>
             <span className="header__sep header__sep--tall">|</span>
             <a href="tel:+18669217925" className="header__right-link header__phone">
-              <span style={{color:'#D32F2F',verticalAlign:'middle',marginRight:4}}><PhoneCall size={20} /></span>
+               <span className="header__phone-icon"><PhoneCall size={20} /></span>
               <span className="header__phone-number header__phone-number--solid">1-866-921-7925</span>
             </a>
             <span className="header__sep header__sep--tall">|</span>
@@ -142,14 +147,14 @@ const Header: React.FC = () => {
           <div className="main-menu" onClick={e => e.stopPropagation()}>
             <button className="main-menu__close" onClick={() => setMobileMenuOpen(false)} aria-label="Close menu">&times;</button>
             <div className="main-menu__section main-menu__vertical">
-              <a className="main-menu__item" onClick={() => { navigate('/'); setMobileMenuOpen(false); }} style={{cursor:'pointer'}}><span className="header__right-domain">RoadReach.com</span></a>
+               <a className="main-menu__item main-menu__item--pointer" onClick={() => { navigate('/'); setMobileMenuOpen(false); }}><span className="header__right-domain">RoadReach.com</span></a>
               <a className="main-menu__item" href="#">Membership</a>
               <a className="main-menu__item" href="#" onClick={() => { setHelpOpen(true); setMobileMenuOpen(false); }}>
                 <HelpCircle size={20} color="#D32F2F" style={{verticalAlign:'middle',marginRight:2}} />
                 <span className="header__help-text">Help Center</span>
               </a>
 
-              <div className="main-menu__item" style={{padding:0}}>
+               <div className="main-menu__item main-menu__item--nopadding">
                 <GeoDropdown showOnlyCountry={true} onCountryChange={() => { window.location.reload(); setMobileMenuOpen(false); }} />
               </div>
 

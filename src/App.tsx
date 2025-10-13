@@ -75,6 +75,7 @@ const AppContent: React.FC = () => {
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/home_hero" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/create-account" element={<CreateAccount />} />
           <Route path="/dashboard" element={<Dashboard />} />
@@ -82,17 +83,20 @@ const AppContent: React.FC = () => {
           <Route path="/select-vehicle" element={<SelectVehicle />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+
+
         </Routes>
       </main>
-      <Footer />
     </div>
   );
-};
+}
 
-const App: React.FC = () => (
-  <BrowserRouter>
-    <AppContent />
-  </BrowserRouter>
-);
+const App: React.FC = () => {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
+  );
+};
 
 export default App;

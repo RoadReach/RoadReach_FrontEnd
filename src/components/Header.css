@@ -1,3 +1,30 @@
+/* Make RoadReach.com clickable only on hover */
+.header__right-domain-link {
+	text-decoration: none;
+	color: #999999;
+	cursor: pointer;
+}
+
+.header__right-link {
+	color: #999999;
+}
+
+/* Phone icon styles */
+.header__phone-icon {
+	color: #D32F2F;
+	vertical-align: middle;
+	margin-right: 4px;
+}
+
+/* Main menu clickable item */
+.main-menu__item--pointer {
+	cursor: pointer;
+}
+
+/* Main menu no padding */
+.main-menu__item--nopadding {
+	padding: 0;
+}
 .main-menu__item.header__right-domain,
 .main-menu__item .header__right-domain {
 	cursor: pointer;
