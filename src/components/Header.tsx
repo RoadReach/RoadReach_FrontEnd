@@ -132,9 +132,9 @@ const Header: React.FC = () => {
             </Link>
           )}
           <button
-            className="nav-menu-toggle"
-            aria-label="Open navigation menu"
-            onClick={() => setMobileMenuOpen(true)}
+            className={`nav-menu-toggle${mobileMenuOpen ? ' nav-menu-toggle--open' : ''}`}
+            aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            onClick={() => setMobileMenuOpen(prev => !prev)}
           >
             <span />
             <span />
@@ -146,7 +146,7 @@ const Header: React.FC = () => {
       {mobileMenuOpen && (
         <div className="main-menu-overlay" onClick={() => setMobileMenuOpen(false)}>
           <div className="main-menu" onClick={e => e.stopPropagation()}>
-            <button className="main-menu__close" onClick={() => setMobileMenuOpen(false)} aria-label="Close menu">&times;</button>
+            {/* Removed cross (X) close button as requested */}
             <div className="main-menu__section main-menu__vertical">
                <a className="main-menu__item main-menu__item--pointer" onClick={() => { navigate('/'); setMobileMenuOpen(false); }}><span className="header__right-domain">RoadReach.com</span></a>
               <a className="main-menu__item" href="#">Membership</a>

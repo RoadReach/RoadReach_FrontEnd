@@ -233,6 +233,7 @@ header.site-header {
 	}
 }
 /* Hide nav-menu-toggle by default (desktop) */
+/* Hamburger/Cross toggle button styles */
 .nav-menu-toggle {
 	display: none;
 	flex-direction: column;
@@ -250,10 +251,19 @@ header.site-header {
 	display: block;
 	width: 2rem;
 	height: 0.25rem;
-	background: #2d5c88;
+	background: #4070a0;
 	margin: 0.2rem 0;
 	border-radius: 2px;
 	transition: all 0.3s;
+}
+.nav-menu-toggle.nav-menu-toggle--open span:nth-child(1) {
+	transform: translateY(0.45rem) rotate(45deg);
+}
+.nav-menu-toggle.nav-menu-toggle--open span:nth-child(2) {
+	opacity: 0;
+}
+.nav-menu-toggle.nav-menu-toggle--open span:nth-child(3) {
+	transform: translateY(-0.45rem) rotate(-45deg);
 }
 @media (max-width: 1030px), (max-height: 914px) {
 	.nav-menu-toggle {
