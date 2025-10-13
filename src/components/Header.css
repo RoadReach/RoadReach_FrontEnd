@@ -1,3 +1,6 @@
+.site-header .header__main--hidden {
+	display: none !important;
+}
 /* Make RoadReach.com clickable only on hover */
 .header__right-domain-link {
 	text-decoration: none;

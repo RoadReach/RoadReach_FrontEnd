@@ -10,7 +10,6 @@ import Dashboard from './components/Dashboard';
 import RentalCars from './components/rentalCars';
 import Profile from "./components/profile";
 import SelectVehicle from './components/SelectVehicle';
-import Footer from './components/Footer';
 import { useSessionTimeout } from "./hooks/useSessionTimeout";
 import './components/SelectVehicle.css';
 

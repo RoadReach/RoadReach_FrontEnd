@@ -293,11 +293,21 @@ const RentalCars: React.FC = () => {
                           setShowPickupSuggest(false);
                         }}
                       >
-                        <LocationSuggestion
-                          type={loc.type}
-                          name={loc.name}
-                          country={loc.countryCode}
-                        />
+                        {loc.type === 'city' ? (
+                          <span>
+                            {loc.name}
+                            {loc.stateName ? `, ${loc.stateName}` : ''}
+                            {(loc.stateAbbr ? ` (${loc.stateAbbr})` : (loc.stateCode ? ` (${loc.stateCode})` : ''))}
+                            ({loc.countryCode === 'US' || loc.countryCode === 'United States' ? 'US' : loc.countryCode})
+                          </span>
+                        ) : (
+                          <span>
+                            {loc.name}
+                            {loc.code ? ` (${loc.code})` : ''}
+                            {loc.stateAbbr ? `, ${loc.stateAbbr}` : loc.stateCode ? `, ${loc.stateCode}` : ''}
+                            ({loc.countryCode === 'US' || loc.countryCode === 'United States' ? 'US' : loc.countryCode})
+                          </span>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -471,11 +481,19 @@ const RentalCars: React.FC = () => {
                           setShowDropoffSuggest(false);
                         }}
                       >
-                        <LocationSuggestion
-                          type={loc.type}
-                          name={loc.name}
-                          country={loc.countryCode}
-                        />
+                        {loc.type === 'city' ? (
+                          <span>
+                            {loc.name}
+                            {loc.stateCode ? `, ${loc.stateCode}` : ''}
+                            ({loc.countryCode === 'US' || loc.countryCode === 'United States' ? 'US' : loc.countryCode})
+                          </span>
+                        ) : loc.type === 'airport' ? (
+                          <span>
+                            {loc.name} ({loc.countryCode})
+                          </span>
+                        ) : (
+                          <span>{loc.name} ({loc.countryCode})</span>
+                        )}
                       </li>
                     ))}
                   </ul>

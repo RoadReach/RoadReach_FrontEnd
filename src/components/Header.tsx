@@ -180,8 +180,8 @@ const Header: React.FC = () => {
       )}
 
 
-      {/* Main nav bar */}
-      <div className="header__main">
+      {/* Main nav bar - hidden when mobile menu is open */}
+  <div className={`header__main${mobileMenuOpen ? ' header__main--hidden' : ''}`}>
         <nav className="header__nav">
           <a href="#" className="header__nav-link">DEALS</a>
           <a href="#" className="header__nav-link">DESTINATIONS</a>

@@ -5,7 +5,10 @@ export interface LocationSuggestionType {
   name: string;
   type: "airport" | "city";
   stateCode?: string;
+  stateName?: string;
+  stateAbbr?: string;
   countryCode: string;
+  code?: string; // airport code
 }
 
 
