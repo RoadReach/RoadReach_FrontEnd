@@ -260,7 +260,6 @@ const RentalCars: React.FC = () => {
           {/* Separate field groups for each scenario */}
           {sameLocation ? (
             <div className="rental-form-fields-row rental-form-fields-row--span">
-              {/* ...existing code for sameLocation fields... */}
               <div className="rental-form-field">
                 <label className="rental-form-label" htmlFor="pickupLocationSame">Pick-Up and Drop-Off Location*</label>
                 <input
@@ -376,9 +375,9 @@ const RentalCars: React.FC = () => {
                 </select>
               </div>
             </div>
-          ) : (
+          ) :
+          (
             <div className="rental-form-fields-row different-location">
-              {/* ...existing code for different location fields... */}
               <div className="rental-form-field">
                 <label className="rental-form-label" htmlFor="pickupLocation">Pick-Up Location*</label>
                 <input
