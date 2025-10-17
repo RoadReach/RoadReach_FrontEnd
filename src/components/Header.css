@@ -1,4 +1,4 @@
-@media (max-width: 1030px)
+@media (max-width: 1057px)
 {
 	.header__nav,
 	.header__nav *,
@@ -237,7 +237,7 @@ header.site-header {
 	align-items: center;
 	gap: 18px;
 }
-@media (max-width: 1030px) {
+@media (max-width: 1057px) {
 	.header__right-content {
 		display: none;
 	}
@@ -283,7 +283,7 @@ header.site-header {
 .nav-menu-toggle.nav-menu-toggle--open span:nth-child(3) {
 	transform: translateY(-0.45rem) rotate(-45deg);
 }
-@media (max-width: 1030px) {
+@media (max-width: 1057px) {
 	.nav-menu-toggle {
 		display: flex;
 	}
