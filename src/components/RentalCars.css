@@ -76,6 +76,7 @@
 .rental-form-fields-row.different-location .rental-form-field:nth-child(3),
 .rental-form-fields-row.different-location .rental-form-field:nth-child(6) {
   min-width: 140px;
+  max-width: 170px;
 }
 /* Ensure Pick-Up Location* and Drop-Off Location* are the same size in 'Drop-off at Different Location' */
 .rental-form-fields-row.different-location .rental-form-field:nth-child(1),
@@ -89,24 +90,33 @@
 
 /* Increase width of Drop-Off Time* in 'Drop-off at Same Location' (5th field in span row) */
 .rental-form-fields-row--span .rental-form-field:nth-child(5) {
-  max-width: 140px;
+  max-width: 170px;
 }
 /* Reduce width of Drop-Off Date* and Drop-Off Time* in 'Drop-off at Different Location' */
 .rental-form-fields-row.different-location .rental-form-field:nth-child(5) {
   max-width: 140px;
 }
 .rental-form-fields-row.different-location .rental-form-field:nth-child(6) {
-  max-width: 110px;
+  max-width: 170px;
 }
 /* 6-column grid for Drop-off at Different Location fields, equal width, same line */
 .rental-form-fields-row.different-location {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  column-gap: 18px;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  column-gap: 12px;
   row-gap: 0;
   align-items: end;
   margin-bottom: 22px;
 }
+
+/* Decrease gap between Pick-Up Time* (3rd) and Drop-Off Location* (4th) */
+.rental-form-fields-row.different-location .rental-form-field:nth-child(3) {
+  margin-right: 2px;
+}
+.rental-form-fields-row.different-location .rental-form-field:nth-child(4) {
+  margin-left: 2px;
+}
+
 /* Make Drop-Off Location* slightly wider for balance */
 .rental-form-fields-row.different-location .rental-form-field:nth-child(4) {
   min-width: 220px;
@@ -115,8 +125,8 @@
   margin-left: auto;
 }
 /* Reduce width of Drop-Off Date* field in 'Drop-off at Different Location' scenario (4th field in row) */
-.rental-form-fields-row:not(.rental-form-fields-row--span) .rental-form-field:nth-child(4) {
-  max-width: 140px;
+.rental-form-fields-row:not(.rental-form-fields-row--span) .rental-form-field:nth-child(5) {
+  max-width: 170px;
 }
 /* Reduce width of Drop-Off Date* field only */
 .rental-form-fields-row .rental-form-field:nth-child(4) {
@@ -163,7 +173,7 @@
 .rental-form-fields-row {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  column-gap: 18px;
+  column-gap: 12px;
   row-gap: 8px;
   align-items: end;
   margin-bottom: 22px;
@@ -176,10 +186,27 @@
   box-sizing: border-box;
 }
 .rental-form-field { position:relative; min-width:0; }
-/* Only span first field when sameLocation is true (increase to span 3 columns) */
-.rental-form-fields-row--span .rental-form-field:first-child {grid-column: span 3;}
+/* Only span first field when sameLocation is true (increase to span 3 columns and make it wider) */
+.rental-form-fields-row--span .rental-form-field:first-child {
+  grid-column: span 3;
+  min-width: 340px;
+  max-width: 420px;
+}
 /* Remove always-on span for first field */
 .rental-form-fields-row .rental-form-field:first-child {grid-column: span 1;}
+
+/* Increase width of Pick-Up Time* in 'Drop-off at Same Location' (3rd field in span row) */
+.rental-form-fields-row--span .rental-form-field:nth-child(3) {
+  min-width: 160px;
+  max-width: 200px;
+}
+
+/* Ensure equal gap between all fields in same location row */
+.rental-form-fields-row--span {
+  column-gap: 28px;
+  row-gap: 0;
+  align-items: end;
+}
 .rental-form-label { display:block; font-size:13px; font-weight:600; margin:0 0 5px; color:#0d2f45; }
 .rental-form-input {
   width: 75%;
@@ -217,7 +244,9 @@
 .rental-form-date-btn { position:absolute; right:6px; padding:4px 6px; background:#f0f4f7; border:1px solid #c1c9d1; border-radius:4px; cursor:pointer; font-size:14px; line-height:1; }
 .rental-form-date-btn:hover { background:#e2e8ef; }
 .rental-form-date-hidden { position:absolute; left:0; top:0; width:0; height:0; opacity:0; pointer-events:none; }
-.rental-form-time-select {
+.rental-form-time-select,
+.rental-form-fields-row.different-location .rental-form-field:nth-child(3) select,
+.rental-form-fields-row.different-location .rental-form-field:nth-child(6) select {
   background-image: url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 fill=%22none%22 stroke=%22%23607080%22 stroke-width=%221.5%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Ccircle cx=%228%22 cy=%228%22 r=%226.25%22/%3E%3Cpath d=%22M8 4.5v3.25l2.25 1.25%22/%3E%3C/svg%3E');
   background-repeat: no-repeat;
   background-position: 8px center;
