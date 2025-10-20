@@ -45,7 +45,7 @@ const Header: React.FC = () => {
         <div className="header__top">
           <div className="header__left header__left--center">
             <Link to="/">
-              <img src={RoadReachLogo} width={150} height={75} alt="RoadReach Logo" className="header__logo-link" />
+              <img src={RoadReachLogo} alt="RoadReach Logo" className="header__logo" />
             </Link>
           </div>
         </div>
@@ -60,7 +60,7 @@ const Header: React.FC = () => {
       <div className="header__container">
         <div className="header__left">
           <Link to="/">
-            <img src={RoadReachLogo} width={150} height={75} alt="RoadReach Logo" className="header__logo-link" />
+            <img src={RoadReachLogo} alt="RoadReach Logo" className="header__logo" />
           </Link>
         </div>
         <div className="header__right">

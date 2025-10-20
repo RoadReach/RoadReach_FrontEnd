@@ -1,3 +1,79 @@
+/* Responsive RoadReach logo sizing - keep only one set at the end for highest specificity */
+.header__logo {
+	width: 200px !important;
+	height: auto !important;
+	transition: width 0.2s, height 0.2s !important;
+}
+@media (max-width: 1418px) {
+	.header__logo {
+		width: 198px !important;
+	}
+}
+@media (max-width: 1408px) {
+	.header__logo {
+		width: 195px !important;
+	}
+}
+@media (max-width: 1398px) {
+	.header__logo {
+		width: 190px !important;
+	}
+}
+@media (max-width: 1388px) {
+	.header__logo {
+		width: 185px !important;
+	}
+}
+@media (max-width: 1378px) {
+	.header__logo {
+		width: 180px !important;
+	}
+}
+@media (max-width: 1368px) {
+	.header__logo {
+		width: 175px !important;
+	}
+}
+@media (max-width: 1358px) {
+	.header__logo {
+		width: 170px !important;
+	}
+}
+@media (max-width: 1248px) {
+	.header__logo {
+		width: 165px !important;
+	}
+}
+@media (max-width: 1148px) {
+	.header__logo {
+		width: 160px !important;
+	}
+}
+@media (max-width: 1070px) {
+	.header__logo {
+		width: 155px !important;
+	}
+}
+@media (max-width: 1066px) {
+	.header__logo {
+		width: 150px !important;
+	}
+}
+@media (max-width: 1065px) {
+	.header__logo {
+		width: 145px !important;
+	}
+}
+@media (max-width: 600px) {
+	.header__logo {
+		width: 90px !important;
+	}
+}
+@media (max-width: 420px) {
+	.header__logo {
+		width: 70px !important;
+	}
+}
 @media (min-width: 1058px) {
 	header.site-header .header__main,
 	.header__main {
