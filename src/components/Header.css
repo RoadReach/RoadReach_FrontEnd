@@ -1,3 +1,21 @@
+@media (min-width: 1058px) {
+	header.site-header .header__main,
+	.header__main {
+		display: flex !important;
+		visibility: visible !important;
+		height: auto !important;
+		width: 96% !important;
+		opacity: 1 !important;
+		pointer-events: auto !important;
+		position: relative !important;
+		z-index: 3000 !important;
+	}
+}
+@media (min-width: 1058px) {
+	.main-menu-overlay {
+		display: none !important;
+	}
+}
 @media (max-width: 1057px)
 {
 	.header__nav,
@@ -56,11 +74,11 @@
 	background: #39709b !important;
 	border: 1px solid #fff !important;
 }
-/* Main menu overlay (Costco style) */
+
 /* Main menu overlay appears below header */
 .main-menu-overlay {
 	position: fixed;
-	top: 64px; /* height of header, adjust if needed */
+	/*top: 64px;  height of header, adjust if needed */
 	left: 0;
 	width: 100vw;
 	height: calc(100vh - 64px);
