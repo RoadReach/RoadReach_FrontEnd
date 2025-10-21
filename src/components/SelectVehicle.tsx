@@ -53,6 +53,40 @@ const SelectVehicle: React.FC = () => {
     criteria.sameLocation ? '1' : '0'
   ].join('|') : '';
 
+  // Helper: format date + time into 'Oct 21, 2025, 12:00 PM'
+  const formatDateTime = (dateStr?: string, timeStr?: string) => {
+    if (!dateStr) return '';
+    try {
+      // If time already contains AM/PM, normalize casing and append to formatted date
+      if (timeStr && /[AP]M/i.test(timeStr)) {
+        const dateOnly = new Date(dateStr);
+        const dateFmt = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(dateOnly);
+        return `${dateFmt}, ${timeStr.toUpperCase()}`;
+      }
+
+      // Build a Date from date + time (assume time like HH:mm or HH:mm:ss)
+      let iso = dateStr;
+      if (timeStr) {
+        const t = timeStr.length === 5 ? `${timeStr}:00` : timeStr;
+        iso = `${dateStr}T${t}`;
+      }
+      let dt = new Date(iso);
+      if (isNaN(dt.getTime())) {
+        // Try a space-separated fallback
+        dt = new Date(`${dateStr} ${timeStr || ''}`);
+      }
+      if (isNaN(dt.getTime())) {
+        return `${dateStr} ${timeStr || ''}`.trim();
+      }
+
+      const dateFmt = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(dt);
+      const timeFmt = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).format(dt);
+      return `${dateFmt}, ${timeFmt}`;
+    } catch {
+      return `${dateStr} ${timeStr || ''}`.trim();
+    }
+  };
+
   // Filters & vehicle data hooks (must be unconditional)
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
   // Committed prices used for backend fetch
@@ -71,7 +105,6 @@ const SelectVehicle: React.FC = () => {
   const agencyOptions = ['Alamo','Avis','Budget','Enterprise Rent-A-Car'];
   const [agencyFilters, setAgencyFilters] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
   // All vehicles returned from backend for current price range (no type filter so we can compute counts)
   const [vehiclesAll, setVehiclesAll] = useState<Vehicle[]>([]);
   const [activeVehicle, setActiveVehicle] = useState<Vehicle | null>(null);
@@ -138,10 +171,12 @@ const SelectVehicle: React.FC = () => {
   }, [criteriaHash]);
 
   // Fetch vehicles whenever committed min/max or criteria change
+  // Fetch vehicles whenever committed min/max or criteria change
   useEffect(() => {
     if (!criteria) return;
     setError(null);
-    if (vehiclesAll.length === 0) setLoading(true); else setRefreshing(true);
+    // Use loading to indicate any active fetch (initial load or refresh)
+    setLoading(true);
     fetchVehicles({
       pickupLocation: criteria.pickupLocation,
       dropoffLocation: criteria.dropoffLocation,
@@ -164,15 +199,10 @@ const SelectVehicle: React.FC = () => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [criteriaHash, minPrice, maxPrice]);
-
   const noCriteria = !criteria;
 
   const toggleType = (t: string) => {
     setTypeFilters(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);
-  };
-
-  const proceed = (v: Vehicle) => {
-    setActiveVehicle(v);
   };
 
   const toggleGeneric = (value: string, setter: React.Dispatch<React.SetStateAction<string[]>>) => {
@@ -376,12 +406,43 @@ const SelectVehicle: React.FC = () => {
     <main className="select-vehicle__main">
         <div className="select-vehicle__header">
           <h1 className="select-vehicle__title">Select Vehicle | RoadReach</h1>
-          <button className="select-vehicle__back" onClick={() => navigate(-1)}>&larr; Back</button>
+          <div className="select-vehicle__header-actions">
+            <button
+              className="select-vehicle__edit"
+              onClick={() => {
+                // navigate to search form with same criteria so user can edit
+                if (criteria) {
+                  navigate('/rental-cars', { state: { search: criteria } });
+                } else {
+                  navigate('/rental-cars');
+                }
+              }}
+              aria-label="Edit search"
+            >
+              Edit
+            </button>
+            <button className="select-vehicle__back" onClick={() => navigate(-1)}>&larr; Back</button>
+          </div>
         </div>
-        <div className="select-vehicle__summary">
-      <div><strong>Pick-Up:</strong> {criteria?.pickupLocation} • {criteria?.pickupDate} {criteria?.pickupTime}</div>
-      <div><strong>Drop-Off:</strong> {criteria?.dropoffLocation} • {criteria?.dropoffDate} {criteria?.dropoffTime}</div>
-      <div><strong>Age 25+:</strong> {criteria?.is25 ? 'Yes' : 'No'}</div>
+        <div className="select-vehicle__criteria-bar">
+          <div className="criteria__left">
+            <div className="criteria__location">{criteria?.pickupLocation}</div>
+            <div className="criteria__dates">{formatDateTime(criteria?.pickupDate, criteria?.pickupTime)} - {formatDateTime(criteria?.dropoffDate, criteria?.dropoffTime)}</div>
+          </div>
+          <div className="criteria__actions">
+            <button
+              className="select-vehicle__edit"
+              onClick={() => {
+                if (criteria) {
+                  navigate('/rental-cars', { state: { search: criteria } });
+                } else {
+                  navigate('/rental-cars');
+                }
+              }}
+            >
+              Edit
+            </button>
+          </div>
         </div>
         {error && (
           <div className="select-vehicle__error" role="alert">
@@ -420,7 +481,7 @@ const SelectVehicle: React.FC = () => {
                 {/* Custom info rows */}
                 <tr>
                   <td className="sticky-left vehicle-table-info-cell" style={{ background: "#003a5c", color: "#fff", fontWeight: "bold" }}>Location:</td>
-                  {companies.map((company, idx) => (
+                  {companies.map(company => (
                     <td
                       key={company}
                       className="vehicle-table-info-cell"
@@ -442,7 +503,7 @@ const SelectVehicle: React.FC = () => {
                 </tr>
                 <tr>
                   <td className="sticky-left vehicle-table-info-cell" style={{ background: "#003a5c", color: "#fff", fontWeight: "bold" }}>Address:</td>
-                  {companies.map((company, idx) => (
+                  {companies.map(company => (
                     <td
                       key={company}
                       className="vehicle-table-info-cell"
@@ -463,7 +524,7 @@ const SelectVehicle: React.FC = () => {
                 </tr>
                 <tr>
                   <td className="sticky-left vehicle-table-info-cell" style={{ background: "#003a5c", color: "#fff", fontWeight: "bold" }}>Pick-Up Hours:</td>
-                  {companies.map((company, idx) => (
+                  {companies.map(company => (
                     <td
                       key={company}
                       className="vehicle-table-info-cell"
