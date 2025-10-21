@@ -111,6 +111,7 @@ const SelectVehicle: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const lastSearchRef = useRef<string>('');
   const [selectedCell, setSelectedCell] = useState<{ type: string, company: string } | null>(null);
+  const [selectedVehicleObj, setSelectedVehicleObj] = useState<Vehicle | null>(null);
   const [showPriceDetails, setShowPriceDetails] = useState<{ vehicle: Vehicle } | null>(null);
   const [showTerms, setShowTerms] = useState(false);
   const [showGeoRestrictions, setShowGeoRestrictions] = useState(false);
@@ -190,11 +191,9 @@ const SelectVehicle: React.FC = () => {
     }).then(list => {
       setVehiclesAll(list);
       setLoading(false);
-      setRefreshing(false);
       setError(null);
     }).catch(() => {
       setLoading(false);
-      setRefreshing(false);
       setError('Failed to load vehicles. Please try again.');
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -258,6 +257,28 @@ const SelectVehicle: React.FC = () => {
     });
     return map;
   }, [vehiclesAll, matchesCapacity, matchesBags, matchesAgency, sliderMin, sliderMax]);
+
+  // Track last criteria for which we auto-opened low-price details
+  const lastAutoShownRef = useRef<string>('');
+
+  // Auto-open the lowest-priced vehicle details for the current result set
+  useEffect(() => {
+    if (!filteredVehicles || filteredVehicles.length === 0) return;
+    // Only auto-open once per search criteria to avoid repeated popups
+    if (lastAutoShownRef.current === criteriaHash) return;
+    // Find the vehicle with the lowest price
+    const min = filteredVehicles.reduce((best, v) => (best == null || v.price < best.price) ? v : best, null as Vehicle | null);
+    if (min) {
+      // select the lowest-priced cell so the inline detail card is shown
+      setSelectedCell({ type: min.type, company: min.company });
+      // store the actual vehicle object to ensure card shows the same price
+      setSelectedVehicleObj(min);
+      // ensure any modals are closed
+      setShowPriceDetails(null);
+      setActiveVehicle(null);
+      lastAutoShownRef.current = criteriaHash;
+    }
+  }, [filteredVehicles, criteriaHash]);
 
   // Slider fill percentages
   const sliderFill = useMemo(() => {
@@ -565,7 +586,12 @@ const SelectVehicle: React.FC = () => {
                             {vehicle ? (
                               <div
                                 className="vehicle-table-price vehicle-table-price--clickable"
-                                onClick={() => setSelectedCell({ type, company })}
+                                onClick={() => {
+                                  setSelectedCell({ type, company });
+                                  // set the exact vehicle object so detail card matches
+                                  const v = filteredVehicles.find(v => v.type === type && v.company === company) || null;
+                                  setSelectedVehicleObj(v);
+                                }}
                                 style={{ cursor: 'pointer' }}
                                 title="View details"
                               >
@@ -583,9 +609,10 @@ const SelectVehicle: React.FC = () => {
                         <tr>
                           <td colSpan={companies.length + 1} style={{ padding: 0, background: "#fff" }}>
                             {(() => {
-                              const vehicle = filteredVehicles.find(
-                                v => v.type === type && v.company === selectedCell.company
-                              );
+                              // Prefer the explicit selectedVehicleObj (set on click or auto-select)
+                              const vehicle = (selectedVehicleObj && selectedVehicleObj.type === type && selectedVehicleObj.company === selectedCell?.company)
+                                ? selectedVehicleObj
+                                : filteredVehicles.find(v => v.type === type && v.company === selectedCell?.company);
                               if (!vehicle) return null;
                               return (
                                 <div className="vehicle-detail-card">
@@ -677,7 +704,14 @@ const SelectVehicle: React.FC = () => {
                                           Terms & Conditions
                                         </a>
                                       </div>
-                                      <button className="btn btn--primary vehicle-detail-card__continue" onClick={() => alert('Continue flow')}>Continue</button>
+                                      <button className="btn btn--primary vehicle-detail-card__continue" onClick={() => {
+                                        // Navigate to Upgrades and pass current search + selected vehicle
+                                        if (criteria) {
+                                          navigate('/upgrades', { state: { search: criteria, selectedVehicle: vehicle } });
+                                        } else {
+                                          navigate('/upgrades', { state: { selectedVehicle: vehicle } });
+                                        }
+                                      }}>Continue</button>
                                     </div>
                                   </div>
                                   <div className="vehicle-detail-card__rewards">
@@ -765,7 +799,13 @@ const SelectVehicle: React.FC = () => {
           {activeVehicle.eco && <li>Eco Friendly</li>}
           {activeVehicle.luxury && <li>Luxury Class</li>}
         </ul>
-        <button className="btn btn--primary vehicle-modal__continue" onClick={() => alert('Proceed flow placeholder')}>Continue</button>
+        <button className="btn btn--primary vehicle-modal__continue" onClick={() => {
+          if (criteria) {
+            navigate('/upgrades', { state: { search: criteria, selectedVehicle: activeVehicle } });
+          } else {
+            navigate('/upgrades', { state: { selectedVehicle: activeVehicle } });
+          }
+        }}>Continue</button>
         <div className="vehicle-modal__rewards">
           Earn approximately <strong>$1.57</strong> towards your <a href="#">Executive Member 2% Reward</a><br />
           Earn up to <strong>3% CASH BACK REWARDS</strong> on eligible travel with the <a href="#">Costco Anywhere Visa® Card by Citi</a>

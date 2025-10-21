@@ -10,6 +10,7 @@ import Dashboard from './components/Dashboard';
 import RentalCars from './components/rentalCars';
 import Profile from "./components/profile";
 import SelectVehicle from './components/SelectVehicle';
+import Upgrades from './components/Upgrades';
 import { useSessionTimeout } from "./hooks/useSessionTimeout";
 import './components/SelectVehicle.css';
 
@@ -80,6 +81,7 @@ const AppContent: React.FC = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/rental-cars" element={<RentalCars />} />
           <Route path="/select-vehicle" element={<SelectVehicle />} />
+          <Route path="/upgrades" element={<Upgrades />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
