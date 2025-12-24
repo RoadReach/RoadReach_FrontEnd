@@ -1,5 +1,9 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { validateEmail } from "./validateEmail";
+import './Login.css';
+import { Link, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface LoginFormData {
   email: string;
@@ -7,16 +11,33 @@ interface LoginFormData {
   keepSignedIn: boolean;
 }
 
+
+
+
 const Login: React.FC = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
     keepSignedIn: false,
   });
-
   const [showPassword, setShowPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<{ email: boolean; password: boolean }>({ email: false, password: false });
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  // Forgot Password states
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotPasswordStep, setForgotPasswordStep] = useState<'email' | 'verification' | 'reset'>('email');
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [forgotPasswordError, setForgotPasswordError] = useState("");
+  const [forgotPasswordSubmitting, setForgotPasswordSubmitting] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -24,250 +45,330 @@ const Login: React.FC = () => {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
-    // Remove red border when user types
-    if (name === "email" && value) {
+    if (name === "email") {
       setFieldErrors((prev) => ({ ...prev, email: false }));
+      setEmailError("");
     }
-    if (name === "password" && value) {
+    if (name === "password") {
       setPasswordError("");
       setFieldErrors((prev) => ({ ...prev, password: false }));
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
     const errors = {
-      email: !formData.email,
-      password: !formData.password,
+      email: false,
+      password: false,
     };
-    setFieldErrors(errors);
-    // Show only one error message at a time, prioritizing email
-    if (errors.email) {
-      setPasswordError("");
-      return;
+    let customEmailError = "";
+    if (!formData.email) {
+      errors.email = true;
+      customEmailError = "Email address is required.";
+    } else {
+      const validationResult = validateEmail(formData.email);
+      if (validationResult) {
+        errors.email = true;
+        customEmailError = validationResult;
+      }
     }
-    if (errors.password) {
+    if (!formData.password) {
+      errors.password = true;
       setPasswordError("Password is required.");
+    } else {
+      setPasswordError("");
+    }
+    setFieldErrors(errors);
+    setEmailError(customEmailError);
+    if (errors.email || errors.password) {
       return;
     }
-    // Proceed with login logic
-    console.log("Login data:", formData);
+
+    // Check credentials with backend
+    try {
+      const response = await fetch("http://localhost:8080/api/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+      const data = await response.json();
+      if (response.ok && data.success) {
+        // Store sign-in flag in localStorage or sessionStorage
+        if (formData.keepSignedIn) {
+          localStorage.setItem("keepSignedIn", "true");
+        } else {
+          sessionStorage.setItem("keepSignedIn", "true");
+        }
+        localStorage.setItem("firstname", data.firstname);
+        localStorage.setItem("lastname", data.lastname);
+        localStorage.setItem("email", data.email);
+        localStorage.setItem("userid", data.userid);
+        toast.success("Login successful!");
+        setTimeout(() => {
+          setSubmitting(false); // <-- Only set to false after navigation
+          navigate("/dashboard");
+        }, 1500);
+      } else {
+        toast.error("Invalid email or password.");
+        setPasswordError("Invalid email or password.");
+        setFieldErrors((prev) => ({ ...prev, password: true }));
+        setSubmitting(false); // <-- Set to false on error
+      }
+    } catch {
+      toast.error("Server error. Please try again.");
+      setPasswordError("Server error. Please try again.");
+      setSubmitting(false); // <-- Set to false on error
+    }
   };
 
   return (
-    <div style={styles.pageWrapper}>
-      <div style={styles.card}>
-        <h2 style={styles.heading}>Sign In</h2>
+    <div className="login">
+      <div className="login__card">
+        <h2 className="login__title">Sign In</h2>
+        <div className="login__desc">
+          NEW! RoadReach.com and RoadReachTravel.com sign in are merging.
+        </div>
+        <ul className="login__list">
+          <li>You can now sign in to both websites using your <b>roadreach.com email and password</b>. <a href="#" className="login__learn-link">Learn more</a></li>
+          <li>You must be a RoadReach Member residing in the United States.</li>
+        </ul>
+        <ToastContainer position="top-right" autoClose={3000} />
         <form onSubmit={handleSubmit}>
-          {/* Email */}
-          <div style={styles.floatingGroup}>
+          <div className="floating-group">
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              style={{
-                ...styles.floatingInput,
-                border: fieldErrors.email ? "2px solid #D84343" : "1px solid #222",
-                color: fieldErrors.email ? "#D84343" : "#222",
-              }}
+              className={`floating-input${fieldErrors.email || emailError ? ' error' : ''}`}
               autoComplete="email"
               id="login-email"
+              aria-label="Email Address"
+              placeholder=" "
             />
-            <label
-              htmlFor="login-email"
-              style={
-                formData.email
-                  ? { ...styles.floatingLabel, ...styles.floatingLabelActive, color: fieldErrors.email ? "#D84343" : "#222" }
-                  : { ...styles.floatingLabel, color: fieldErrors.email ? "#D84343" : "#444" }
-              }
-            >
-              Email Address
-            </label>
+            <label htmlFor="login-email" className="floating-label">Email Address</label>
           </div>
-
-          {/* Password */}
-          <div style={styles.floatingGroup}>
+          {(fieldErrors.email || emailError) && (
+            <div className="error-text">{emailError || 'Email address is required.'}</div>
+          )}
+          <div className="floating-group login__relative">
             <input
               type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleChange}
-              style={{
-                ...styles.floatingInput,
-                border: fieldErrors.password ? "2px solid #D84343" : "1px solid #222",
-                color: fieldErrors.password ? "#D84343" : "#222",
-              }}
+              className={`floating-input${(fieldErrors.password || passwordError) ? ' error' : ''}`}
               id="login-password"
               autoComplete="current-password"
+              aria-label="Password"
+              placeholder=" "
             />
-            <label
-              htmlFor="login-password"
-              style={
-                formData.password
-                  ? {
-                      ...styles.floatingLabel,
-                      ...styles.floatingLabelActive,
-                      color: fieldErrors.password ? "#D84343" : "#222",
-                    }
-                  : {
-                      ...styles.floatingLabel,
-                      color: fieldErrors.password ? "#D84343" : "#444",
-                    }
-              }
-            >
-              Password
-            </label>
+            <label htmlFor="login-password" className="floating-label">Password</label>
             <button
               type="button"
-              style={{
-                ...styles.showButton,
-                top: "50%",
-                transform: "translateY(-50%)",
-                color: "#666",
-              }}
+              className="show-toggle"
               onClick={() => setShowPassword((prev) => !prev)}
               tabIndex={-1}
+              aria-label="Show password"
             >
               <span role="img" aria-label="Show password">👁️</span>
             </button>
           </div>
-          {passwordError && (
-            <div style={{ color: "#D84343", fontWeight: 600, margin: "6px 0 0 2px", fontSize: "22px" }}>
-              {fieldErrors.email ? "Email is required." : passwordError}
+          {(fieldErrors.password || passwordError) && (
+            <div className="error-text">{passwordError || 'Password is required.'}</div>
+          )}
+          <div className="login__links-col">
+            <Link to="/forgot-password" className="login__link">Forgot Password?</Link>
+            <a href="#" className="login__link">Need help logging in?</a>
+          </div>
+
+          {/* Forgot Password Modal */}
+          {showForgotPassword && (
+            <div className="modal-overlay modal-overlay--centered">
+              <div className="modal-card modal-card--centered">
+                <img src="/public/vite.svg" alt="Logo" className="modal-logo" />
+                <h2 className="modal-title">Password Reset</h2>
+                {forgotPasswordStep === 'email' && (
+                  <>
+                    <div className="modal-instructions">Enter your account email address to receive a verification code to reset your password.</div>
+                    <label htmlFor="forgot-email" className="modal-label">Email Address</label>
+                    <input
+                      id="forgot-email"
+                      type="email"
+                      value={forgotEmail}
+                      onChange={e => setForgotEmail(e.target.value)}
+                      placeholder="Email Address"
+                      className="modal-input"
+                      autoFocus
+                    />
+                    {forgotPasswordError && <div className="error-text">{forgotPasswordError}</div>}
+                    <button
+                      className="modal-btn modal-btn--primary"
+                      disabled={forgotPasswordSubmitting}
+                      onClick={async () => {
+                        setForgotPasswordError("");
+                        if (!forgotEmail) {
+                          setForgotPasswordError("Email is required.");
+                          return;
+                        }
+                        setForgotPasswordSubmitting(true);
+                        try {
+                          const res = await fetch("http://localhost:8080/api/users/send-reset-code", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ email: forgotEmail })
+                          });
+                          const data = await res.json();
+                          if (res.ok && data.success) {
+                            setForgotPasswordStep('verification');
+                          } else {
+                            setForgotPasswordError(data.message || "Failed to send code. Try again.");
+                          }
+                        } catch {
+                          setForgotPasswordError("Server error. Try again.");
+                        } finally {
+                          setForgotPasswordSubmitting(false);
+                        }
+                      }}
+                    >Send Verification Code</button>
+                    <button className="modal-btn modal-btn--link" onClick={() => setShowForgotPassword(false)}>Cancel</button>
+                  </>
+                )}
+                {forgotPasswordStep === 'verification' && (
+                  <>
+                    <h3>Verify Code</h3>
+                    <p>Enter the code sent to your email.</p>
+                    <input
+                      type="text"
+                      value={verificationCode}
+                      onChange={e => setVerificationCode(e.target.value)}
+                      placeholder="Verification code"
+                      className="floating-input"
+                      autoFocus
+                      disabled={forgotPasswordSubmitting}
+                    />
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      value={newPassword}
+                      onChange={e => setNewPassword(e.target.value)}
+                      placeholder="New password"
+                      className="floating-input floating-input--mt12"
+                      disabled={forgotPasswordSubmitting}
+                    />
+                    <div className="confirm-password-row">
+                      <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        value={confirmPassword}
+                        onChange={e => setConfirmPassword(e.target.value)}
+                        placeholder="Confirm new password"
+                        className="floating-input floating-input--fullwidth"
+                        disabled={forgotPasswordSubmitting}
+                      />
+                      <button
+                        type="button"
+                        className="show-toggle show-toggle--confirm"
+                        onClick={() => setShowConfirmPassword((prev) => !prev)}
+                        tabIndex={-1}
+                        aria-label="Show confirm password"
+                      >
+                        <span role="img" aria-label="Show confirm password">👁️</span>
+                      </button>
+                    </div>
+                    {forgotPasswordError && <div className="error-text">{forgotPasswordError}</div>}
+                    <div className="login__links-col">
+                      <Link to="/forgot-password" className="login__link">Forgot Password?</Link>
+                      <a href="#" className="login__link">Need help logging in?</a>
+                    </div>
+                    <button
+                      className="login__full-btn"
+                      disabled={forgotPasswordSubmitting}
+                      onClick={async () => {
+                        setForgotPasswordError("");
+                        if (!newPassword || !confirmPassword) {
+                          setForgotPasswordError("Please enter and confirm your new password.");
+                          return;
+                        }
+                        if (newPassword !== confirmPassword) {
+                          setForgotPasswordError("Passwords do not match.");
+                          return;
+                        }
+                        // TODO: Call backend to reset password
+                        setForgotPasswordSubmitting(true);
+                        try {
+                          const res = await fetch("http://localhost:8080/api/users/reset-password", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ email: forgotEmail, code: verificationCode, password: newPassword })
+                          });
+                          const data = await res.json();
+                          if (res.ok && data.success) {
+                            toast.success("Password reset successful! You can now log in.");
+                            setShowForgotPassword(false);
+                          } else {
+                            setForgotPasswordError(data.message || "Failed to reset password. Try again.");
+                          }
+                        } catch {
+                          setForgotPasswordError("Server error. Try again.");
+                        } finally {
+                          setForgotPasswordSubmitting(false);
+                        }
+                      }}
+                    >Reset Password</button>
+                  </>
+                )}
+              </div>
             </div>
           )}
-
-          {/* Checkbox */}
-          <div style={styles.checkbox}>
+          <div className="login__checkbox-row">
             <input
               type="checkbox"
               name="keepSignedIn"
               checked={formData.keepSignedIn}
               onChange={handleChange}
+              aria-label="Keep me signed in"
+              id="keepSignedIn"
             />
-            <span style={{ marginLeft: "5px" }}>Keep me signed in</span>
+            <label htmlFor="keepSignedIn" className="login__checkbox-label">Keep me signed in</label>
+            <div className="login__info-wrapper">
+              <button
+                type="button"
+                className={`login__info-btn${showTooltip ? ' active' : ''}`}
+                aria-label="Info: We'll keep you signed in on this device. You may need to sign in again when editing sensitive account information."
+                tabIndex={0}
+                onClick={() => setShowTooltip((prev) => !prev)}
+                onBlur={() => setShowTooltip(false)}
+              >
+                <span className="login__info-icon">i</span>
+              </button>
+              {showTooltip && (
+                <div className="login__tooltip">
+                  We'll keep you signed in on this device. You may need to sign in again when editing sensitive account information.
+                </div>
+              )}
+            </div>
           </div>
-
-          {/* Submit */}
-          <button type="submit" style={styles.signInBtn}>
-            Sign In
+          <div className="login__checkbox-info">
+            Check this box only when on a private device.
+          </div>
+          <button type="submit" className="login__full-btn login__sign-btn" disabled={submitting}>
+            {submitting ? "Signing In..." : "Sign In"}
           </button>
-
-          <hr style={{ margin: "20px 0" }} />
-          <Link to="/create-account" style={styles.createBtn}>
-            Create Account
-          </Link>
+          <div className="login__new-row">
+            <span>New to RoadReach? <a href="#" className="login__learn-link">Learn more</a> about becoming a member.</span>
+          </div>
+          <button type="button" className="login__center-btn login__create-btn">
+            <Link to="/create-account">Create Account</Link>
+          </button>
         </form>
       </div>
+  {/* Footer removed as requested */}
     </div>
   );
-};
-
-const styles: { [key: string]: React.CSSProperties } = {
-  pageWrapper: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "90vh",
-    backgroundColor: "#f5f5f5",
-    overflow: "visible",
-  },
-  card: {
-    background: "#fff",
-    padding: "30px",
-    borderRadius: "8px",
-    boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-    width: "400px",
-    fontFamily: "Arial, sans-serif",
-  },
-  heading: {
-    marginBottom: "10px",
-  },
-  label: {
-    fontSize: "14px",
-    margin: "10px 0 5px",
-    display: "block",
-  },
-  input: {
-    width: "100%",
-    padding: "8px",
-    fontSize: "18px",
-    border: "1px solid #ccc",
-    borderRadius: "6px",
-    marginBottom: "10px",
-    boxSizing: "border-box",
-  },
-  passwordWrapper: {
-    position: "relative",
-  },
-  showButton: {
-    position: "absolute",
-    right: "8px",
-    top: "8px",
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    fontSize: "20px",
-  },
-  checkbox: {
-    display: "flex",
-    alignItems: "center",
-    marginTop: "15px",
-  },
-  signInBtn: {
-    background: "#005DA6",
-    color: "#fff",
-    padding: "10px",
-    marginTop: "20px",
-    border: "none",
-    borderRadius: "4px",
-    width: "100%",
-    cursor: "pointer",
-    fontSize: "18px",
-  },
-  createBtn: {
-    background: "#ccc",
-    color: "#000",
-    padding: "10px",
-    border: "none",
-    borderRadius: "4px",
-    width: "100%",
-    cursor: "pointer",
-    fontSize: "18px",
-  },
-  floatingGroup: {
-    position: "relative",
-    marginBottom: "18px",
-  },
-  floatingInput: {
-    width: "100%",
-    padding: "12px 8px 8px 8px",
-    fontSize: "18px",
-    border: "1px solid #222",
-    borderRadius: "6px",
-    outline: "none",
-    boxSizing: "border-box",
-  },
-  floatingLabel: {
-    position: "absolute",
-    left: "12px",
-    top: "8px",
-    fontSize: "14px",
-    color: "#444",
-    background: "#fff",
-    padding: "0 2px",
-    pointerEvents: "none",
-    transition: "0.2s",
-  },
-  floatingLabelActive: {
-    top: "-10px",
-    left: "8px",
-    fontSize: "12px",
-    color: "#222",
-    background: "#fff",
-    padding: "0 2px",
-  },
 };
 
 export default Login;

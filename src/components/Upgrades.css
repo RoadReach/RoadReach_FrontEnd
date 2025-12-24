@@ -1,0 +1,46 @@
+.upgrades__page { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; }
+.upgrades__topbar { background: #0b3f57; color: #fff; display:flex; justify-content:space-between; align-items:center; padding:18px 20px; }
+.upgrades__topbar-left { display:flex; flex-direction:column; }
+.upgrades__location { font-size:1.05rem; font-weight:600; }
+.upgrades__dates { font-size:0.95rem; opacity:0.95; }
+.upgrades__topbar-right { display:flex; align-items:center; gap:18px; }
+.upgrades__total-label { font-size:0.95rem; opacity:0.85; }
+.upgrades__total-amount { font-size:1.4rem; font-weight:700; }
+.upgrades__top-cta { background:#1d6b93; border:none; color:#fff; padding:10px 14px; border-radius:4px; cursor:pointer; }
+
+.upgrades__container { display:flex; gap:28px; padding:28px 20px; max-width:1100px; margin:0 auto; }
+.upgrades__main { flex:1; }
+.upgrades__title { margin:0 0 16px 0; color:#0b395c; font-size:1.6rem; }
+.upgrades__table { border:1px solid #e6eef5; border-radius:6px; overflow:hidden; background:#fff; }
+.upgrades__table-head { display:grid; grid-template-columns: 1fr 220px 180px; background:#3a6b84; color:#fff; padding:14px 18px; align-items:center; font-weight:600; }
+.upgrades__row { display:grid; grid-template-columns: 1fr 220px 180px; align-items:center; padding:18px; gap:12px; }
+.upgrades__row.alt { background:#f3f8fb; }
+.upgrades__row .col.desc a { color:#0b395c; text-decoration:underline; }
+.upgrades__row .col.price { color:#003a5c; }
+.qty-btn { width:34px; height:34px; border-radius:4px; border:1px solid #cddfe9; background:#fff; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; font-size:18px; }
+.qty-val { display:inline-block; min-width:36px; text-align:center; margin: 0 8px; }
+.upgrades__disclaimer { padding:14px 18px; color:#555; font-size:0.9rem; }
+
+.upgrades__sidebar { width:280px; display:flex; flex-direction:column; gap:18px; }
+.help-box { border:1px solid #e6eef5; padding:12px; border-radius:6px; background:#fff; }
+.help-box__title { font-weight:700; color:#003a5c; margin-bottom:6px; }
+.help-box__phone { font-weight:700; margin-bottom:6px; }
+.upgrades__bottom-cta { display:flex; gap:10px; justify-content:flex-end; }
+.btn--secondary { background:#f0f4f8; border:1px solid #d9e2ec; padding:8px 12px; border-radius:4px; }
+.btn--primary { background:#1d6b93; color:#fff; border:none; padding:8px 12px; border-radius:4px; }
+
+@media (max-width: 900px) {
+	.upgrades__container { flex-direction:column; }
+	.upgrades__sidebar { width:100%; }
+}
+
+/* Confirm overlay styles */
+.confirm-overlay { position: fixed; inset: 0; background: rgba(8, 74, 110, 0.85); display:flex; align-items:center; justify-content:center; z-index:1200; }
+.confirm-dialog { background: rgba(255,255,255,0.06); color:#fff; padding:24px 28px; border-radius:6px; max-width:640px; width:90%; text-align:center; position:relative; }
+.confirm-close { position:absolute; right:12px; top:8px; background:transparent; border:none; color:#fff; font-size:20px; cursor:pointer; }
+.confirm-title { margin:8px 0 6px; font-size:20px; }
+.confirm-body { margin:8px 0 16px; color:#f3fbff; }
+.confirm-actions { display:flex; gap:12px; justify-content:center; }
+.confirm-actions .btn--secondary { background:transparent; border:1px solid rgba(255,255,255,0.25); color:#fff; }
+.confirm-actions .btn--primary { background:#1d6b93; color:#fff; }
+

@@ -1,0 +1,21 @@
+.dashboard-outer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  width: 100%;
+  background:linear-gradient(135deg, rgba(255,184,128,0.72), rgba(255,118,92,0.72)), url('../assets/hero-car.svg') center/cover no-repeat;
+}
+
+.dashboard-main {
+  background: #f4f4f4;
+  min-height: 50vh;
+  width: 80%;
+  text-align: center;
+  align-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+}

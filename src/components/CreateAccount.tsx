@@ -1,73 +1,36 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import './CreateAccount.css';
+import './FloatingLabelUniversal.css';
+import { Link, useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const FloatingInput = ({
-  label,
-  type = "text",
-  name,
-  value,
-  onChange,
-  hasError = false, // Add this prop
-}: {
-  label: string;
-  type?: string;
-  name: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  hasError?: boolean;
+const FloatingInput = ({ label, type = 'text', name, value, onChange, hasError = false }: {
+  label: string; type?: string; name: string; value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; hasError?: boolean;
 }) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const isActive = isFocused || value.length > 0;
+  const [focused, setFocused] = useState(false);
+  const active = focused || value.length > 0;
   return (
-    <div
-      style={{
-        position: "relative",
-        marginBottom: "18px",
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <div className="floating-group">
       <input
+        aria-label={label}
         type={type}
         name={name}
         value={value}
         onChange={onChange}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        style={{
-          width: "100%",
-          padding: "12px 8px 8px 8px",
-          fontSize: "18px",
-          border: hasError ? "1.5px solid red" : "1px solid #222", // Highlight in red if error
-          borderRadius: "6px",
-          outline: "none",
-          boxSizing: "border-box",
-          backgroundColor: "#fff",
-        }}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        className={`floating-input${value ? ' has-value' : ''}${hasError ? ' error' : ''}`}
+        placeholder=" "
       />
-      <label
-        style={{
-          position: "absolute",
-          left: "12px",
-          top: isActive ? "-10px" : "16px",
-          fontSize: isActive ? "12px" : "14px",
-          color: isActive ? "#222" : "#444",
-          background: "#fff",
-          padding: "0 2px",
-          pointerEvents: "none",
-          transition: "0.2s",
-          zIndex: 1,
-        }}
-      >
-        {label}
-      </label>
+      <label className="floating-label">{label}</label>
     </div>
   );
 };
 
 const CreateAccount: React.FC = () => {
-  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [passwordStrength, setPasswordStrength] = useState("");
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -75,12 +38,14 @@ const CreateAccount: React.FC = () => {
     password: "",
     confirmPassword: "",
     receiveEmails: false,
+    keepSignedIn: false, // Add keepSignedIn to form state
   });
 
   const [emailError, setEmailError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<{ firstName: boolean; lastName: boolean; email: boolean; password: boolean }>({ firstName: false, lastName: false, email: false, password: false });
   const [mainError, setMainError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -102,9 +67,17 @@ const CreateAccount: React.FC = () => {
       setFieldErrors((prev) => ({ ...prev, email: false }));
       setMainError("");
     }
-    if (name === "password" && value) {
+    if (name === "password") {
       setFieldErrors((prev) => ({ ...prev, password: false }));
       setMainError("");
+      // Password strength feedback
+      if (value.length < 8) {
+        setPasswordStrength("Weak password");
+      } else if (value.length < 10) {
+        setPasswordStrength("Strong password");
+      } else {
+        setPasswordStrength("Very strong password");
+      }
     }
 
     // Email validation
@@ -126,10 +99,10 @@ const CreateAccount: React.FC = () => {
     }
   };
 
-  // const navigate = useNavigate();
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
     const errors = {
       firstName: !form.firstName,
       lastName: !form.lastName,
@@ -154,6 +127,13 @@ const CreateAccount: React.FC = () => {
       setMainError("Password is required.");
       return;
     }
+    // Password regex validation on submit
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+    if (!passwordRegex.test(form.password)) {
+      setMainError("Password must be at least 8 characters, include uppercase, lowercase, number, and special character.");
+      setFieldErrors((prev) => ({ ...prev, password: true }));
+      return;
+    }
 
     if (form.password !== form.confirmPassword) {
       setMainError("Passwords do not match!");
@@ -171,169 +151,130 @@ const CreateAccount: React.FC = () => {
           lastName: form.lastName,
         }),
       });
-
-      // Expecting backend to return JSON: { userId: "...", message: "..." }
-      const result = await response.json();
-      if (result.userId && result.message) {
-        setSuccessMsg("Successfully registered to RoadReach app! Your User ID is: ${result.userId}. Please check your email.");
-      } else if (result.message) {
-        setSuccessMsg(result.message);
+      const result = await response.text();
+      if (result.includes("successfully")) {
+        // Store sign-in flag in localStorage or sessionStorage
+        if (form.keepSignedIn) {
+          localStorage.setItem("keepSignedIn", "true");
+        } else {
+          sessionStorage.setItem("keepSignedIn", "true");
+        }
+        toast.success(result);
+        setTimeout(() => {
+          setSubmitting(false);
+          navigate("/login");
+        }, 3000);
       } else {
-        setSuccessMsg("Registration completed. Please check your email.");
+        toast.error(result);
+        setSubmitting(false);
       }
-      setMainError("");
-      // Optionally navigate to login after a delay
-      // setTimeout(() => navigate("/login"), 5000);
     } catch {
-      setSuccessMsg("Error connecting to server");
+      toast.error("Error connecting to server");
+      setSubmitting(false);
     }
   };
 
 
   return (
-    <div style={styles.pageWrapper}>
-      <div style={styles.card}>
-        <h2 style={styles.heading}>Create Account</h2>
-        {successMsg ? (
-          <div style={{ color: "#005DA6", fontWeight: 600, margin: "20px 0", fontSize: "16px", textAlign: "center" }}>
-            {successMsg}
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit}>
-            {/* First Name */}
-            <FloatingInput
-              label="First Name"
-              name="firstName"
-              value={form.firstName}
-              onChange={handleChange}
-              hasError={fieldErrors.firstName}
-            />
-            {/* Last Name */}
-            <FloatingInput
-              label="Last Name"
-              name="lastName"
-              value={form.lastName}
-              onChange={handleChange}
-              hasError={fieldErrors.lastName}
-            />
-            {/* Email Address */}
-            <FloatingInput
-              label="Email Address"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              type="email"
-              hasError={emailError || fieldErrors.email}
-            />
-            {/* Password */}
-            <FloatingInput
+  <div className="auth-page create-account">
+      <div className="card card--narrow create-account__card">
+        <h2 className="create-account__title">Create Account</h2>
+        {/* Toastify container */}
+        <ToastContainer position="top-right" autoClose={3000} />
+        <form onSubmit={handleSubmit}>
+          {/* First Name */}
+          <FloatingInput
+            label="First Name"
+            name="firstName"
+            value={form.firstName}
+            onChange={handleChange}
+            hasError={fieldErrors.firstName}
+          />
+          {/* Last Name */}
+          <FloatingInput
+            label="Last Name"
+            name="lastName"
+            value={form.lastName}
+            onChange={handleChange}
+            hasError={fieldErrors.lastName}
+          />
+          {/* Email Address */}
+          <FloatingInput
+            label="Email Address"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+            type="email"
+            hasError={emailError || fieldErrors.email}
+          />
+          {/* Password */}
+          <FloatingInput
               label="Password"
               name="password"
               value={form.password}
               onChange={handleChange}
               type="password"
               hasError={fieldErrors.password}
-            />
-            {/* Confirm Password */}
-            <FloatingInput
-              label="Confirm Password"
-              name="confirmPassword"
-              value={form.confirmPassword}
-              onChange={handleChange}
-              type="password"
-              hasError={confirmPasswordError}
-            />
-            {/* Error Message */}
-            {mainError && (
-              <div style={{ color: "#D84343", fontWeight: 600, margin: "6px 0 0 2px", fontSize: "22px" }}>
-                {mainError}
-              </div>
+          />
+          {/* Confirm Password */}
+          <FloatingInput
+            label="Confirm Password"
+            name="confirmPassword"
+            value={form.confirmPassword}
+            onChange={handleChange}
+            type="password"
+            hasError={confirmPasswordError}
+          />
+          {/* Error Message */}
+            {mainError && (<div className="error-text error-text--main">{mainError}</div>)}
+            {form.password && (
+              <div className={`strength-text ${form.password.length < 8 ? 'strength--weak' : form.password.length < 10 ? 'strength--strong' : 'strength--very-strong'}`}>{passwordStrength}</div>
             )}
-            {/* Receive Emails */}
-            <div style={{ margin: "15px 0" }}>
-              <input
-                type="checkbox"
-                name="receiveEmails"
-                checked={form.receiveEmails}
-                onChange={handleChange}
-              />
-              <span style={{ marginLeft: "8px", fontSize: "14px" }}>
-                Yes, I would like to receive emails about special promotions and new
-                product information.
-              </span>
-            </div>
-            <div style={{ fontSize: "14px", marginBottom: "10px" }}>
-              By creating an account you agree to RoadReach.com{" "}
-              <a href="#" style={{ color: "#005DA6" }}>
-                terms and conditions
-              </a>{" "}
-              of use.
-            </div>
-            <button type="submit" style={styles.createBtn}>
-              Create Account
-            </button>
-          </form>
-        )}
-        <div
-          style={{
-            marginTop: "20px",
-            textAlign: "center",
-            fontSize: "14px",
-          }}
-        >
+          {/* Receive Emails */}
+          <div className="check-row">
+            <input
+              type="checkbox"
+              name="receiveEmails"
+              checked={form.receiveEmails}
+              onChange={handleChange}
+              aria-label="Receive promotional emails"
+            />
+            <span>
+              Yes, I would like to receive emails about special promotions and new
+              product information.
+            </span>
+          </div>
+          {/* Keep me signed in */}
+          <div className="check-row">
+            <input
+              type="checkbox"
+              name="keepSignedIn"
+              checked={form.keepSignedIn}
+              onChange={handleChange}
+              aria-label="Keep me signed in"
+            />
+            <span>
+              Keep me signed in
+            </span>
+          </div>
+          <div className="create-account__terms">
+            By creating an account you agree to RoadReach.com{" "}
+            <a href="#">
+              terms and conditions
+            </a>{" "}
+            of use.
+          </div>
+          <button type="submit" className="btn btn--primary create-account__submit mt-10" disabled={submitting}>
+            {submitting ? "Creating..." : "Create Account"}
+          </button>
+        </form>
+        <div className="create-account__footer">
           Already have an account?{" "}
-          <Link to="/login" style={{ color: "#005DA6" }}>
-            Sign In
-          </Link>
+          <Link to="/login">Sign In</Link>
         </div>
       </div>
     </div>
   );
-};
-
-const styles: { [key: string]: React.CSSProperties } = {
-  pageWrapper: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "90vh",
-    backgroundColor: "#f5f5f5",
-  },
-  card: {
-    background: "#fff",
-    padding: "30px",
-    borderRadius: "8px",
-    boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-    width: "400px",
-    fontFamily: "Arial, sans-serif",
-  },
-  heading: {
-    marginBottom: "10px",
-  },
-  label: {
-    fontSize: "14px",
-    margin: "10px 0 5px",
-    display: "block",
-  },
-  input: {
-    width: "100%",
-    padding: "8px",
-    fontSize: "14px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-    marginBottom: "10px",
-  },
-  createBtn: {
-    background: "#005DA6",
-    color: "#fff",
-    padding: "10px",
-    border: "none",
-    borderRadius: "4px",
-    width: "100%",
-    fontSize: "16px",
-    cursor: "pointer",
-    marginTop: "10px",
-  },
 };
 
 export default CreateAccount;

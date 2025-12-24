@@ -1,0 +1,26 @@
+.create-account { width:100%; position:relative; min-height:calc(100vh - var(--header-height)); display:flex; justify-content:center; align-items:center; padding:40px 20px; box-sizing:border-box; }
+/* Distinct background for Create Account page */
+/* Use car image but with a different color treatment than login */
+/* Warm sunrise gradient (peach → soft orange) over car image */
+.create-account::before { content:""; position:absolute; inset:0; background:linear-gradient(135deg, rgba(255,184,128,0.72), rgba(255,118,92,0.72)), url('../assets/hero-car.svg') center/cover no-repeat; filter:saturate(115%) brightness(1.05); }
+.create-account__card { position:relative; z-index:1; }
+.create-account__title { margin-bottom:10px; }
+.create-account__terms { font-size:14px; margin-bottom:10px; }
+.create-account__terms a { color:#005DA6; }
+.create-account__footer { margin-top:20px; text-align:center; font-size:14px; }
+.create-account__submit { width:100%; }
+.error-text--main { font-size:22px; }
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #005ea6;
+  border-top: 2px solid #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

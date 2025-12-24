@@ -1,0 +1,7 @@
+.loc-input { width:100%; margin-bottom:8px; padding:8px 10px; border:1px solid #cfd6dc; border-radius:4px; font-size:14px; }
+.loc-input:focus { outline:none; border-color:#1565c0; box-shadow:0 0 0 2px rgba(21,101,192,0.15); }
+.loc-results { max-height:300px; overflow-y:auto; border:1px solid #ccc; border-radius:4px; padding:4px 0; background:#fff; }
+.loc-result { display:flex; align-items:center; padding:6px 10px; font-size:14px; gap:8px; }
+.loc-result svg { font-size:14px; opacity:.85; }
+.loc-result:hover { background:#f2f6fa; cursor:pointer; }
+.loc-empty { padding:8px 10px; font-size:13px; color:#5d6a72; }
